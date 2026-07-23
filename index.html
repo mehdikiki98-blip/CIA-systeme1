@@ -492,10 +492,22 @@
     let globalAgents = [];
     let refreshInterval = null;
 
-    // دالة تسجيل الأحداث في قاعدة البيانات
+    // دالة تسجيل الأحداث بتوقيت السعودية وأرقام إنجليزية
     async function logAction(actionDescription) {
         try {
-            const timestamp = new Date().toLocaleString('ar-EG', { timeZone: 'Africa/Casablanca' });
+            const options = {
+                timeZone: 'Asia/Riyadh',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            };
+            const formatter = new Intl.DateTimeFormat('en-US', options);
+            const timestamp = formatter.format(new Date());
+
             const logEntry = {
                 text: actionDescription,
                 time: timestamp,
@@ -713,7 +725,7 @@
         document.getElementById('modal-agent-name').innerText = agent.name;
         const modalBody = document.getElementById('modal-body');
 
-        let maxRankLimitIdx = RANKS.length - 1; // يمكن لـ Owner ترقية لأي رتبة وبدون قيود
+        let maxRankLimitIdx = RANKS.length - 1; 
         let availableRanks = RANKS;
         
         if (!isOwner) {
