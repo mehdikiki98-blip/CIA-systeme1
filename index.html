@@ -243,20 +243,7 @@
             gap: 10px;
         }
 
-        .action-flex {
-            display: flex;
-            gap: 4px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .action-flex select {
-            width: 110px;
-            padding: 4px;
-            font-size: 11px;
-        }
-
-        /* نافذة منبثقة (Modal/Popup) */
+        /* النافذة المنبثقة (Modal/Popup) */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -315,7 +302,7 @@
 </head>
 <body>
 
-<!-- صوت استخباراتي هادئ تلقائي -->
+<!-- صوت استخباراتي هادئ جداً (2%) -->
 <audio id="bg-music" loop preload="auto">
     <source src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_c8c8a221f2.mp3?filename=ambient-tech-10501.mp3" type="audio/mpeg">
 </audio>
@@ -400,7 +387,6 @@
             <button class="close-btn" onclick="closeModal()">✖</button>
         </div>
         <div id="modal-body" style="display: flex; flex-direction: column; gap: 12px;">
-            <!-- تنزل عناصر التحكم هنا بالسوفتوير -->
         </div>
     </div>
 </div>
@@ -438,11 +424,11 @@
     let globalAgents = [];
     let refreshInterval = null;
 
-    // تشغيل الموسيقى الخفيفة عند تفاعل المستخدم
+    // تشغيل الموسيقى بدرجة 2% فقط (0.02) عند تحريك الماوس أو النقرة الأولية
     function playMusic() {
         const audio = document.getElementById('bg-music');
         if (audio) {
-            audio.volume = 0.15;
+            audio.volume = 0.02; // درجة هادئة وخفيفة جداً (2%)
             audio.play().catch(() => {});
         }
     }
@@ -538,9 +524,10 @@
                 });
             }
 
-            // إظهار زر الترقية السريع تلقائياً لقائد الاستخبارات/النائب/المستشار
+            // إظهار زر الترقية السريع تلقائياً (يشمل رئيس CIA وقائد الاستخبارات والنائب والمستشار)
             const isTopLeader = (
                 currentUser.rank === "قائد الاستخبارات" || 
+                currentUser.position === "رئيس CIA" || 
                 currentUser.position === "نائب رئيس CIA" || 
                 currentUser.position === "مستشار CIA"
             );
@@ -592,6 +579,7 @@
         const myRankIndex = RANKS.indexOf(currentUser.rank);
         const isTopLeader = (
             currentUser.rank === "قائد الاستخبارات" || 
+            currentUser.position === "رئيس CIA" || 
             currentUser.position === "نائب رئيس CIA" || 
             currentUser.position === "مستشار CIA"
         );
@@ -607,7 +595,7 @@
 
             let actionsHTML = '';
 
-            // التحكم متاح تلقائياً للكبار أو عند إدخال الكود
+            // التحكم متاح تلقائياً للقيادة العليا أو عند إدخال الكود
             if (isOwnerUnlocked || isTopLeader || (isCodeUnlocked && myRankIndex > targetRankIndex)) {
                 actionsHTML = `<td><button class="btn-sm" onclick="openModal('${agent.id}')">⚙️ فتح التعديل</button></td>`;
             } else {
@@ -639,6 +627,7 @@
         const targetRankIndex = RANKS.indexOf(agent.rank);
         const isTopLeader = (
             currentUser.rank === "قائد الاستخبارات" || 
+            currentUser.position === "رئيس CIA" || 
             currentUser.position === "نائب رئيس CIA" || 
             currentUser.position === "مستشار CIA"
         );
