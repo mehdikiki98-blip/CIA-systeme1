@@ -137,7 +137,9 @@
         .agent-name-click {
             color: var(--accent-gold);
             font-weight: bold;
+            cursor: pointer;
         }
+        .agent-name-click:hover { text-decoration: underline; }
 
         .badge, .badge-sector, .badge-position, .badge-status, .badge-eval {
             padding: 3px 6px;
@@ -321,9 +323,8 @@
     <button id="music-btn" style="background: var(--accent-gold); color: #000; font-size: 11px; padding: 4px 10px; border-radius: 12px;" onclick="toggleAudio()">▶️ تشغيل الأغنية</button>
 </div>
 
-<!-- عنصر الصوت الحقيقي للأغنية المرفقة -->
 <audio id="cia-audio" loop>
-    <source src="data:audio/mp3;base64,..."> <!-- تم تضمين ملف الصوت مباشرة -->
+    <source src="data:audio/mp3;base64,...">
 </audio>
 
 <div class="container">
@@ -344,7 +345,7 @@
                 <input type="password" id="password" placeholder="أدخل كلمة السر..." required autocomplete="off">
             </div>
             <button type="submit" id="submit-btn" class="btn-full">دخول / إنشاء حساب</button>
-            <p id="login-error" class="error-msg" style="color:red; font-size:12px; margin-top:5px;"></p>
+            <p id="login-error" style="color:red; font-size:12px; margin-top:5px;"></p>
         </form>
     </div>
 
@@ -428,10 +429,11 @@
     </div>
 </div>
 
+<!-- نافذة التعديل الشاملة -->
 <div id="edit-modal" class="modal-overlay hidden">
     <div class="modal-content">
         <div class="modal-header">
-            <h3>⚙️ تعديل العميل: <span id="modal-agent-name" style="color: #fff;"></span></h3>
+            <h3>⚙️ تعديل بيانات العميل: <span id="modal-agent-name" style="color: #fff;"></span></h3>
             <button class="close-btn" onclick="closeModal('edit-modal')">✖</button>
         </div>
         <div id="modal-body" style="display: flex; flex-direction: column; gap: 12px;"></div>
@@ -447,10 +449,13 @@
         "عميد", "فريق", "فريق اول", "قائد الاستخبارات"
     ];
 
+    const SECTORS = ["CIA", "RDF", "SSF", "FBI", "POLICE", "ARMY"];
     const POSITIONS = [
         "بدون منصب", "رئيس CIA", "نائب رئيس CIA", "مستشار CIA", "مسؤول أفراد CIA", 
         "مسؤول ضباط CIA", "محقق CIA", "رئيس CID", "نائب رئيس CID", "مستشار CID"
     ];
+    const STATUSES = ["في الخدمة 🟢", "في مهمة 🟡", "موقوف 🔴", "خارج الخدمة ⚪"];
+    const EVALUATIONS = ["ممتاز ⭐⭐⭐", "جيد جداً ⭐⭐", "جيد ⭐", "تحت الإنذار ⚠️", "بدون تقييم"];
 
     const OWNER_CODE = "mehdicia"; 
     const ADMIN_SECRET = "ciaontop"; 
@@ -469,7 +474,7 @@
                 btn.innerText = "⏸️ إيقاف الأغنية";
                 btn.style.background = "#2ecc71";
             }).catch(e => {
-                alert("⚠️ يجدر النقر أو التفاعل مع الصفحة أولاً لتشغيل الصوت.");
+                alert("⚠️ يرجى النقر على الصفحة أولاً لتشغيل الصوت.");
             });
         } else {
             audio.pause();
@@ -508,7 +513,7 @@
                 const newUser = { 
                     name: name, password: pass, rank: "مستجد", 
                     sector: "CIA", position: "بدون منصب", status: "في الخدمة 🟢",
-                    evaluation: "بدون تقييم", evaluator: ""
+                    evaluation: "بدون تقييم"
                 };
                 await fetch(`${DB_URL}/${userKey}.json`, {
                     method: 'PUT',
@@ -571,7 +576,7 @@
         } else if (inputCode === ADMIN_SECRET) {
             isCodeUnlocked = true;
             msg.style.color = "var(--accent-green)";
-            msg.innerText = "✓ تم التفعيل!";
+            msg.innerText = "✓ تم تفعيل صلاحيات الأدمن!";
             renderTable();
         } else {
             msg.style.color = "var(--accent-red)";
@@ -590,11 +595,11 @@
             const tr = document.createElement('tr');
             
             const actionCell = hasAdminAccess 
-                ? `<button class="btn-sm" onclick="openModal('${agent.id}')">⚙️ تعديل</button>` 
+                ? `<button class="btn-sm" onclick="openModal('${agent.id}')">⚙️ تعديل كامل</button>` 
                 : `<span style="color:#555; font-size:11px;">مقفول 🔒</span>`;
 
             tr.innerHTML = `
-                <td><span class="agent-name-click">${agent.name}</span></td>
+                <td><span class="agent-name-click" onclick="openModal('${agent.id}')">${agent.name}</span></td>
                 <td><span class="badge-status">${agent.status || 'في الخدمة 🟢'}</span></td>
                 <td><span class="badge">${agent.rank}</span></td>
                 <td><span class="badge-sector">${agent.sector || 'CIA'}</span></td>
@@ -618,8 +623,11 @@
         document.getElementById('modal-agent-name').innerText = agent.name;
         const modalBody = document.getElementById('modal-body');
 
-        let rankOptions = RANPS = RANKS.map(r => `<option value="${r}" ${r === agent.rank ? 'selected' : ''}>${r}</option>`).join('');
-        let positionOptions = POSITIONS.map(p => `<option value="${p}" ${p === agent.position ? 'selected' : ''}>${p}</option>`).join('');
+        let rankOptions = RANKS.map(r => `<option value="${r}" ${r === agent.rank ? 'selected' : ''}>${r}</option>`).join('');
+        let sectorOptions = SECTORS.map(s => `<option value="${s}" ${s === (agent.sector || 'CIA') ? 'selected' : ''}>${s}</option>`).join('');
+        let positionOptions = POSITIONS.map(p => `<option value="${p}" ${p === (agent.position || 'بدون منصب') ? 'selected' : ''}>${p}</option>`).join('');
+        let statusOptions = STATUSES.map(st => `<option value="${st}" ${st === (agent.status || 'في الخدمة 🟢') ? 'selected' : ''}>${st}</option>`).join('');
+        let evalOptions = EVALUATIONS.map(ev => `<option value="${ev}" ${ev === (agent.evaluation || 'بدون تقييم') ? 'selected' : ''}>${ev}</option>`).join('');
 
         modalBody.innerHTML = `
             <div class="form-group">
@@ -628,10 +636,26 @@
                 <button style="margin-top:5px;" onclick="saveField('${agent.id}', 'rank', 'modal-rank')">حفظ الرتبة</button>
             </div>
             <div class="form-group">
+                <label>تعديل القطاع:</label>
+                <select id="modal-sector">${sectorOptions}</select>
+                <button style="margin-top:5px;" onclick="saveField('${agent.id}', 'sector', 'modal-sector')">حفظ القطاع</button>
+            </div>
+            <div class="form-group">
                 <label>تعديل المنصب:</label>
                 <select id="modal-position">${positionOptions}</select>
                 <button style="margin-top:5px;" onclick="saveField('${agent.id}', 'position', 'modal-position')">حفظ المنصب</button>
             </div>
+            <div class="form-group">
+                <label>تعديل الحالة:</label>
+                <select id="modal-status">${statusOptions}</select>
+                <button style="margin-top:5px;" onclick="saveField('${agent.id}', 'status', 'modal-status')">حفظ الحالة</button>
+            </div>
+            <div class="form-group">
+                <label>تعديل التقييم:</label>
+                <select id="modal-eval">${evalOptions}</select>
+                <button style="margin-top:5px;" onclick="saveField('${agent.id}', 'evaluation', 'modal-eval')">حفظ التقييم</button>
+            </div>
+            ${isOwnerUnlocked ? `<button class="btn-danger" style="margin-top:10px;" onclick="deleteAgent('${agent.id}')">🗑️ حذف العميل نهائياً</button>` : ''}
         `;
         document.getElementById('edit-modal').classList.remove('hidden');
     }
@@ -645,8 +669,17 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(val)
         });
-        alert('✓ تم حفظ التعديل!');
+        alert('✓ تم حفظ التعديل بنجاح!');
         fetchAgentsOnline();
+    }
+
+    async function deleteAgent(id) {
+        if (confirm("هل أنت متأكد من حذف هذا العميل نهائياً من السجل؟")) {
+            await fetch(`${DB_URL}/${id}.json`, { method: 'DELETE' });
+            alert("✓ تم الحذف بنجاح!");
+            closeModal('edit-modal');
+            fetchAgentsOnline();
+        }
     }
 
     function logout() { location.reload(); }
