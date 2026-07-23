@@ -12,6 +12,7 @@
             --accent-red: #e74c3c;
             --accent-green: #2ecc71;
             --accent-blue: #3498db;
+            --accent-purple: #9b59b6;
             --text-color: #e0e6ed;
             --border-color: #2c3240;
         }
@@ -35,7 +36,7 @@
 
         .container {
             width: 100%;
-            max-width: 1000px;
+            max-width: 1100px;
             background-color: var(--panel-bg);
             border: 1px solid var(--border-color);
             border-top: 4px solid var(--accent-gold);
@@ -173,6 +174,16 @@
             border: 1px solid var(--accent-blue);
         }
 
+        .badge-position {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            background: #2c1d38;
+            color: var(--accent-purple);
+            border: 1px solid var(--accent-purple);
+        }
+
         .admin-box {
             background: #0d1117;
             border: 1px dashed var(--accent-gold);
@@ -212,7 +223,7 @@
 <div class="container">
     <div class="header">
         <h1>🌐 نظام الاستخبارات العامة | CIA DATABASE</h1>
-        <p>نظام إلكتروني سري لمتابعة وإدارة الرتب والقطاعات (متصل مباشرة أونلاين)</p>
+        <p>نظام إلكتروني سري لمتابعة وإدارة الرتب والقطاعات والمناصب (متصل مباشرة أونلاين)</p>
     </div>
 
     <!-- 1. صفحة التسجيل والدخول -->
@@ -261,7 +272,8 @@
                     <th>الاسم / الكود</th>
                     <th>الرتبة الحالية</th>
                     <th>القطاع</th>
-                    <th id="admin-actions-header">تعديل الرتبة والقطاع / الإجراءات</th>
+                    <th>المنصب</th>
+                    <th id="admin-actions-header">تعديل الإجراءات</th>
                 </tr>
             </thead>
             <tbody id="agents-table-body">
@@ -277,6 +289,15 @@
         "مستجد", "جندي", "جندي اول", "عريف", "وكيل رقيب", "رقيب", "رقيب اول", 
         "رئيس رقباء", "ملازم", "ملازم اول", "نقيب", "رائد", "مقدم", "عقيد", 
         "عميد", "فريق", "فريق اول", "مستشار رئيس الاستخبارات", "نائب رئيس الاستخبارات", "قائد الاستخبارات"
+    ];
+
+    const POSITIONS = [
+        "بدون منصب",
+        "محققيق cia",
+        "رئيس cid",
+        "نائب رئيس cid",
+        "محقق cid",
+        "مستشار cid"
     ];
 
     const OWNER_CODE = "mehdicia"; 
@@ -315,7 +336,7 @@
                     errorMsg.innerText = "✕ كلمة السر غير صحيحة لهذا الاسم!";
                 }
             } else {
-                const newUser = { name: name, password: pass, rank: "مستجد", sector: "CIA" };
+                const newUser = { name: name, password: pass, rank: "مستجد", sector: "CIA", position: "بدون منصب" };
                 await fetch(`${DB_URL}/${userKey}.json`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
@@ -352,13 +373,14 @@
             if (data) {
                 Object.keys(data).forEach(key => {
                     if (data[key]) {
-                        // الافتراضي هو CIA إذا لم يكن محدد
                         const sector = data[key].sector || "CIA";
-                        globalAgents.push({ id: key, ...data[key], sector });
+                        const position = data[key].position || "بدون منصب";
+                        globalAgents.push({ id: key, ...data[key], sector, position });
                         
                         if (currentUser && currentUser.id === key) {
                             currentUser.rank = data[key].rank;
                             currentUser.sector = sector;
+                            currentUser.position = position;
                             document.getElementById('current-rank-display').innerText = currentUser.rank;
                         }
                     }
@@ -381,7 +403,7 @@
             isOwnerUnlocked = true;
             isCodeUnlocked = false;
             msg.style.color = "var(--accent-green)";
-            msg.innerText = "👑 تم تفعيل الصلاحيات المطلقة بنجاح!";
+            msg.innerText = "👑 تم تفعيل الصلاحيات المطلقة والمناصب بنجاح!";
             renderTable();
             return;
         }
@@ -421,37 +443,41 @@
             const tr = document.createElement('tr');
             const targetRankIndex = RANKS.indexOf(agent.rank);
             const currentSector = agent.sector || "CIA";
+            const currentPosition = agent.position || "بدون منصب";
 
             let actionsHTML = '';
 
-            // صلاحية التعديل الشاملة للأونر
+            // صلاحية التعديل الشاملة للأونر (بما فيها المناصب)
             if (isOwnerUnlocked) {
                 let rankOptions = RANKS.map(r => `<option value="${r}" ${r === agent.rank ? 'selected' : ''}>${r}</option>`).join('');
                 let sectorOptions = `
                     <option value="CIA" ${currentSector === 'CIA' ? 'selected' : ''}>CIA</option>
                     <option value="CID" ${currentSector === 'CID' ? 'selected' : ''}>CID</option>
                 `;
+                let positionOptions = POSITIONS.map(p => `<option value="${p}" ${p === currentPosition ? 'selected' : ''}>${p}</option>`).join('');
 
                 actionsHTML = `
                     <td>
                         <div class="action-flex">
                             <select id="rank-select-${agent.id}">${rankOptions}</select>
-                            <button class="btn-sm" onclick="setRankOnline('${agent.id}')">تطبيق الرتبة</button>
+                            <button class="btn-sm" onclick="setRankOnline('${agent.id}')">الرتبة</button>
                             
                             <select id="sector-select-${agent.id}">${sectorOptions}</select>
-                            <button class="btn-sm" style="background:var(--accent-blue); color:#fff;" onclick="setSectorOnline('${agent.id}')">تطبيق القطاع</button>
+                            <button class="btn-sm" style="background:var(--accent-blue); color:#fff;" onclick="setSectorOnline('${agent.id}')">القطاع</button>
+
+                            <select id="position-select-${agent.id}">${positionOptions}</select>
+                            <button class="btn-sm" style="background:var(--accent-purple); color:#fff;" onclick="setPositionOnline('${agent.id}')">المنصب</button>
 
                             <button class="btn-sm btn-danger" style="background:#555;" onclick="deleteAgentOnline('${agent.id}')">🗑️ طرد</button>
                         </div>
                     </td>
                 `;
             } 
-            // صلاحية تعديل الرتبة + القطاع (شرط رائد فما فوق لتعديل القطاع)
+            // صلاحية المسؤولين العاديين (تعديل الرتبة والقطاع فقط - بدون المناصب)
             else if ((isCodeUnlocked || isLeader) && myRankIndex > targetRankIndex) {
                 let allowedRanks = RANKS.slice(0, myRankIndex);
                 let rankOptions = allowedRanks.map(r => `<option value="${r}" ${r === agent.rank ? 'selected' : ''}>${r}</option>`).join('');
                 
-                // خيارات القطاع (متاحة فقط إذا كانت رتبة المستخدم الحالية رائد فما فوق)
                 let sectorHTML = '';
                 if (myRankIndex >= raidIndex) {
                     let sectorOptions = `
@@ -460,7 +486,7 @@
                     `;
                     sectorHTML = `
                         <select id="sector-select-${agent.id}">${sectorOptions}</select>
-                        <button class="btn-sm" style="background:var(--accent-blue); color:#fff;" onclick="setSectorOnline('${agent.id}')">تطبيق القطاع</button>
+                        <button class="btn-sm" style="background:var(--accent-blue); color:#fff;" onclick="setSectorOnline('${agent.id}')">القطاع</button>
                     `;
                 }
 
@@ -468,7 +494,7 @@
                     <td>
                         <div class="action-flex">
                             <select id="rank-select-${agent.id}">${rankOptions}</select>
-                            <button class="btn-sm" onclick="setRankOnline('${agent.id}')">تطبيق الرتبة</button>
+                            <button class="btn-sm" onclick="setRankOnline('${agent.id}')">الرتبة</button>
                             ${sectorHTML}
                             <button class="btn-sm btn-danger" style="background:#555;" onclick="deleteAgentOnline('${agent.id}')">🗑️ طرد</button>
                         </div>
@@ -484,6 +510,7 @@
                 <td><strong>${agent.name}</strong></td>
                 <td><span class="badge">${agent.rank}</span></td>
                 <td><span class="badge-sector">${currentSector}</span></td>
+                <td><span class="badge-position">${currentPosition}</span></td>
                 ${actionsHTML}
             `;
             tbody.appendChild(tr);
@@ -510,6 +537,18 @@
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(selectedSector)
+        });
+        fetchAgentsOnline();
+    }
+
+    async function setPositionOnline(id) {
+        const selectElem = document.getElementById(`position-select-${id}`);
+        const selectedPosition = selectElem.value;
+        selectElem.blur();
+        await fetch(`${DB_URL}/${id}/position.json`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(selectedPosition)
         });
         fetchAgentsOnline();
     }
