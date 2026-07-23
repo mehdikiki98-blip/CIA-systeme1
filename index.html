@@ -258,7 +258,6 @@
 </div>
 
 <script>
-    // الرابط المباشر الصحيح من صورتك فـ Firebase
     const DB_URL = "https://cia-systeme-default-rtdb.firebaseio.com/agents";
 
     const RANKS = [
@@ -389,6 +388,11 @@
     }
 
     function renderTable() {
+        // حماية: إذا كان المستخدم فاتح شي قائمة اختيار دابا، نوقفو التحديث باش ما تسدش عليه
+        if (document.activeElement && document.activeElement.tagName === 'SELECT') {
+            return;
+        }
+
         const tbody = document.getElementById('agents-table-body');
         if (!tbody || !currentUser) return;
         tbody.innerHTML = '';
@@ -444,7 +448,9 @@
     }
 
     async function setRankOnline(id) {
-        const selectedRank = document.getElementById(`rank-select-${id}`).value;
+        const selectElem = document.getElementById(`rank-select-${id}`);
+        const selectedRank = selectElem.value;
+        selectElem.blur(); // إلغاء التركيز بعد الاختيار باش يرجع التحديث التلقائي خدام
         await fetch(`${DB_URL}/${id}/rank.json`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
