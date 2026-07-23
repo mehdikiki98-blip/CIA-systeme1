@@ -576,7 +576,7 @@
 
     function canManageAgent(agent) {
         if (!currentUser) return false;
-        if (currentUser.name.toLowerCase() === OWNER_CODE) return true;
+        if (currentUser.name.toLowerCase() === OWNER_CODE || isCodeUnlocked) return true;
 
         const userPos = currentUser.position || "";
         const isCiaLeader = userPos.includes("رئيس CIA") || userPos.includes("نائب رئيس CIA") || userPos.includes("مستشار CIA");
@@ -631,7 +631,7 @@
 
         const userRankIdx = RANKS.indexOf(currentUser.rank);
         const userPos = currentUser.position || "";
-        const isOwner = currentUser.name.toLowerCase() === OWNER_CODE;
+        const isOwner = currentUser.name.toLowerCase() === OWNER_CODE || isCodeUnlocked;
 
         const isCiaLeader = userPos.includes("رئيس CIA") || userPos.includes("نائب رئيس CIA") || userPos.includes("مستشار CIA") || isOwner;
         const isCidLeader = userPos.includes("قائد CID") || userPos.includes("نائب قائد CID");
@@ -644,13 +644,7 @@
         document.getElementById('modal-agent-name').innerText = agent.name;
         const modalBody = document.getElementById('modal-body');
 
-        let maxRankLimitIdx = RANKS.indexOf("ملازم");
-        let availableRanks = RANKS.filter((r, idx) => idx <= maxRankLimitIdx && idx < userRankIdx);
-        
-        if (isCiaLeader) {
-            availableRanks = RANKS.filter((r, idx) => idx < userRankIdx);
-        }
-
+        let availableRanks = RANKS.filter((r, idx) => idx < userRankIdx);
         let rankOptions = availableRanks.map(r => `<option value="${r}" ${r === agent.rank ? 'selected' : ''}>${r}</option>`).join('');
         let sectorOptions = SECTORS.map(s => `<option value="${s}" ${s === (agent.sector || 'CIA') ? 'selected' : ''}>${s}</option>`).join('');
         
@@ -708,20 +702,7 @@
 
     async function saveField(id, field, elemId) {
         const val = document.getElementById(elemId).value;
-        const isOwner = currentUser.name.toLowerCase() === OWNER_CODE;
         
-        if (field === 'rank' && !isOwner) {
-            const targetRankIdx = RANKS.indexOf(val);
-            const molazimIdx = RANKS.indexOf("ملازم");
-            const userPos = currentUser.position || "";
-            const isCiaLeader = userPos.includes("رئيس CIA") || userPos.includes("نائب رئيس CIA") || userPos.includes("مستشار CIA");
-            
-            if (!isCiaLeader && targetRankIdx > molazimIdx) {
-                alert("⚠️ لا يمكن أن تتجاوز الترقيات رتبة ملازم!");
-                return;
-            }
-        }
-
         await fetch(`${DB_URL}/${id}/${field}.json`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
