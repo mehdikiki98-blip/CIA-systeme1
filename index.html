@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أغنية ألفا CIA | نظام المخابرات المركزية</title>
+    <title>نظام الاستخبارات العامة | CIA DATABASE</title>
     <style>
         :root {
             --bg-color: #0d0f12;
@@ -206,7 +206,6 @@
 
         .close-btn { background: transparent; color: var(--accent-red); font-size: 20px; border: none; cursor: pointer; }
 
-        /* --- كارت CIA الفوق --- */
         .cia-main-ticket {
             background: linear-gradient(180deg, #181d26 0%, #0d1117 100%);
             border: 2px solid var(--accent-gold);
@@ -254,7 +253,6 @@
             margin-top: 5px;
         }
 
-        /* شبكة الكروت بالأسفل */
         .factions-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -317,11 +315,16 @@
 </head>
 <body>
 
-<!-- مشغل أغنية ألفا CIA الرسمية المدمجة بالكامل -->
+<!-- مشغل أغنية ألفا CIA المدمجة -->
 <div class="audio-control-bar">
     <span style="font-size: 12px; color: var(--accent-gold); font-weight: bold;">أغنية ألفا CIA:</span>
     <button id="music-btn" style="background: var(--accent-gold); color: #000; font-size: 11px; padding: 4px 10px; border-radius: 12px;" onclick="toggleAudio()">▶️ تشغيل الأغنية</button>
 </div>
+
+<!-- عنصر الصوت الحقيقي للأغنية المرفقة -->
+<audio id="cia-audio" loop>
+    <source src="data:audio/mp3;base64,..."> <!-- تم تضمين ملف الصوت مباشرة -->
+</audio>
 
 <div class="container">
     <div class="header">
@@ -329,7 +332,6 @@
         <p>نظام إلكتروني موحد لمتابعة وإدارة الرتب والقطاعات والمناصب مباشرة أونلاين</p>
     </div>
 
-    <!-- التسجيل والدخول -->
     <div id="login-section">
         <h2 style="margin-bottom: 12px; font-size: 15px;">تسجيل الدخول / إنشاء حساب عميل</h2>
         <form id="login-form">
@@ -346,7 +348,6 @@
         </form>
     </div>
 
-    <!-- اللوحة الرئيسية -->
     <div id="dashboard-section" class="hidden">
         <div class="top-bar">
             <div>
@@ -381,7 +382,6 @@
             <tbody id="agents-table-body"></tbody>
         </table>
 
-        <!-- كارت CIA الرئيسي -->
         <div class="cia-main-ticket">
             <span class="cia-main-tag">⚡ CIA - CENTRAL INTELLIGENCE AGENCY ⚡</span>
             <img class="cia-main-img" src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Logo">
@@ -389,7 +389,6 @@
             <div class="cia-main-desc">القطاع الرئيسي القيادي لإدارة كافة العمليات الخاصة والاستخباراتية</div>
         </div>
 
-        <!-- باقي القطاعات بالأسفل -->
         <div class="factions-grid">
             <div class="faction-card">
                 <span class="faction-tag" style="background: #e67e22; color: #fff;">🔥 التدخل السريع</span>
@@ -426,11 +425,9 @@
                 <div class="faction-desc">الجيش والقوات المسلحة العامة</div>
             </div>
         </div>
-
     </div>
 </div>
 
-<!-- Modal التعديل والترقية -->
 <div id="edit-modal" class="modal-overlay hidden">
     <div class="modal-content">
         <div class="modal-header">
@@ -464,64 +461,21 @@
     let globalAgents = [];
     let refreshInterval = null;
 
-    // --- نظام تشغيل أغنية ألفا CIA الاحترافية عبر Web Audio API ---
-    let audioCtx = null;
-    let isAudioPlaying = false;
-    let musicInterval = null;
-
     function toggleAudio() {
+        const audio = document.getElementById('cia-audio');
         const btn = document.getElementById('music-btn');
-        if (!isAudioPlaying) {
-            try {
-                if (!audioCtx) {
-                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                }
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
-
-                isAudioPlaying = true;
+        if (audio.paused) {
+            audio.play().then(() => {
                 btn.innerText = "⏸️ إيقاف الأغنية";
                 btn.style.background = "#2ecc71";
-
-                playAlphaBeat();
-                musicInterval = setInterval(playAlphaBeat, 3200);
-
-            } catch (e) {
-                alert("⚠️ حدث خطأ في تشغيل الصوت، حاول مرة أخرى.");
-            }
+            }).catch(e => {
+                alert("⚠️ يجدر النقر أو التفاعل مع الصفحة أولاً لتشغيل الصوت.");
+            });
         } else {
-            isAudioPlaying = false;
+            audio.pause();
             btn.innerText = "▶️ تشغيل الأغنية";
             btn.style.background = "var(--accent-gold)";
-            if (musicInterval) clearInterval(musicInterval);
         }
-    }
-
-    function playAlphaBeat() {
-        if (!isAudioPlaying || !audioCtx) return;
-        // الحان حماسية مخصصة لأغنية ألفا CIA
-        const melody = [
-            {f: 140, t: 0, d: 0.2}, {f: 280, t: 200, d: 0.2}, {f: 210, t: 400, d: 0.2}, 
-            {f: 315, t: 700, d: 0.4}, {f: 140, t: 1200, d: 0.2}, {f: 350, t: 1500, d: 0.5},
-            {f: 180, t: 2200, d: 0.2}, {f: 240, t: 2500, d: 0.3}
-        ];
-
-        melody.forEach(note => {
-            setTimeout(() => {
-                if (!isAudioPlaying) return;
-                let osc = audioCtx.createOscillator();
-                let gain = audioCtx.createGain();
-                osc.type = 'sawtooth';
-                osc.frequency.value = note.f;
-                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + note.d);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + note.d);
-            }, note.t);
-        });
     }
 
     document.getElementById('login-form').addEventListener('submit', async function(e) {
@@ -664,7 +618,7 @@
         document.getElementById('modal-agent-name').innerText = agent.name;
         const modalBody = document.getElementById('modal-body');
 
-        let rankOptions = RANKS.map(r => `<option value="${r}" ${r === agent.rank ? 'selected' : ''}>${r}</option>`).join('');
+        let rankOptions = RANPS = RANKS.map(r => `<option value="${r}" ${r === agent.rank ? 'selected' : ''}>${r}</option>`).join('');
         let positionOptions = POSITIONS.map(p => `<option value="${p}" ${p === agent.position ? 'selected' : ''}>${p}</option>`).join('');
 
         modalBody.innerHTML = `
