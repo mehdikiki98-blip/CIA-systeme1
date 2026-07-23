@@ -302,7 +302,6 @@
 </head>
 <body>
 
-<!-- صوت استخباراتي هادئ جداً (2%) -->
 <audio id="bg-music" loop preload="auto">
     <source src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_c8c8a221f2.mp3?filename=ambient-tech-10501.mp3" type="audio/mpeg">
 </audio>
@@ -313,7 +312,6 @@
         <p>نظام إلكتروني موحد لمتابعة وإدارة الرتب والقطاعات والمناصب مباشرة أونلاين</p>
     </div>
 
-    <!-- 1. صفحة التسجيل والدخول -->
     <div id="login-section">
         <h2 style="margin-bottom: 12px; font-size: 15px;">تسجيل الدخول / إنشاء حساب عميل</h2>
         <form id="login-form">
@@ -336,7 +334,6 @@
         </form>
     </div>
 
-    <!-- 2. لوحة النظام الرئيسية -->
     <div id="dashboard-section" class="hidden">
         <div class="top-bar">
             <div>
@@ -379,7 +376,6 @@
     </div>
 </div>
 
-<!-- النافذة المنبثقة لقائمة الترقية والإدارة -->
 <div id="edit-modal" class="modal-overlay hidden">
     <div class="modal-content">
         <div class="modal-header">
@@ -424,11 +420,11 @@
     let globalAgents = [];
     let refreshInterval = null;
 
-    // تشغيل الموسيقى بدرجة 2% فقط (0.02) عند تحريك الماوس أو النقرة الأولية
+    // تشغيل الموسيقى بدرجة 2% (0.02)
     function playMusic() {
         const audio = document.getElementById('bg-music');
         if (audio) {
-            audio.volume = 0.02; // درجة هادئة وخفيفة جداً (2%)
+            audio.volume = 0.02;
             audio.play().catch(() => {});
         }
     }
@@ -524,7 +520,7 @@
                 });
             }
 
-            // إظهار زر الترقية السريع تلقائياً (يشمل رئيس CIA وقائد الاستخبارات والنائب والمستشار)
+            // إظهار زر الترقية السريع تلقائياً (رئيس CIA، قائد الاستخبارات، النائب، المستشار)
             const isTopLeader = (
                 currentUser.rank === "قائد الاستخبارات" || 
                 currentUser.position === "رئيس CIA" || 
@@ -595,7 +591,6 @@
 
             let actionsHTML = '';
 
-            // التحكم متاح تلقائياً للقيادة العليا أو عند إدخال الكود
             if (isOwnerUnlocked || isTopLeader || (isCodeUnlocked && myRankIndex > targetRankIndex)) {
                 actionsHTML = `<td><button class="btn-sm" onclick="openModal('${agent.id}')">⚙️ فتح التعديل</button></td>`;
             } else {
@@ -618,7 +613,7 @@
         });
     }
 
-    // فتح النافذة المنبثقة لقائمة الترقيات والإدارة
+    // فتح النافذة المنبثقة لقائمة الترقيات والإدارة وتعديل الاسم
     function openModal(agentId) {
         const agent = globalAgents.find(a => a.id === agentId);
         if (!agent) return;
@@ -651,6 +646,14 @@
         let evalOptions = EVALUATIONS.map(e => `<option value="${e}" ${e === agent.evaluation ? 'selected' : ''}>${e}</option>`).join('');
 
         modalBody.innerHTML = `
+            <div class="form-group">
+                <label>تعديل اسم العميل:</label>
+                <div style="display:flex; gap:5px;">
+                    <input type="text" id="modal-name-input" value="${agent.name}">
+                    <button style="width:90px; background:var(--accent-gold); color:#000;" onclick="saveName('${agent.id}')">حفظ</button>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label>تعديل الرتبة والترقية:</label>
                 <div style="display:flex; gap:5px;">
@@ -705,6 +708,25 @@
         if (globalAgents.length > 0) {
             openModal(globalAgents[0].id);
         }
+    }
+
+    // حفظ الاسم الجديد
+    async function saveName(id) {
+        const newName = document.getElementById('modal-name-input').value.trim();
+        if (!newName) {
+            alert("يرجى إدخال اسم صحيح!");
+            return;
+        }
+
+        await fetch(`${DB_URL}/${id}/name.json`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newName)
+        });
+
+        alert('✏️ تم تغيير اسم العميل بنجاح!');
+        closeModal();
+        fetchAgentsOnline();
     }
 
     async function saveField(id, field, elemId) {
