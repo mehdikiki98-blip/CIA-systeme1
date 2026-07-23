@@ -390,40 +390,19 @@
             <div class="cia-main-desc">القطاع الرئيسي القيادي لإدارة كافة العمليات الخاصة والاستخباراتية</div>
         </div>
 
-        <div class="factions-grid">
+        <div class="factions-grid" style="grid-template-columns: repeat(2, minmax(200px, 1fr)); max-width: 500px; margin: 15px auto;">
             <div class="faction-card">
-                <span class="faction-tag" style="background: #e67e22; color: #fff;">🔥 التدخل السريع</span>
-                <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/1022/1022331.png" alt="RDF Logo">
-                <div class="faction-name">RDF</div>
-                <div class="faction-desc">قوات الانتشار والتدخل السريع</div>
+                <span class="faction-tag" style="background: #e67e22; color: #fff;">🌐 القيادة</span>
+                <img class="faction-img" src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Logo">
+                <div class="faction-name">CIA</div>
+                <div class="faction-desc">القطاع الرئيسي القيادي</div>
             </div>
 
             <div class="faction-card">
-                <span class="faction-tag" style="background: #2980b9; color: #fff;">🛡️ القوات الخاصة</span>
-                <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/947/947502.png" alt="SSF Logo">
-                <div class="faction-name">SSF</div>
-                <div class="faction-desc">قوات الأمن الخاصة</div>
-            </div>
-
-            <div class="faction-card">
-                <span class="faction-tag" style="background: #f1c40f; color: #000;">🔍 التحقيقات</span>
-                <img class="faction-img" src="https://upload.wikimedia.org/wikipedia/commons/d/da/Seal_of_the_Federal_Bureau_of_Investigation.svg" alt="FBI Logo">
-                <div class="faction-name">FBI</div>
-                <div class="faction-desc">مكتب التحقيقات الفيدرالي</div>
-            </div>
-
-            <div class="faction-card">
-                <span class="faction-tag" style="background: #e74c3c; color: #fff;">🚓 الأمن العام</span>
-                <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/2067/2067831.png" alt="POLICE Logo">
-                <div class="faction-name">POLICE</div>
-                <div class="faction-desc">جهاز الشرطة العامة</div>
-            </div>
-
-            <div class="faction-card">
-                <span class="faction-tag" style="background: #c0392b; color: #fff;">⚔️ القوات المسلحة</span>
-                <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/2599/2599636.png" alt="ARMY Logo">
-                <div class="faction-name">ARMY</div>
-                <div class="faction-desc">وحدة الجيش والعمليات</div>
+                <span class="faction-tag" style="background: #2980b9; color: #fff;">🔍 التحقيقات</span>
+                <img class="faction-img" src="https://upload.wikimedia.org/wikipedia/commons/d/da/Seal_of_the_Federal_Bureau_of_Investigation.svg" alt="CID Logo">
+                <div class="faction-name">CID</div>
+                <div class="faction-desc">قطاع التحقيقات الخاصة</div>
             </div>
         </div>
     </div>
@@ -449,9 +428,8 @@
         "عميد", "فريق", "فريق اول", "قائد الاستخبارات"
     ];
 
-    const SECTORS = ["CIA", "RDF", "SSF", "FBI", "POLICE", "ARMY"];
+    const SECTORS = ["CIA", "CID"];
     
-    // المناصب المتاحة مع تخصيص CID و CIA
     const POSITIONS = [
         "بدون منصب", 
         "رئيس CIA", "نائب رئيس CIA", "مستشار CIA", 
@@ -541,7 +519,6 @@
         document.getElementById('current-user-display').innerText = currentUser.name;
         document.getElementById('current-rank-display').innerText = currentUser.rank;
 
-        // إذا تم إدخال الكود سابقاً يختفي صندوق الكود
         if (isCodeUnlocked) {
             document.getElementById('admin-box-container').style.display = 'none';
         }
@@ -590,18 +567,18 @@
         }
     }
 
-    // هل يمتلك صلاحية إظهار زر الإدارة (رتبة ملازم فما فوق)؟
-    function canShowManageButton() {
-        if (!currentUser) return false;
-        if (!isCodeUnlocked) return false; // لا يظهر شيء حتى يتم إدخال كود ciaontop
+    function canManageAgent(agent) {
+        if (!currentUser || !isCodeUnlocked) return false;
 
-        const rankIdx = RANKS.indexOf(currentUser.rank);
+        const userRankIdx = RANKS.indexOf(currentUser.rank);
         const molazimIdx = RANKS.indexOf("ملازم");
-        
-        // إذا كانت رتبته ملازم فما فوق
-        if (rankIdx >= molazimIdx) return true;
-        
-        return false;
+        const targetRankIdx = RANKS.indexOf(agent.rank);
+        const isOwner = currentUser.id === "mehdicia";
+
+        if (userRankIdx < molazimIdx) return false;
+        if (!isOwner && userRankIdx <= targetRankIdx) return false;
+
+        return true;
     }
 
     function renderTable() {
@@ -609,18 +586,16 @@
         if (!tbody || !currentUser) return;
         tbody.innerHTML = '';
 
-        const showAdminControls = canShowManageButton();
-
         globalAgents.forEach((agent) => {
             const tr = document.createElement('tr');
+            const canManage = canManageAgent(agent);
             
-            // زر الإدارة يظهر فقط إذا دخل الكود وعنده ملازم فما فوق
-            const actionCell = showAdminControls 
+            const actionCell = canManage 
                 ? `<button class="btn-sm" onclick="openModal('${agent.id}')">⚙️ إدارة</button>` 
-                : `<span style="color:#555; font-size:11px;">مقفول 🔒</span>`;
+                : '';
 
             tr.innerHTML = `
-                <td><span class="agent-name-click" onclick="${showAdminControls ? `openModal('${agent.id}')` : ''}">${agent.name}</span></td>
+                <td><span class="${canManage ? 'agent-name-click' : ''}" onclick="${canManage ? `openModal('${agent.id}')` : ''}">${agent.name}</span></td>
                 <td><span class="badge-status">${agent.status || 'في الخدمة 🟢'}</span></td>
                 <td><span class="badge">${agent.rank}</span></td>
                 <td><span class="badge-sector">${agent.sector || 'CIA'}</span></td>
@@ -633,32 +608,20 @@
     }
 
     function openModal(agentId) {
-        if (!canShowManageButton()) {
-            alert("⚠️ ليس لديك صلاحيات كافية!");
+        const agent = globalAgents.find(a => a.id === agentId);
+        if (!agent || !canManageAgent(agent)) {
+            alert("⚠️ لا يمكنك تعديل هذا العميل!");
             return;
         }
 
-        const agent = globalAgents.find(a => a.id === agentId);
-        if (!agent) return;
-
         const userRankIdx = RANKS.indexOf(currentUser.rank);
-        const targetRankIdx = RANKS.indexOf(agent.rank);
         const userPos = currentUser.position || "";
         const userSector = currentUser.sector || "CIA";
         const isOwner = currentUser.id === "mehdicia";
 
-        // تحديد الصلاحيات بناءً على المنصب والقطاع
         const isCiaLeader = userPos.includes("رئيس CIA") || userPos.includes("نائب رئيس CIA") || userPos.includes("مستشار CIA") || isOwner;
         const isCidLeader = userPos.includes("قائد CID") || userPos.includes("نائب قائد CID");
 
-        // القواعد المطلوبة:
-        // 1. لا يظهر إلا لمن هم أقل منه في الرتبة (لا يمكنه تعديل من يساويه أو يعلوه في الرتبة إلا إذا كان المالك)
-        if (!isOwner && userRankIdx <= targetRankIdx) {
-            alert("⚠️ لا يمكنك ترقية أو التحكم بشخص يساويه أو يعلوه في الرتبة!");
-            return;
-        }
-
-        // 2. التحقق من قطاع CID و CIA
         if (isCidLeader && !isCiaLeader) {
             if (agent.sector !== "CID" && agent.sector !== userSector) {
                 alert("⚠️ قادة CID يتحكمون فقط بأعضاء قطاعهم!");
@@ -669,11 +632,9 @@
         document.getElementById('modal-agent-name').innerText = agent.name;
         const modalBody = document.getElementById('modal-body');
 
-        // الترقية يجب ألا تفوت رتبة "ملازم" كحد أقصى للمدراء العاديين، أو حسب رتبته (ملازم فما فوق لا يتجاوزون ملازم في الترقية حسب الطلب: "وترقياتهم تفوتش ملازم")
         let maxRankLimitIdx = RANKS.indexOf("ملازم");
         let availableRanks = RANKS.filter((r, idx) => idx <= maxRankLimitIdx && idx < userRankIdx);
         
-        // إذا كان قيادي CIA أعلى أو المالك يمكنه منح رتب أعلى
         if (isCiaLeader) {
             availableRanks = RANKS.filter((r, idx) => idx < userRankIdx);
         }
@@ -681,13 +642,11 @@
         let rankOptions = availableRanks.map(r => `<option value="${r}" ${r === agent.rank ? 'selected' : ''}>${r}</option>`).join('');
         let sectorOptions = SECTORS.map(s => `<option value="${s}" ${s === (agent.sector || 'CIA') ? 'selected' : ''}>${s}</option>`).join('');
         
-        // هل يمكنه إعطاء مناصب؟ (فقط قادة CIA أو من لديهم مناصب قيادية محددة، أو إذا لم يكن لديه منصب لا يملك صلاحية إعطاء مناصب)
         let canAssignPosition = isCiaLeader || isCidLeader || userPos.includes("رئيس");
         let positionSectionHtml = '';
 
         if (canAssignPosition) {
             let availablePositions = POSITIONS;
-            // قادة CID يعطون مناصب CID فقط، قادة CIA يعطون كل المناصب
             if (isCidLeader && !isCiaLeader) {
                 availablePositions = ["بدون منصب", "قائد CID", "نائب قائد CID"];
             }
@@ -739,7 +698,6 @@
     async function saveField(id, field, elemId) {
         const val = document.getElementById(elemId).value;
         
-        // التحقق من حد الرتبة ألا يتجاوز ملازم للمرقي إذا لم يكن قيادة عليا
         if (field === 'rank') {
             const targetRankIdx = RANKS.indexOf(val);
             const molazimIdx = RANKS.indexOf("ملازم");
