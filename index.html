@@ -302,6 +302,7 @@
 </head>
 <body>
 
+<!-- صوت استخباراتي هادئ جداً (2%) -->
 <audio id="bg-music" loop preload="auto">
     <source src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_c8c8a221f2.mp3?filename=ambient-tech-10501.mp3" type="audio/mpeg">
 </audio>
@@ -312,6 +313,7 @@
         <p>نظام إلكتروني موحد لمتابعة وإدارة الرتب والقطاعات والمناصب مباشرة أونلاين</p>
     </div>
 
+    <!-- 1. صفحة التسجيل والدخول -->
     <div id="login-section">
         <h2 style="margin-bottom: 12px; font-size: 15px;">تسجيل الدخول / إنشاء حساب عميل</h2>
         <form id="login-form">
@@ -334,6 +336,7 @@
         </form>
     </div>
 
+    <!-- 2. لوحة النظام الرئيسية -->
     <div id="dashboard-section" class="hidden">
         <div class="top-bar">
             <div>
@@ -376,6 +379,7 @@
     </div>
 </div>
 
+<!-- النافذة المنبثقة لقائمة الترقية والإدارة -->
 <div id="edit-modal" class="modal-overlay hidden">
     <div class="modal-content">
         <div class="modal-header">
@@ -396,15 +400,20 @@
         "عميد", "فريق", "فريق اول", "قائد الاستخبارات"
     ];
 
+    // تمت إضافة مسؤول الأفراد ومسؤول الضباط هنا
     const POSITIONS = [
         "بدون منصب",
         "رئيس CIA",
         "نائب رئيس CIA",
         "مستشار CIA",
+        "مسؤول أفراد CIA",
+        "مسؤول ضباط CIA",
         "محقق CIA",
         "رئيس CID",
         "نائب رئيس CID",
         "مستشار CID",
+        "مسؤول أفراد CID",
+        "مسؤول ضباط CID",
         "محقق CID"
     ];
 
@@ -520,7 +529,7 @@
                 });
             }
 
-            // إظهار زر الترقية السريع تلقائياً (رئيس CIA، قائد الاستخبارات، النائب، المستشار)
+            // إظهار زر الترقية السريع للقيادة
             const isTopLeader = (
                 currentUser.rank === "قائد الاستخبارات" || 
                 currentUser.position === "رئيس CIA" || 
@@ -613,7 +622,7 @@
         });
     }
 
-    // فتح النافذة المنبثقة لقائمة الترقيات والإدارة وتعديل الاسم
+    // فتح النافذة المنبثقة لقائمة الترقيات والتحكم
     function openModal(agentId) {
         const agent = globalAgents.find(a => a.id === agentId);
         if (!agent) return;
