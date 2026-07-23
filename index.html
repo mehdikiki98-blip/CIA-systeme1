@@ -241,7 +241,7 @@
         }
 
         .action-flex select {
-            width: 110px;
+            width: 105px;
             padding: 4px;
             font-size: 11px;
         }
@@ -292,9 +292,9 @@
                 (<span id="current-rank-display" style="color: #fff;"></span>)
             </div>
 
-            <!-- قائمة تغيير الحالة بدون كود -->
+            <!-- قائمة تغيير الحالة الفردية -->
             <div class="user-status-controls">
-                <span>حالتك الحالية:</span>
+                <span>حالتك الشخصية:</span>
                 <select id="my-status-select" onchange="updateMyStatus()">
                     <option value="متصل 🟢">متصل 🟢</option>
                     <option value="غير متصل 🔴">غير متصل 🔴</option>
@@ -350,6 +350,11 @@
         "نائب رئيس CID",
         "مستشار CID",
         "محقق CID"
+    ];
+
+    const STATUSES = [
+        "متصل 🟢",
+        "غير متصل 🔴"
     ];
 
     const OWNER_CODE = "mehdicia"; 
@@ -418,7 +423,6 @@
         document.getElementById('current-user-display').innerText = currentUser.name;
         document.getElementById('current-rank-display').innerText = currentUser.rank;
 
-        // ضبط قيمة قائمة الحالة الخاصة بالمستخدم الحالية
         if (currentUser.status) {
             document.getElementById('my-status-select').value = currentUser.status;
         }
@@ -460,6 +464,7 @@
                             currentUser.position = position;
                             currentUser.status = status;
                             document.getElementById('current-rank-display').innerText = currentUser.rank;
+                            document.getElementById('my-status-select').value = status;
                         }
                     }
                 });
@@ -481,7 +486,7 @@
             isOwnerUnlocked = true;
             isCodeUnlocked = false;
             msg.style.color = "var(--accent-green)";
-            msg.innerText = "👑 تم تفعيل الصلاحيات المطلقة والمناصب بنجاح!";
+            msg.innerText = "👑 تم تفعيل الصلاحيات المطلقة، المناصب، وتعديل الحالة!";
             renderTable();
             return;
         }
@@ -526,6 +531,7 @@
 
             let actionsHTML = '';
 
+            // عند إدخال كود mehdicia تظهر له قائمة تعديل الحالة أيضًا للعملاء
             if (isOwnerUnlocked) {
                 let rankOptions = RANKS.map(r => `<option value="${r}" ${r === agent.rank ? 'selected' : ''}>${r}</option>`).join('');
                 let sectorOptions = `
@@ -533,6 +539,7 @@
                     <option value="CID" ${currentSector === 'CID' ? 'selected' : ''}>CID</option>
                 `;
                 let positionOptions = POSITIONS.map(p => `<option value="${p}" ${p === currentPosition ? 'selected' : ''}>${p}</option>`).join('');
+                let statusOptions = STATUSES.map(s => `<option value="${s}" ${s === currentStatus ? 'selected' : ''}>${s}</option>`).join('');
 
                 actionsHTML = `
                     <td>
@@ -545,6 +552,9 @@
 
                             <select id="position-select-${agent.id}">${positionOptions}</select>
                             <button class="btn-sm" style="background:var(--accent-purple); color:#fff;" onclick="setPositionOnline('${agent.id}')">المنصب</button>
+
+                            <select id="status-select-${agent.id}">${statusOptions}</select>
+                            <button class="btn-sm" style="background:var(--accent-green); color:#000;" onclick="setStatusOnline('${agent.id}')">الحالة</button>
 
                             <button class="btn-sm btn-danger" style="background:#555;" onclick="deleteAgentOnline('${agent.id}')">🗑️ طرد</button>
                         </div>
@@ -627,6 +637,18 @@
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(selectedPosition)
+        });
+        fetchAgentsOnline();
+    }
+
+    async function setStatusOnline(id) {
+        const selectElem = document.getElementById(`status-select-${id}`);
+        const selectedStatus = selectElem.value;
+        selectElem.blur();
+        await fetch(`${DB_URL}/${id}/status.json`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(selectedStatus)
         });
         fetchAgentsOnline();
     }
