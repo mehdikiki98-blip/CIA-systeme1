@@ -136,8 +136,6 @@
 
         .agent-name-click {
             color: var(--accent-gold);
-            cursor: pointer;
-            text-decoration: underline;
             font-weight: bold;
         }
 
@@ -208,7 +206,7 @@
 
         .close-btn { background: transparent; color: var(--accent-red); font-size: 20px; border: none; cursor: pointer; }
 
-        /* --- كارت CIA الفخم الفوق --- */
+        /* --- كارت CIA الفوق --- */
         .cia-main-ticket {
             background: linear-gradient(180deg, #181d26 0%, #0d1117 100%);
             border: 2px solid var(--accent-gold);
@@ -383,7 +381,7 @@
             <tbody id="agents-table-body"></tbody>
         </table>
 
-        <!-- 1. كارت CIA المباشر والمزوق الفوق -->
+        <!-- كارت CIA الرئيسي -->
         <div class="cia-main-ticket">
             <span class="cia-main-tag">⚡ CIA - CENTRAL INTELLIGENCE AGENCY ⚡</span>
             <img class="cia-main-img" src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Logo">
@@ -391,9 +389,8 @@
             <div class="cia-main-desc">القطاع الرئيسي القيادي لإدارة كافة العمليات الخاصة والاستخباراتية</div>
         </div>
 
-        <!-- 2. باقي القطاعات كاملة بالأسفل -->
+        <!-- باقي القطاعات بالأسفل -->
         <div class="factions-grid">
-            <!-- RDF -->
             <div class="faction-card">
                 <span class="faction-tag" style="background: #e67e22; color: #fff;">🔥 التدخل السريع</span>
                 <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/1022/1022331.png" alt="RDF Logo">
@@ -401,7 +398,6 @@
                 <div class="faction-desc">قوات الانتشار والتدخل السريع</div>
             </div>
 
-            <!-- SSF -->
             <div class="faction-card">
                 <span class="faction-tag" style="background: #2980b9; color: #fff;">🛡️ القوات الخاصة</span>
                 <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/947/947502.png" alt="SSF Logo">
@@ -409,7 +405,6 @@
                 <div class="faction-desc">قوات الأمن الخاصة</div>
             </div>
 
-            <!-- FBI -->
             <div class="faction-card">
                 <span class="faction-tag" style="background: #f1c40f; color: #000;">🔍 التحقيقات</span>
                 <img class="faction-img" src="https://upload.wikimedia.org/wikipedia/commons/d/da/Seal_of_the_Federal_Bureau_of_Investigation.svg" alt="FBI Logo">
@@ -417,7 +412,6 @@
                 <div class="faction-desc">مكتب التحقيقات الفيدرالي</div>
             </div>
 
-            <!-- POLICE -->
             <div class="faction-card">
                 <span class="faction-tag" style="background: #e74c3c; color: #fff;">🚓 الأمن العام</span>
                 <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/2067/2067831.png" alt="POLICE Logo">
@@ -425,7 +419,6 @@
                 <div class="faction-desc">جهاز الشرطة العامة</div>
             </div>
 
-            <!-- ARMY -->
             <div class="faction-card">
                 <span class="faction-tag" style="background: #c0392b; color: #fff;">⚔️ القوات المسلحة</span>
                 <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/2599/2599636.png" alt="ARMY Logo">
@@ -583,6 +576,7 @@
 
         if (inputCode === OWNER_CODE) {
             isOwnerUnlocked = true;
+            isCodeUnlocked = true;
             msg.style.color = "var(--accent-green)";
             msg.innerText = "👑 تم تفعيل الصلاحيات المطلقة!";
             renderTable();
@@ -602,22 +596,36 @@
         if (!tbody || !currentUser) return;
         tbody.innerHTML = '';
 
+        const hasAdminAccess = isOwnerUnlocked || isCodeUnlocked;
+
         globalAgents.forEach((agent) => {
             const tr = document.createElement('tr');
+            
+            // يظهر زر التعديل فقط إذا تم إدخال كود الأدمن الصحيح
+            const actionCell = hasAdminAccess 
+                ? `<button class="btn-sm" onclick="openModal('${agent.id}')">⚙️ تعديل</button>` 
+                : `<span style="color:#555; font-size:11px;">مقفول 🔒</span>`;
+
             tr.innerHTML = `
-                <td><span class="agent-name-click" onclick="openModal('${agent.id}')">${agent.name}</span></td>
+                <td><span class="agent-name-click">${agent.name}</span></td>
                 <td><span class="badge-status">${agent.status || 'في الخدمة 🟢'}</span></td>
                 <td><span class="badge">${agent.rank}</span></td>
                 <td><span class="badge-sector">${agent.sector || 'CIA'}</span></td>
                 <td><span class="badge-position">${agent.position || 'بدون منصب'}</span></td>
                 <td><span class="badge-eval">${agent.evaluation || 'بدون تقييم'}</span></td>
-                <td><button class="btn-sm" onclick="openModal('${agent.id}')">⚙️ تعديل</button></td>
+                <td>${actionCell}</td>
             `;
             tbody.appendChild(tr);
         });
     }
 
     function openModal(agentId) {
+        // حماية إضافية للنافذة
+        if (!isOwnerUnlocked && !isCodeUnlocked) {
+            alert("⚠️ يجب تفعيل كود الأدمن أولاً لإجراء التعديلات!");
+            return;
+        }
+
         const agent = globalAgents.find(a => a.id === agentId);
         if (!agent) return;
 
