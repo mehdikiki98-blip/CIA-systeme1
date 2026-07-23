@@ -45,7 +45,7 @@
             border: 1px solid var(--border-color);
             border-top: 3px solid var(--accent-gold);
             border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(243, 156, 18, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
             padding: 20px;
         }
 
@@ -61,7 +61,6 @@
             font-size: 20px;
             letter-spacing: 1px;
             margin-bottom: 5px;
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
         }
 
         .header p {
@@ -93,7 +92,6 @@
 
         input:focus, select:focus {
             border-color: var(--accent-gold);
-            box-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
         }
 
         button {
@@ -110,34 +108,11 @@
         button:hover {
             background: #b59228;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
         }
 
         .btn-full { width: 100%; }
         .btn-danger { background: var(--accent-red); color: #fff; }
         .btn-danger:hover { background: #c0392b; }
-
-        .btn-red-alliance {
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%) !important;
-            color: #fff !important;
-            border: 1px solid #ff5e4d !important;
-            box-shadow: 0 0 10px rgba(231, 76, 60, 0.4);
-        }
-
-        .btn-strike-force {
-            background: linear-gradient(135deg, #f39c12 0%, #d35400 100%) !important;
-            color: #fff !important;
-            border: 1px solid #f1c40f !important;
-            box-shadow: 0 0 10px rgba(243, 156, 18, 0.4);
-        }
-
-        .btn-divider {
-            width: 1px;
-            height: 25px;
-            background-color: var(--border-color);
-            margin: 0 4px;
-            align-self: center;
-        }
 
         .btn-sm { padding: 4px 8px; font-size: 11px; width: auto; }
         .hidden { display: none !important; }
@@ -198,8 +173,6 @@
             padding: 10px;
             border-radius: 6px;
             border: 1px solid var(--border-color);
-            flex-wrap: wrap;
-            gap: 10px;
         }
 
         .modal-overlay {
@@ -235,91 +208,55 @@
 
         .close-btn { background: transparent; color: var(--accent-red); font-size: 20px; border: none; cursor: pointer; }
 
-        .section-title-box {
-            background: #0d1117;
-            border: 1px solid var(--border-color);
-            border-right: 4px solid var(--accent-gold);
-            padding: 10px 15px;
-            margin: 25px 0 15px 0;
-            text-align: right;
-            border-radius: 4px;
-        }
-
-        .section-title-box h3 {
-            color: #fff;
-            font-size: 14px;
-        }
-
-        .section-title-box.scum-title {
-            border-right-color: var(--accent-red);
-        }
-
-        /* --- كارت CIA الفريد والمهيب --- */
+        /* --- كارت CIA المنفرد --- */
         .cia-hero-card {
-            background: linear-gradient(180deg, #181d26 0%, #0d1117 100%);
-            border: 2px solid var(--accent-gold);
-            border-radius: 12px;
-            padding: 25px 15px;
-            margin-bottom: 25px;
+            background: #0d1117;
+            border: 1px solid var(--accent-gold);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             text-align: center;
-            box-shadow: 0 0 25px rgba(243, 156, 18, 0.25), inset 0 0 15px rgba(0, 0, 0, 0.8);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cia-hero-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 3px;
-            background: linear-gradient(90deg, transparent, var(--accent-gold-bright), transparent);
         }
 
         .cia-hero-tag {
-            background: linear-gradient(135deg, #d35400 0%, #e67e22 100%);
+            background: #d35400;
             color: #fff;
-            font-size: 12px;
-            font-weight: 800;
-            padding: 4px 16px;
-            border-radius: 20px;
-            margin-bottom: 15px;
-            letter-spacing: 1px;
-            box-shadow: 0 0 12px rgba(230, 126, 34, 0.6);
-            border: 1px solid #f1c40f;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 4px 14px;
+            border-radius: 15px;
+            margin-bottom: 12px;
         }
 
         .cia-hero-img {
-            width: 110px;
-            height: 110px;
+            width: 80px;
+            height: 80px;
             object-fit: contain;
-            margin: 10px 0 15px 0;
-            filter: drop-shadow(0 0 15px rgba(243, 156, 18, 0.5));
+            margin-bottom: 10px;
         }
 
         .cia-hero-title {
-            font-size: 20px;
-            font-weight: 900;
+            font-size: 18px;
+            font-weight: bold;
             color: #fff;
-            letter-spacing: 0.5px;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
         }
 
         .cia-hero-desc {
-            font-size: 13px;
-            color: #a0aec0;
-            margin-top: 6px;
-            max-width: 500px;
+            font-size: 12px;
+            color: #8b949e;
+            margin-top: 4px;
         }
 
-        /* شبكة الكروت الأخرى بالأسفل */
-        .sub-factions-grid {
+        /* شبكة باقي القطاعات بالأسفل */
+        .factions-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
             width: 100%;
+            margin-top: 15px;
         }
 
         .faction-card {
@@ -331,12 +268,10 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
 
         .faction-card:hover {
             border-color: var(--accent-gold);
-            transform: translateY(-4px);
         }
 
         .faction-tag {
@@ -350,8 +285,8 @@
         }
 
         .faction-img {
-            width: 60px;
-            height: 60px;
+            width: 55px;
+            height: 55px;
             object-fit: contain;
             margin-bottom: 10px;
         }
@@ -364,14 +299,13 @@
             bottom: 15px;
             right: 15px;
             z-index: 9999;
-            background: rgba(22, 26, 34, 0.95);
+            background: #161a22;
             border: 1px solid var(--accent-gold);
             padding: 8px 15px;
             border-radius: 30px;
             display: flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
         }
     </style>
 </head>
@@ -379,8 +313,8 @@
 
 <!-- شريط تشغيل الصوت -->
 <div class="audio-control-bar">
-    <span style="font-size: 12px; color: var(--accent-gold); font-weight: bold;">🎵 شيلة Alpha:</span>
-    <button id="music-btn" style="background: var(--accent-gold); color: #000; font-size: 11px; padding: 5px 12px; border-radius: 15px;" onclick="toggleAudio()">▶️ تشغيل الصوت</button>
+    <span style="font-size: 12px; color: var(--accent-gold); font-weight: bold;">شيلة Alpha:</span>
+    <button id="music-btn" style="background: var(--accent-gold); color: #000; font-size: 11px; padding: 4px 10px; border-radius: 12px;" onclick="toggleAudio()">▶️ تشغيل الصوت</button>
 </div>
 
 <div class="container">
@@ -413,14 +347,7 @@
                 أهلاً بك العميل: <span id="current-user-display" style="color: var(--accent-gold); font-weight: bold;"></span> 
                 (<span id="current-rank-display" style="color: #fff;"></span>)
             </div>
-
-            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-                <button class="btn-strike-force" onclick="scrollToSec('cia-sec')">⚡ قطاع CIA بوحده</button>
-                <div class="btn-divider"></div>
-                <button class="btn-red-alliance" onclick="scrollToSec('sub-sec')">🛡️ باقي الوحدات والقطاعات</button>
-
-                <button class="btn-danger btn-sm" onclick="logout()">تسجيل الخروج</button>
-            </div>
+            <button class="btn-danger btn-sm" onclick="logout()">تسجيل الخروج</button>
         </div>
 
         <div class="admin-box" id="admin-box-container">
@@ -432,7 +359,7 @@
             <p id="admin-msg" style="font-size: 12px; margin-top: 6px; font-weight: bold;"></p>
         </div>
 
-        <h3 style="font-size: 14px;">📋 سجل العملاء (اضغط على الاسم للتحكم)</h3>
+        <h3 style="font-size: 14px;">📋 سجل العملاء</h3>
         <table>
             <thead>
                 <tr>
@@ -442,32 +369,23 @@
                     <th>القطاع</th>
                     <th>المنصب</th>
                     <th>التقييم</th>
-                    <th>تعديل الإجراءات</th>
+                    <th>الإجراءات</th>
                 </tr>
             </thead>
             <tbody id="agents-table-body"></tbody>
         </table>
 
-        <!-- ==================== 1. كارت CIA المهيب والمنفرد فوق ==================== -->
-        <div id="cia-sec" class="section-title-box">
-            <h3>⚡ القطاع الرئيسي والقيادي</h3>
-        </div>
-
+        <!-- 1. كارت CIA بوحده الفوق -->
         <div class="cia-hero-card">
             <span class="cia-hero-tag">⚡ CIA STRIKE FORCE ⚡</span>
-            <!-- صورة رسمية معتمدة لوكالة CIA -->
-            <img class="cia-hero-img" src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Emblem">
+            <img class="cia-hero-img" src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Logo">
             <div class="cia-hero-title">القوة الضاربة (CIA)</div>
-            <div class="cia-hero-desc">وحدة التدخل السري والعمليات الخاصة العالية الخطورة التابعة لوكالة المخابرات المركزية</div>
+            <div class="cia-hero-desc">وحدة التدخل والعمليات الخاصة التابعة لـ CIA</div>
         </div>
 
-        <!-- ==================== 2. باقي الوحدات مفرقة ومحتوية بالأسفل ==================== -->
-        <div id="sub-sec" class="section-title-box">
-            <h3>🛡️ باقي قطاعات الاستخبارات والوحدات الميدانية</h3>
-        </div>
-
-        <div class="sub-factions-grid">
-            <!-- التدخل السريع -->
+        <!-- 2. جميع القطاعات الأخرى الخمسة مجموعة بالأسفل -->
+        <div class="factions-grid">
+            <!-- RDF -->
             <div class="faction-card">
                 <span class="faction-tag" style="background: #e67e22; color: #fff;">🔥 التدخل السريع</span>
                 <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/1022/1022331.png" alt="RDF Logo">
@@ -475,7 +393,7 @@
                 <div class="faction-desc">قوات الانتشار والتدخل السريع</div>
             </div>
 
-            <!-- القوات الخاصة -->
+            <!-- SSF -->
             <div class="faction-card">
                 <span class="faction-tag" style="background: #2980b9; color: #fff;">🛡️ القوات الخاصة</span>
                 <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/947/947502.png" alt="SSF Logo">
@@ -483,22 +401,15 @@
                 <div class="faction-desc">قوات الأمن الخاصة</div>
             </div>
 
-            <!-- مكتب التحقيقات -->
+            <!-- FBI -->
             <div class="faction-card">
                 <span class="faction-tag" style="background: #f1c40f; color: #000;">🔍 التحقيقات</span>
                 <img class="faction-img" src="https://upload.wikimedia.org/wikipedia/commons/d/da/Seal_of_the_Federal_Bureau_of_Investigation.svg" alt="FBI Logo">
                 <div class="faction-name">FBI</div>
                 <div class="faction-desc">مكتب التحقيقات الفيدرالي</div>
             </div>
-        </div>
 
-        <!-- ==================== 3. قطاع حتالة المجتمع ==================== -->
-        <div class="section-title-box scum-title">
-            <h3 style="color: var(--accent-red);">🛡️ قطاع حتالة المجتمع (الأجهزة الأخرى)</h3>
-        </div>
-
-        <div class="sub-factions-grid">
-            <!-- الأمن العام -->
+            <!-- POLICE -->
             <div class="faction-card">
                 <span class="faction-tag" style="background: #e74c3c; color: #fff;">🚓 الأمن العام</span>
                 <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/2067/2067831.png" alt="POLICE Logo">
@@ -506,7 +417,7 @@
                 <div class="faction-desc">جهاز الشرطة العامة</div>
             </div>
 
-            <!-- القوات المسلحة -->
+            <!-- ARMY -->
             <div class="faction-card">
                 <span class="faction-tag" style="background: #c0392b; color: #fff;">⚔️ القوات المسلحة</span>
                 <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/2599/2599636.png" alt="ARMY Logo">
@@ -522,7 +433,7 @@
 <div id="edit-modal" class="modal-overlay hidden">
     <div class="modal-content">
         <div class="modal-header">
-            <h3>⚙️ لوحة الترقية وتعديل العميل: <span id="modal-agent-name" style="color: #fff;"></span></h3>
+            <h3>⚙️ تعديل العميل: <span id="modal-agent-name" style="color: #fff;"></span></h3>
             <button class="close-btn" onclick="closeModal('edit-modal')">✖</button>
         </div>
         <div id="modal-body" style="display: flex; flex-direction: column; gap: 12px;"></div>
@@ -552,7 +463,7 @@
     let globalAgents = [];
     let refreshInterval = null;
 
-    // --- إعداد تشغيل الصوت المباشر والمضمون ---
+    // --- إعداد تشغيل الصوت ---
     const bgAudio = new Audio("https://files.catbox.moe/5z924f.mp3");
     bgAudio.loop = true;
     bgAudio.volume = 0.6;
@@ -564,32 +475,19 @@
             bgAudio.play().then(() => {
                 isAudioPlaying = true;
                 btn.innerText = "⏸️ إيقاف الصوت";
-                btn.style.background = "#e74c3c";
-                btn.style.color = "#fff";
-            }).catch(err => {
-                console.log("Audio play blocked", err);
-            });
+            }).catch(() => {});
         } else {
             bgAudio.pause();
             isAudioPlaying = false;
             btn.innerText = "▶️ تشغيل الصوت";
-            btn.style.background = "#f39c12";
-            btn.style.color = "#000";
         }
     }
 
-    // تشغيل تلقائي أول ما يضغط العميل على الشاشة في أي مكان
     document.body.addEventListener('click', function autoPlayOnce() {
         if (!isAudioPlaying) {
             toggleAudio();
         }
-        document.body.removeEventListener('click', autoPlayOnce);
     }, { once: true });
-
-    function scrollToSec(id) {
-        const el = document.getElementById(id);
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-    }
 
     document.getElementById('login-form').addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -678,12 +576,12 @@
         if (inputCode === OWNER_CODE) {
             isOwnerUnlocked = true;
             msg.style.color = "var(--accent-green)";
-            msg.innerText = "👑 تم تفعيل كامل الصلاحيات المطلقة!";
+            msg.innerText = "👑 تم تفعيل الصلاحيات المطلقة!";
             renderTable();
         } else if (inputCode === ADMIN_SECRET) {
             isCodeUnlocked = true;
             msg.style.color = "var(--accent-green)";
-            msg.innerText = "✓ تم التفعيل بكتُبة مسؤول!";
+            msg.innerText = "✓ تم التفعيل!";
             renderTable();
         } else {
             msg.style.color = "var(--accent-red)";
