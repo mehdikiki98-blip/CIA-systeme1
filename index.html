@@ -38,7 +38,7 @@
             overflow-x: hidden;
         }
 
-        /* الهيدر العلوي الجديد المطابق للصورة */
+        /* الهيدر العلوي */
         .header-banner-styled {
             display: flex;
             align-items: center;
@@ -156,6 +156,19 @@
 
         .btn-danger:hover {
             background: #c0392b;
+        }
+
+        /* الزر الأحمر المعدل للتحالفات */
+        .btn-red-alliance {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%) !important;
+            color: #fff !important;
+            border: 1px solid #ff5e4d !important;
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.4);
+        }
+
+        .btn-red-alliance:hover {
+            background: linear-gradient(135deg, #ff5e4d 0%, #e74c3c 100%) !important;
+            box-shadow: 0 0 15px rgba(231, 76, 60, 0.7);
         }
 
         .btn-sm {
@@ -323,13 +336,6 @@
             cursor: pointer;
         }
 
-        .close-btn:hover {
-            color: #fff;
-            background: transparent;
-            box-shadow: none;
-            transform: none;
-        }
-
         .error-msg {
             color: var(--accent-red);
             font-size: 12px;
@@ -477,16 +483,38 @@
             font-size: 11px;
             line-height: 1.4;
         }
+
+        /* مشغل الصوت العلوي الثابت */
+        .audio-control-bar {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            z-index: 9999;
+            background: rgba(22, 26, 34, 0.95);
+            border: 1px solid var(--accent-gold);
+            padding: 8px 15px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+        }
     </style>
 </head>
 <body>
 
-<!-- صوت شيلة Alpha Alexander المطلوبة عند دخول الموقع -->
-<audio id="bg-music" loop preload="auto">
+<!-- صوت شيلة Alpha Alexander -->
+<audio id="bg-music" loop>
     <source src="https://files.catbox.moe/5z924f.mp3" type="audio/mpeg">
 </audio>
 
-<!-- الهيدر العلوي الجديد بنفس شكل وحروف الصورة بالضبط -->
+<!-- مشغل الصوت السريع لتفادي منع المتصفح -->
+<div class="audio-control-bar">
+    <span style="font-size: 12px; color: var(--accent-gold); font-weight: bold;">🎵 شيلة Alpha:</span>
+    <button id="music-btn" style="background: var(--accent-gold); color: #000; font-size: 11px; padding: 4px 10px; border-radius: 15px;" onclick="toggleAudio()">▶️ تشغيل الصوت</button>
+</div>
+
+<!-- الهيدر العلوي -->
 <div class="header-banner-styled">
     <span class="shield-icon">🛡️</span>
     <span class="title-text">أجهزة التحالف والقطاعات الأمنية</span>
@@ -531,7 +559,8 @@
             </div>
 
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <button style="background: var(--accent-blue); color: #fff;" onclick="scrollToAlliances()">🛡️ شركاء التحالف الأمنيين</button>
+                <!-- التعديل هنا: الزر أصبح أحمر ومكتوب عليه حلفاء مجتمع القوة -->
+                <button class="btn-red-alliance" onclick="scrollToAlliances()">🛡️ حلفاء مجتمع القوة</button>
                 
                 <div id="leader-quick-btn-container" class="hidden">
                     <button style="background: var(--accent-gold); color: #000;" onclick="toggleLeaderPanel()">⚡ فتح قائمة الإدارة والترقيات</button>
@@ -570,10 +599,18 @@
         <!-- قسم الهيكلية الأمنية والشركاء -->
         <div class="alliances-section" id="alliances-sec">
 
-            <!-- الأجهزة والقطاعات الأمنية -->
+            <!-- الأجهزة والقطاعات الأمنية المشتركة -->
             <div class="sub-factions-grid">
 
-                <!-- 1. التدخل السريع -->
+                <!-- 1. CIA جهاز المخابرات (تمت إضافته بالقائمة) -->
+                <div class="faction-card">
+                    <span class="faction-tag" style="background: #e74c3c; color: #fff;">👁️ CIA</span>
+                    <img class="faction-img" src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Logo">
+                    <div class="faction-name">CIA</div>
+                    <div class="faction-desc">وكالة الاستخبارات المركزية</div>
+                </div>
+
+                <!-- 2. التدخل السريع -->
                 <div class="faction-card">
                     <span class="faction-tag" style="background: #e67e22; color: #fff;">🔥 التدخل السريع</span>
                     <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/1022/1022331.png" alt="RDF Logo">
@@ -581,7 +618,7 @@
                     <div class="faction-desc">قوات الانتشار والتدخل السريع</div>
                 </div>
 
-                <!-- 2. القوات الخاصة -->
+                <!-- 3. القوات الخاصة -->
                 <div class="faction-card">
                     <span class="faction-tag" style="background: #2980b9; color: #fff;">🛡️ القوات الخاصة</span>
                     <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/947/947502.png" alt="SSF Logo">
@@ -589,7 +626,7 @@
                     <div class="faction-desc">قوات الأمن الخاصة</div>
                 </div>
 
-                <!-- 3. التحقيقات -->
+                <!-- 4. التحقيقات -->
                 <div class="faction-card">
                     <span class="faction-tag" style="background: #f1c40f; color: #000;">🔍 التحقيقات</span>
                     <img class="faction-img" src="https://upload.wikimedia.org/wikipedia/commons/d/da/Seal_of_the_Federal_Bureau_of_Investigation.svg" alt="FBI Logo">
@@ -597,7 +634,7 @@
                     <div class="faction-desc">مكتب التحقيقات الفيدرالي</div>
                 </div>
 
-                <!-- 4. الأمن العام -->
+                <!-- 5. الأمن العام -->
                 <div class="faction-card">
                     <span class="faction-tag" style="background: #f39c12; color: #000;">🚓 الأمن العام</span>
                     <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/2067/2067831.png" alt="POLICE Logo">
@@ -605,9 +642,9 @@
                     <div class="faction-desc">جهاز الشرطة العامة</div>
                 </div>
 
-                <!-- 5. القوات المسلحة -->
+                <!-- 6. القوات المسلحة -->
                 <div class="faction-card">
-                    <span class="faction-tag" style="background: #f39c12; color: #000;">⚔️ القوات المسلحة</span>
+                    <span class="faction-tag" style="background: #27ae60; color: #fff;">⚔️ القوات المسلحة</span>
                     <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/2599/2599636.png" alt="ARMY Logo">
                     <div class="faction-name">ARMY</div>
                     <div class="faction-desc">الجيش والقوات المسلحة</div>
@@ -656,7 +693,6 @@
         </p>
 
         <div class="gallery-grid">
-            
             <div class="gallery-item">
                 <img src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80" alt="Special Operation">
                 <div class="gallery-info">
@@ -688,7 +724,6 @@
                     <p>مراقبة وتنظيم جميع الأجهزة الأمنية (FBI, POLICE, SSF, RDF, ARMY) بكفاءة عالية.</p>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
@@ -730,17 +765,39 @@
     let globalAgents = [];
     let refreshInterval = null;
 
-    // تشغيل الشيلة تلقائياً مع أول لمسة أو ضغطة بالموقع
-    function playAudioTrack() {
+    // التحكم في تشغيل الصوت
+    function toggleAudio() {
         const audio = document.getElementById('bg-music');
-        if (audio) {
-            audio.volume = 0.4;
-            audio.play().catch(() => {});
+        const btn = document.getElementById('music-btn');
+        if (audio.paused) {
+            audio.volume = 0.5;
+            audio.play();
+            btn.innerText = "⏸️ إيقاف الصوت";
+            btn.style.background = "#e74c3c";
+            btn.style.color = "#fff";
+        } else {
+            audio.pause();
+            btn.innerText = "▶️ تشغيل الصوت";
+            btn.style.background = "#f39c12";
+            btn.style.color = "#000";
         }
     }
-    window.addEventListener('click', playAudioTrack, { once: true });
-    window.addEventListener('touchstart', playAudioTrack, { once: true });
-    window.addEventListener('keydown', playAudioTrack, { once: true });
+
+    // تشغيل تلقائي بمجرد أي ضغطة بالأرضية
+    window.addEventListener('click', function() {
+        const audio = document.getElementById('bg-music');
+        if (audio.paused) {
+            audio.volume = 0.5;
+            audio.play().then(() => {
+                const btn = document.getElementById('music-btn');
+                if (btn) {
+                    btn.innerText = "⏸️ إيقاف الصوت";
+                    btn.style.background = "#e74c3c";
+                    btn.style.color = "#fff";
+                }
+            }).catch(() => {});
+        }
+    }, { once: true });
 
     function openCiaAchievements() {
         document.getElementById('cia-modal').classList.remove('hidden');
@@ -755,7 +812,6 @@
 
     document.getElementById('login-form').addEventListener('submit', async function(e) {
         e.preventDefault();
-        playAudioTrack();
         const btn = document.getElementById('submit-btn');
         const name = document.getElementById('username').value.trim();
         const pass = document.getElementById('password').value.trim();
