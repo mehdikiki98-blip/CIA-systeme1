@@ -317,9 +317,15 @@
 </head>
 <body>
 
+<!-- عنصر الصوت المخفي المربوط مباشرة بالمتصفح -->
+<audio id="bg-audio" loop preload="auto">
+    <source src="https://actions.google.com/sounds/v1/cinematics/epic_suspense_action.ogg" type="audio/ogg">
+    متصفحك لا يدعم تشغيل الصوت.
+</audio>
+
 <!-- شريط تشغيل الصوت -->
 <div class="audio-control-bar">
-    <span style="font-size: 12px; color: var(--accent-gold); font-weight: bold;">شيلة الصوت:</span>
+    <span style="font-size: 12px; color: var(--accent-gold); font-weight: bold;">صوت الحماس:</span>
     <button id="music-btn" style="background: var(--accent-gold); color: #000; font-size: 11px; padding: 4px 10px; border-radius: 12px;" onclick="toggleAudio()">▶️ تشغيل الصوت</button>
 </div>
 
@@ -464,24 +470,23 @@
     let globalAgents = [];
     let refreshInterval = null;
 
-    // --- رابط صوت جديد ومضمون ---
-    const bgAudio = new Audio("https://actions.google.com/sounds/v1/cinematics/epic_suspense_action.ogg");
-    bgAudio.loop = true;
-    bgAudio.volume = 0.8;
+    // --- تشغيل الصوت بشكل مباشر وآمن ---
+    const audioElement = document.getElementById('bg-audio');
+    audioElement.volume = 0.8;
     let isAudioPlaying = false;
 
     function toggleAudio() {
         const btn = document.getElementById('music-btn');
         if (!isAudioPlaying) {
-            bgAudio.play().then(() => {
+            audioElement.play().then(() => {
                 isAudioPlaying = true;
                 btn.innerText = "⏸️ إيقاف الصوت";
                 btn.style.background = "#2ecc71";
             }).catch((err) => {
-                alert("⚠️ لم يتم إطلاق الصوت، يرجى الضغط مرة أخرى داخل الصفحة لتفعيله!");
+                console.log("Audio play blocked:", err);
             });
         } else {
-            bgAudio.pause();
+            audioElement.pause();
             isAudioPlaying = false;
             btn.innerText = "▶️ تشغيل الصوت";
             btn.style.background = "var(--accent-gold)";
