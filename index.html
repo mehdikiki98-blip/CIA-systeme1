@@ -317,15 +317,9 @@
 </head>
 <body>
 
-<!-- عنصر الصوت المخفي المربوط مباشرة بالمتصفح -->
-<audio id="bg-audio" loop preload="auto">
-    <source src="https://actions.google.com/sounds/v1/cinematics/epic_suspense_action.ogg" type="audio/ogg">
-    متصفحك لا يدعم تشغيل الصوت.
-</audio>
-
 <!-- شريط تشغيل الصوت -->
 <div class="audio-control-bar">
-    <span style="font-size: 12px; color: var(--accent-gold); font-weight: bold;">صوت الحماس:</span>
+    <span style="font-size: 12px; color: var(--accent-gold); font-weight: bold;">نظام الصوت:</span>
     <button id="music-btn" style="background: var(--accent-gold); color: #000; font-size: 11px; padding: 4px 10px; border-radius: 12px;" onclick="toggleAudio()">▶️ تشغيل الصوت</button>
 </div>
 
@@ -470,27 +464,59 @@
     let globalAgents = [];
     let refreshInterval = null;
 
-    // --- تشغيل الصوت بشكل مباشر وآمن ---
-    const audioElement = document.getElementById('bg-audio');
-    audioElement.volume = 0.8;
+    // --- نظام تشغيل الموسيقى المباشر الآمن عبر Web Audio API ---
+    let audioCtx = null;
     let isAudioPlaying = false;
+    let musicInterval = null;
 
     function toggleAudio() {
         const btn = document.getElementById('music-btn');
         if (!isAudioPlaying) {
-            audioElement.play().then(() => {
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+
                 isAudioPlaying = true;
                 btn.innerText = "⏸️ إيقاف الصوت";
                 btn.style.background = "#2ecc71";
-            }).catch((err) => {
-                console.log("Audio play blocked:", err);
-            });
+
+                // نغمة حماسية استخباراتية متكررة
+                playBeat();
+                musicInterval = setInterval(playBeat, 2400);
+
+            } catch (e) {
+                alert("⚠️ حدث خطأ في تشغيل الصوت، حاول مرة أخرى.");
+            }
         } else {
-            audioElement.pause();
             isAudioPlaying = false;
             btn.innerText = "▶️ تشغيل الصوت";
             btn.style.background = "var(--accent-gold)";
+            if (musicInterval) clearInterval(musicInterval);
         }
+    }
+
+    function playBeat() {
+        if (!isAudioPlaying || !audioCtx) return;
+        const notes = [120, 150, 180, 220, 150];
+        notes.forEach((freq, index) => {
+            setTimeout(() => {
+                if (!isAudioPlaying) return;
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            }, index * 200);
+        });
     }
 
     document.getElementById('login-form').addEventListener('submit', async function(e) {
