@@ -189,6 +189,16 @@
             display: inline-block;
         }
 
+        .badge-status {
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            background: #0d1117;
+            border: 1px solid var(--border-color);
+            display: inline-block;
+        }
+
         .admin-box {
             background: #0d1117;
             border: 1px dashed var(--accent-gold);
@@ -202,7 +212,25 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
-            font-size: 13px;
+            font-size: 12px;
+            background: #0d1117;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .user-status-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .user-status-controls select {
+            width: 120px;
+            padding: 4px 6px;
+            font-size: 11px;
         }
 
         .action-flex {
@@ -259,12 +287,25 @@
     <!-- 2. لوحة النظام الرئيسية -->
     <div id="dashboard-section" class="hidden">
         <div class="top-bar">
-            <div>أهلاً بك العميل: <span id="current-user-display" style="color: var(--accent-gold); font-weight: bold;"></span> (<span id="current-rank-display" style="color: #fff;"></span>)</div>
+            <div>
+                أهلاً بك العميل: <span id="current-user-display" style="color: var(--accent-gold); font-weight: bold;"></span> 
+                (<span id="current-rank-display" style="color: #fff;"></span>)
+            </div>
+
+            <!-- قائمة تغيير الحالة بدون كود -->
+            <div class="user-status-controls">
+                <span>حالتك الحالية:</span>
+                <select id="my-status-select" onchange="updateMyStatus()">
+                    <option value="متصل 🟢">متصل 🟢</option>
+                    <option value="غير متصل 🔴">غير متصل 🔴</option>
+                </select>
+            </div>
+
             <button class="btn-danger btn-sm" onclick="logout()">تسجيل الخروج</button>
         </div>
 
         <div class="admin-box" id="admin-box-container">
-            <h3 style="font-size: 13px; margin-bottom: 8px; color: var(--accent-gold);">🔓 تفعيل الصلاحيات</h3>
+            <h3 style="font-size: 13px; margin-bottom: 8px; color: var(--accent-gold);">🔓 تفعيل الصلاحيات (للمسؤولين)</h3>
             <div style="display: flex; gap: 8px;">
                 <input type="password" id="admin-code-input" placeholder="أدخل كود التفعيل الخاص بك...">
                 <button style="width: 120px;" onclick="unlockAdmin()">تفعيل</button>
@@ -277,6 +318,7 @@
             <thead>
                 <tr>
                     <th>الاسم / الكود</th>
+                    <th>الحالة</th>
                     <th>الرتبة الحالية</th>
                     <th>القطاع</th>
                     <th>المنصب</th>
@@ -292,14 +334,12 @@
 <script>
     const DB_URL = "https://cia-systeme-default-rtdb.firebaseio.com/agents";
 
-    // قائمة الرتب العسكرية فقط (تمت إزالة المناصب منها)
     const RANKS = [
         "مستجد", "جندي", "جندي اول", "عريف", "وكيل رقيب", "رقيب", "رقيب اول", 
         "رئيس رقباء", "ملازم", "ملازم اول", "نقيب", "رائد", "مقدم", "عقيد", 
         "عميد", "فريق", "فريق اول", "قائد الاستخبارات"
     ];
 
-    // قائمة المناصب الخاصة بـ CIA و CID
     const POSITIONS = [
         "بدون منصب",
         "رئيس CIA",
@@ -348,7 +388,14 @@
                     errorMsg.innerText = "✕ كلمة السر غير صحيحة لهذا الاسم!";
                 }
             } else {
-                const newUser = { name: name, password: pass, rank: "مستجد", sector: "CIA", position: "بدون منصب" };
+                const newUser = { 
+                    name: name, 
+                    password: pass, 
+                    rank: "مستجد", 
+                    sector: "CIA", 
+                    position: "بدون منصب",
+                    status: "متصل 🟢"
+                };
                 await fetch(`${DB_URL}/${userKey}.json`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
@@ -371,10 +418,26 @@
         document.getElementById('current-user-display').innerText = currentUser.name;
         document.getElementById('current-rank-display').innerText = currentUser.rank;
 
+        // ضبط قيمة قائمة الحالة الخاصة بالمستخدم الحالية
+        if (currentUser.status) {
+            document.getElementById('my-status-select').value = currentUser.status;
+        }
+
         fetchAgentsOnline();
         if (!refreshInterval) {
             refreshInterval = setInterval(fetchAgentsOnline, 2000);
         }
+    }
+
+    async function updateMyStatus() {
+        const selectedStatus = document.getElementById('my-status-select').value;
+        currentUser.status = selectedStatus;
+        await fetch(`${DB_URL}/${currentUser.id}/status.json`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(selectedStatus)
+        });
+        fetchAgentsOnline();
     }
 
     async function fetchAgentsOnline() {
@@ -387,12 +450,15 @@
                     if (data[key]) {
                         const sector = data[key].sector || "CIA";
                         const position = data[key].position || "بدون منصب";
-                        globalAgents.push({ id: key, ...data[key], sector, position });
+                        const status = data[key].status || "متصل 🟢";
+                        
+                        globalAgents.push({ id: key, ...data[key], sector, position, status });
                         
                         if (currentUser && currentUser.id === key) {
                             currentUser.rank = data[key].rank;
                             currentUser.sector = sector;
                             currentUser.position = position;
+                            currentUser.status = status;
                             document.getElementById('current-rank-display').innerText = currentUser.rank;
                         }
                     }
@@ -456,10 +522,10 @@
             const targetRankIndex = RANKS.indexOf(agent.rank);
             const currentSector = agent.sector || "CIA";
             const currentPosition = agent.position || "بدون منصب";
+            const currentStatus = agent.status || "متصل 🟢";
 
             let actionsHTML = '';
 
-            // صلاحية التعديل الشاملة للأونر (بما فيها المناصب)
             if (isOwnerUnlocked) {
                 let rankOptions = RANKS.map(r => `<option value="${r}" ${r === agent.rank ? 'selected' : ''}>${r}</option>`).join('');
                 let sectorOptions = `
@@ -485,7 +551,6 @@
                     </td>
                 `;
             } 
-            // صلاحية المسؤولين العاديين (تعديل الرتبة والقطاع فقط - بدون المناصب)
             else if ((isCodeUnlocked || isLeader) && myRankIndex > targetRankIndex) {
                 let allowedRanks = RANKS.slice(0, myRankIndex);
                 let rankOptions = allowedRanks.map(r => `<option value="${r}" ${r === agent.rank ? 'selected' : ''}>${r}</option>`).join('');
@@ -520,6 +585,7 @@
 
             tr.innerHTML = `
                 <td><strong>${agent.name}</strong></td>
+                <td><span class="badge-status">${currentStatus}</span></td>
                 <td><span class="badge">${agent.rank}</span></td>
                 <td><span class="badge-sector">${currentSector}</span></td>
                 <td><span class="badge-position">${currentPosition}</span></td>
