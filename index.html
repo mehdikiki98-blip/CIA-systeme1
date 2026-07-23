@@ -31,58 +31,58 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px;
         }
 
         .container {
             width: 100%;
-            max-width: 1100px;
+            max-width: 1150px;
             background-color: var(--panel-bg);
             border: 1px solid var(--border-color);
-            border-top: 4px solid var(--accent-gold);
+            border-top: 3px solid var(--accent-gold);
             border-radius: 8px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
-            padding: 30px;
+            padding: 20px;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             border-bottom: 1px solid var(--border-color);
-            padding-bottom: 15px;
+            padding-bottom: 10px;
         }
 
         .header h1 {
             color: var(--accent-gold);
-            font-size: 24px;
+            font-size: 20px;
             letter-spacing: 1px;
             margin-bottom: 5px;
         }
 
         .header p {
-            font-size: 13px;
+            font-size: 12px;
             color: #8b949e;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
+            margin-bottom: 6px;
+            font-size: 12px;
             color: var(--accent-gold);
         }
 
         input, select {
             width: 100%;
-            padding: 12px;
+            padding: 8px 10px;
             background-color: #0d1117 !important;
             border: 1px solid var(--border-color);
-            border-radius: 6px;
+            border-radius: 5px;
             color: #fff !important;
-            font-size: 14px;
+            font-size: 12px;
             outline: none;
         }
 
@@ -99,13 +99,14 @@
         }
 
         button {
-            padding: 12px 15px;
+            padding: 8px 12px;
             background: var(--accent-gold);
             color: #000;
             font-weight: bold;
             border: none;
-            border-radius: 6px;
+            border-radius: 5px;
             cursor: pointer;
+            font-size: 12px;
             transition: 0.3s;
         }
 
@@ -127,8 +128,8 @@
         }
 
         .btn-sm {
-            padding: 6px 10px;
-            font-size: 12px;
+            padding: 4px 8px;
+            font-size: 11px;
             width: auto;
         }
 
@@ -139,82 +140,88 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 15px;
         }
 
         th, td {
-            padding: 12px;
+            padding: 8px 10px;
             text-align: right;
             border-bottom: 1px solid var(--border-color);
-            font-size: 14px;
+            font-size: 12px;
         }
 
         th {
             background-color: #0d1117;
             color: var(--accent-gold);
+            font-size: 12px;
         }
 
         .badge {
-            padding: 4px 8px;
+            padding: 3px 6px;
             border-radius: 4px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
             background: #21262d;
             color: var(--accent-gold);
             border: 1px solid var(--accent-gold);
+            display: inline-block;
         }
 
         .badge-sector {
-            padding: 4px 8px;
+            padding: 3px 6px;
             border-radius: 4px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
             background: #1b2838;
             color: var(--accent-blue);
             border: 1px solid var(--accent-blue);
+            display: inline-block;
         }
 
         .badge-position {
-            padding: 4px 8px;
+            padding: 3px 6px;
             border-radius: 4px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
             background: #2c1d38;
             color: var(--accent-purple);
             border: 1px solid var(--accent-purple);
+            display: inline-block;
         }
 
         .admin-box {
             background: #0d1117;
             border: 1px dashed var(--accent-gold);
-            padding: 15px;
+            padding: 12px;
             border-radius: 6px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            font-size: 13px;
         }
 
         .action-flex {
             display: flex;
-            gap: 6px;
+            gap: 4px;
             align-items: center;
             flex-wrap: wrap;
         }
 
         .action-flex select {
-            width: 130px;
-            padding: 6px;
+            width: 110px;
+            padding: 4px;
+            font-size: 11px;
         }
 
         .error-msg {
             color: var(--accent-red);
-            font-size: 13px;
-            margin-top: 10px;
+            font-size: 12px;
+            margin-top: 8px;
         }
     </style>
 </head>
@@ -223,12 +230,12 @@
 <div class="container">
     <div class="header">
         <h1>🌐 نظام الاستخبارات العامة | CIA DATABASE</h1>
-        <p>نظام إلكتروني سري لمتابعة وإدارة الرتب والقطاعات والمناصب (متصل مباشرة أونلاين)</p>
+        <p>نظام إلكتروني موحد لمتابعة وإدارة الرتب والقطاعات والمناصب مباشرة أونلاين</p>
     </div>
 
     <!-- 1. صفحة التسجيل والدخول -->
     <div id="login-section">
-        <h2 style="margin-bottom: 15px; font-size: 18px;">تسجيل الدخول / إنشاء حساب عميل</h2>
+        <h2 style="margin-bottom: 12px; font-size: 15px;">تسجيل الدخول / إنشاء حساب عميل</h2>
         <form id="login-form">
             <div class="form-group">
                 <label for="username">الاسم الكامل / الرمز:</label>
@@ -257,15 +264,15 @@
         </div>
 
         <div class="admin-box" id="admin-box-container">
-            <h3 style="font-size: 14px; margin-bottom: 10px; color: var(--accent-gold);">🔓 تفعيل الصلاحيات</h3>
-            <div style="display: flex; gap: 10px;">
+            <h3 style="font-size: 13px; margin-bottom: 8px; color: var(--accent-gold);">🔓 تفعيل الصلاحيات</h3>
+            <div style="display: flex; gap: 8px;">
                 <input type="password" id="admin-code-input" placeholder="أدخل كود التفعيل الخاص بك...">
-                <button style="width: 150px;" onclick="unlockAdmin()">تفعيل</button>
+                <button style="width: 120px;" onclick="unlockAdmin()">تفعيل</button>
             </div>
-            <p id="admin-msg" style="font-size: 13px; margin-top: 8px; font-weight: bold;"></p>
+            <p id="admin-msg" style="font-size: 12px; margin-top: 6px; font-weight: bold;"></p>
         </div>
 
-        <h3>📋 سجل العملاء والرتب الحالية (مباشر وموحد)</h3>
+        <h3 style="font-size: 14px;">📋 سجل العملاء والرتب الحالية (مباشر وموحد)</h3>
         <table>
             <thead>
                 <tr>
@@ -285,19 +292,24 @@
 <script>
     const DB_URL = "https://cia-systeme-default-rtdb.firebaseio.com/agents";
 
+    // قائمة الرتب العسكرية فقط (تمت إزالة المناصب منها)
     const RANKS = [
         "مستجد", "جندي", "جندي اول", "عريف", "وكيل رقيب", "رقيب", "رقيب اول", 
         "رئيس رقباء", "ملازم", "ملازم اول", "نقيب", "رائد", "مقدم", "عقيد", 
-        "عميد", "فريق", "فريق اول", "مستشار رئيس الاستخبارات", "نائب رئيس الاستخبارات", "قائد الاستخبارات"
+        "عميد", "فريق", "فريق اول", "قائد الاستخبارات"
     ];
 
+    // قائمة المناصب الخاصة بـ CIA و CID
     const POSITIONS = [
         "بدون منصب",
-        "محققيق cia",
-        "رئيس cid",
-        "نائب رئيس cid",
-        "محقق cid",
-        "مستشار cid"
+        "رئيس CIA",
+        "نائب رئيس CIA",
+        "مستشار CIA",
+        "محقق CIA",
+        "رئيس CID",
+        "نائب رئيس CID",
+        "مستشار CID",
+        "محقق CID"
     ];
 
     const OWNER_CODE = "mehdicia"; 
@@ -319,7 +331,7 @@
 
         if (!name || !pass) return;
 
-        btn.innerText = "جاري الاتصال بالسيرفر...";
+        btn.innerText = "جاري الاتصال...";
         btn.disabled = true;
 
         const userKey = encodeURIComponent(name.toLowerCase().replace(/[^a-z0-9]/g, "_"));
@@ -437,7 +449,7 @@
 
         const myRankIndex = RANKS.indexOf(currentUser.rank);
         const raidIndex = RANKS.indexOf("رائد");
-        const isLeader = (currentUser.rank === "قائد الاستخبارات" || currentUser.rank === "نائب رئيس الاستخبارات");
+        const isLeader = (currentUser.rank === "قائد الاستخبارات");
 
         globalAgents.forEach((agent) => {
             const tr = document.createElement('tr');
@@ -501,9 +513,9 @@
                     </td>
                 `;
             } else if (isCodeUnlocked || isLeader) {
-                actionsHTML = `<td><span style="font-size:11px; color:#777;">(رتبة أعلى منك/مساوية)</span></td>`;
+                actionsHTML = `<td><span style="font-size:10px; color:#777;">(رتبة أعلى منك/مساوية)</span></td>`;
             } else {
-                actionsHTML = `<td><span style="font-size:11px; color:#777;">🔒 أدخل الكود للتعديل</span></td>`;
+                actionsHTML = `<td><span style="font-size:10px; color:#777;">🔒 أدخل الكود للتعديل</span></td>`;
             }
 
             tr.innerHTML = `
