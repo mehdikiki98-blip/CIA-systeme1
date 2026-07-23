@@ -299,7 +299,7 @@
             margin-top: 8px;
         }
 
-        /* --- قسم الشركاء والأجهزة الأمنية --- */
+        /* --- تصميم الهيكلية العسكرية/الأمنية --- */
         .alliances-section {
             margin-top: 35px;
             padding-top: 20px;
@@ -310,7 +310,7 @@
         .alliances-title {
             color: var(--accent-gold);
             font-size: 18px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             display: flex;
@@ -319,11 +319,60 @@
             gap: 10px;
         }
 
-        .factions-grid {
+        /* حاوية القيادة العليا في الأعلى */
+        .top-cia-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .cia-card {
+            background: linear-gradient(180deg, #1c222e 0%, #0d1117 100%);
+            border: 2px solid var(--accent-gold);
+            border-radius: 10px;
+            padding: 20px;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .cia-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.5);
+        }
+
+        .cia-tag {
+            background: linear-gradient(90deg, #c0392b, #e74c3c);
+            color: #fff;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.4);
+            border: 1px solid #ff6b6b;
+        }
+
+        .cia-img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.4));
+        }
+
+        /* حاوية الأجهزة السفلية تحت CIA */
+        .sub-factions-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             gap: 15px;
-            margin-top: 15px;
+            width: 100%;
         }
 
         .faction-card {
@@ -344,15 +393,6 @@
             box-shadow: 0 6px 18px rgba(212, 175, 55, 0.2);
         }
 
-        .faction-card.cia-main {
-            grid-column: 1 / -1;
-            background: linear-gradient(180deg, #161a22 0%, #0d1117 100%);
-            border: 2px solid var(--accent-gold);
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.25);
-            max-width: 320px;
-            margin: 0 auto 15px auto;
-        }
-
         .faction-tag {
             background: var(--accent-gold);
             color: #000;
@@ -362,25 +402,14 @@
             border-radius: 12px;
             margin-bottom: 10px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .faction-card.cia-main .faction-tag {
-            background: #e74c3c;
-            color: #fff;
         }
 
         .faction-img {
-            width: 70px;
-            height: 70px;
+            width: 65px;
+            height: 65px;
             object-fit: contain;
             margin-bottom: 10px;
-            filter: drop-shadow(0 0 5px rgba(255,255,255,0.2));
-        }
-
-        .faction-card.cia-main .faction-img {
-            width: 90px;
-            height: 90px;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.15));
         }
 
         .faction-name {
@@ -477,23 +506,26 @@
             </tbody>
         </table>
 
-        <!-- قسم التحالف الأمني واستعراض الأجهزة -->
+        <!-- قسم الهيكلية الأمنية والشركاء -->
         <div class="alliances-section" id="alliances-sec">
             <h2 class="alliances-title">
                 <span>🛡️</span> القيادة العليا وأجهزة التحالف الأمني <span>🛡️</span>
             </h2>
 
-            <div class="factions-grid">
-
-                <!-- 1. الجهاز الرئيسي CIA -->
-                <div class="faction-card cia-main">
-                    <span class="faction-tag">👑 القيادة العليا | HIGH COMMAND</span>
-                    <img class="faction-img" src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Logo">
-                    <div class="faction-name">CIA</div>
-                    <div class="faction-desc">وكالة الاستخبارات المركزية العامة</div>
+            <!-- CIA في الأعلى فوق جميع الأجهزة -->
+            <div class="top-cia-container">
+                <div class="cia-card">
+                    <span class="cia-tag">👑 القيادة العليا | HIGH COMMAND</span>
+                    <img class="cia-img" src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Logo">
+                    <div class="faction-name" style="font-size: 16px; color: var(--accent-gold);">CIA</div>
+                    <div class="faction-desc" style="font-size: 11px;">وكالة الاستخبارات المركزية العامة</div>
                 </div>
+            </div>
 
-                <!-- 2. جهاز RDF -->
+            <!-- بقية الأجهزة الأمنية تحت CIA مباشرة -->
+            <div class="sub-factions-grid">
+
+                <!-- 1. RDF -->
                 <div class="faction-card">
                     <span class="faction-tag">🔥 التدخل السريع</span>
                     <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/1022/1022331.png" alt="RDF Logo">
@@ -501,7 +533,7 @@
                     <div class="faction-desc">قوات الانتشار والتدخل السريع</div>
                 </div>
 
-                <!-- 3. جهاز SSF -->
+                <!-- 2. SSF -->
                 <div class="faction-card">
                     <span class="faction-tag">🛡️ القوات الخاصة</span>
                     <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/947/947502.png" alt="SSF Logo">
@@ -509,7 +541,7 @@
                     <div class="faction-desc">قوات الأمن الخاصة</div>
                 </div>
 
-                <!-- 4. جهاز FBI -->
+                <!-- 3. FBI -->
                 <div class="faction-card">
                     <span class="faction-tag">🔍 التحقيقات</span>
                     <img class="faction-img" src="https://upload.wikimedia.org/wikipedia/commons/d/da/Seal_of_the_Federal_Bureau_of_Investigation.svg" alt="FBI Logo">
@@ -517,7 +549,7 @@
                     <div class="faction-desc">مكتب التحقيقات الفيدرالي</div>
                 </div>
 
-                <!-- 5. جهاز POLICE -->
+                <!-- 4. POLICE -->
                 <div class="faction-card">
                     <span class="faction-tag">🚓 الأمن العام</span>
                     <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/2067/2067831.png" alt="POLICE Logo">
@@ -525,7 +557,7 @@
                     <div class="faction-desc">جهاز الشرطة العامة</div>
                 </div>
 
-                <!-- 6. جهاز ARMY -->
+                <!-- 5. ARMY -->
                 <div class="faction-card">
                     <span class="faction-tag">⚔️ القوات المسلحة</span>
                     <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/2599/2599636.png" alt="ARMY Logo">
