@@ -450,17 +450,21 @@
     ];
 
     const SECTORS = ["CIA", "RDF", "SSF", "FBI", "POLICE", "ARMY"];
+    
+    // المناصب المتاحة مع تخصيص CID و CIA
     const POSITIONS = [
-        "بدون منصب", "رئيس CIA", "نائب رئيس CIA", "مستشار CIA", "مسؤول أفراد CIA", 
-        "مسؤول ضباط CIA", "محقق CIA", "رئيس CID", "نائب رئيس CID", "مستشار CID"
+        "بدون منصب", 
+        "رئيس CIA", "نائب رئيس CIA", "مستشار CIA", 
+        "قائد CID", "نائب قائد CID",
+        "مسؤول أفراد CIA", "مسؤول ضباط CIA", "محقق CIA"
     ];
+
     const STATUSES = ["في الخدمة 🟢", "في مهمة 🟡", "موقوف 🔴", "خارج الخدمة ⚪"];
     const EVALUATIONS = ["ممتاز ⭐⭐⭐", "جيد جداً ⭐⭐", "جيد ⭐", "تحت الإنذار ⚠️", "بدون تقييم"];
 
     const OWNER_CODE = "mehdicia"; 
     const ADMIN_SECRET = "ciaontop"; 
     
-    let isOwnerUnlocked = false; 
     let isCodeUnlocked = false;  
     let currentUser = null;
     let globalAgents = [];
@@ -505,7 +509,6 @@
             if (userData) {
                 if (userData.password === pass) {
                     currentUser = { id: userKey, ...userData };
-                    checkAutoPermissions();
                     showDashboard();
                 } else {
                     errorMsg.innerText = "✕ كلمة السر غير صحيحة!";
@@ -522,7 +525,6 @@
                     body: JSON.stringify(newUser)
                 });
                 currentUser = { id: userKey, ...newUser };
-                checkAutoPermissions();
                 showDashboard();
             }
         } catch (err) {
@@ -533,28 +535,14 @@
         }
     });
 
-    function checkAutoPermissions() {
-        if (!currentUser) return;
-        const pos = currentUser.position || "";
-
-        // إذا كان رئيس CIA، نائب رئيس CIA، أو مستشار CIA، تفتح القائمة تلقائياً ويختفي صندوق الكود
-        if (pos === "رئيس CIA" || pos === "نائب رئيس CIA" || pos === "مستشار CIA") {
-            isCodeUnlocked = true;
-        }
-        if (currentUser.id === "mehdicia") {
-            isOwnerUnlocked = true;
-            isCodeUnlocked = true;
-        }
-    }
-
     function showDashboard() {
         document.getElementById('login-section').classList.add('hidden');
         document.getElementById('dashboard-section').classList.remove('hidden');
         document.getElementById('current-user-display').innerText = currentUser.name;
         document.getElementById('current-rank-display').innerText = currentUser.rank;
 
-        const pos = currentUser.position || "";
-        if (pos === "رئيس CIA" || pos === "نائب رئيس CIA" || pos === "مستشار CIA") {
+        // إذا تم إدخال الكود سابقاً يختفي صندوق الكود
+        if (isCodeUnlocked) {
             document.getElementById('admin-box-container').style.display = 'none';
         }
 
@@ -576,8 +564,8 @@
                         if (currentUser && currentUser.id === key) {
                             currentUser.rank = data[key].rank;
                             currentUser.position = data[key].position;
+                            currentUser.sector = data[key].sector;
                             document.getElementById('current-rank-display').innerText = currentUser.rank;
-                            checkAutoPermissions();
                         }
                     }
                 });
@@ -590,16 +578,11 @@
         const inputCode = document.getElementById('admin-code-input').value.trim();
         const msg = document.getElementById('admin-msg');
 
-        if (inputCode === OWNER_CODE) {
-            isOwnerUnlocked = true;
+        if (inputCode === ADMIN_SECRET || inputCode === OWNER_CODE) {
             isCodeUnlocked = true;
             msg.style.color = "var(--accent-green)";
-            msg.innerText = "👑 تم تفعيل الصلاحيات المطلقة!";
-            renderTable();
-        } else if (inputCode === ADMIN_SECRET) {
-            isCodeUnlocked = true;
-            msg.style.color = "var(--accent-green)";
-            msg.innerText = "✓ تم تفعيل الصلاحيات!";
+            msg.innerText = "✓ تم تفعيل النظام بنجاح!";
+            document.getElementById('admin-box-container').style.display = 'none';
             renderTable();
         } else {
             msg.style.color = "var(--accent-red)";
@@ -607,18 +590,17 @@
         }
     }
 
-    function hasUserPermission() {
+    // هل يمتلك صلاحية إظهار زر الإدارة (رتبة ملازم فما فوق)؟
+    function canShowManageButton() {
         if (!currentUser) return false;
-        if (isOwnerUnlocked || isCodeUnlocked) return true;
+        if (!isCodeUnlocked) return false; // لا يظهر شيء حتى يتم إدخال كود ciaontop
 
         const rankIdx = RANKS.indexOf(currentUser.rank);
         const molazimIdx = RANKS.indexOf("ملازم");
-        const pos = currentUser.position || "";
-
-        // الصلاحية تُمنح إذا كانت رتبته فوق ملازم (ملازم أول فما فوق) أو لديه منصب رئيس CID
-        if (rankIdx > molazimIdx || pos.includes("رئيس CID")) {
-            return true;
-        }
+        
+        // إذا كانت رتبته ملازم فما فوق
+        if (rankIdx >= molazimIdx) return true;
+        
         return false;
     }
 
@@ -627,17 +609,18 @@
         if (!tbody || !currentUser) return;
         tbody.innerHTML = '';
 
-        const userCanManage = hasUserPermission();
+        const showAdminControls = canShowManageButton();
 
         globalAgents.forEach((agent) => {
             const tr = document.createElement('tr');
             
-            const actionCell = userCanManage 
+            // زر الإدارة يظهر فقط إذا دخل الكود وعنده ملازم فما فوق
+            const actionCell = showAdminControls 
                 ? `<button class="btn-sm" onclick="openModal('${agent.id}')">⚙️ إدارة</button>` 
                 : `<span style="color:#555; font-size:11px;">مقفول 🔒</span>`;
 
             tr.innerHTML = `
-                <td><span class="agent-name-click" onclick="${userCanManage ? `openModal('${agent.id}')` : ''}">${agent.name}</span></td>
+                <td><span class="agent-name-click" onclick="${showAdminControls ? `openModal('${agent.id}')` : ''}">${agent.name}</span></td>
                 <td><span class="badge-status">${agent.status || 'في الخدمة 🟢'}</span></td>
                 <td><span class="badge">${agent.rank}</span></td>
                 <td><span class="badge-sector">${agent.sector || 'CIA'}</span></td>
@@ -650,7 +633,7 @@
     }
 
     function openModal(agentId) {
-        if (!hasUserPermission()) {
+        if (!canShowManageButton()) {
             alert("⚠️ ليس لديك صلاحيات كافية!");
             return;
         }
@@ -660,43 +643,73 @@
 
         const userRankIdx = RANKS.indexOf(currentUser.rank);
         const targetRankIdx = RANKS.indexOf(agent.rank);
-        const molazimIdx = RANKS.indexOf("ملازم");
         const userPos = currentUser.position || "";
+        const userSector = currentUser.sector || "CIA";
+        const isOwner = currentUser.id === "mehdicia";
 
-        const isCiaTop = userPos.includes("رئيس CIA") || userPos.includes("نائب رئيس CIA") || userPos.includes("مستشار CIA") || isOwnerUnlocked;
-        const isCidBoss = userPos.includes("رئيس CID");
+        // تحديد الصلاحيات بناءً على المنصب والقطاع
+        const isCiaLeader = userPos.includes("رئيس CIA") || userPos.includes("نائب رئيس CIA") || userPos.includes("مستشار CIA") || isOwner;
+        const isCidLeader = userPos.includes("قائد CID") || userPos.includes("نائب قائد CID");
 
-        // الشرط الصارم: إذا لم يكن من قيادات CIA العليا، فلا يمكنه تعديل من هو في رتبة تساوي أو تعلو رتبته (أو التحكم في الإداريين الأعلى منه)
-        if (!isCiaTop && userRankIdx <= targetRankIdx) {
+        // القواعد المطلوبة:
+        // 1. لا يظهر إلا لمن هم أقل منه في الرتبة (لا يمكنه تعديل من يساويه أو يعلوه في الرتبة إلا إذا كان المالك)
+        if (!isOwner && userRankIdx <= targetRankIdx) {
             alert("⚠️ لا يمكنك ترقية أو التحكم بشخص يساويه أو يعلوه في الرتبة!");
             return;
+        }
+
+        // 2. التحقق من قطاع CID و CIA
+        if (isCidLeader && !isCiaLeader) {
+            if (agent.sector !== "CID" && agent.sector !== userSector) {
+                alert("⚠️ قادة CID يتحكمون فقط بأعضاء قطاعهم!");
+                return;
+            }
         }
 
         document.getElementById('modal-agent-name').innerText = agent.name;
         const modalBody = document.getElementById('modal-body');
 
-        // إذا كان المستخدم فوق ملازم وليس رئيس CIA العليا، فرتبه تقتصر على ترقية من هو أقل منه فقط ولا يمكنه تعديل الرتب فوق رتبته أو مناصب قيادة CIA العليا
-        let availableRanks = RANKS;
-        if (!isCiaTop) {
+        // الترقية يجب ألا تفوت رتبة "ملازم" كحد أقصى للمدراء العاديين، أو حسب رتبته (ملازم فما فوق لا يتجاوزون ملازم في الترقية حسب الطلب: "وترقياتهم تفوتش ملازم")
+        let maxRankLimitIdx = RANKS.indexOf("ملازم");
+        let availableRanks = RANKS.filter((r, idx) => idx <= maxRankLimitIdx && idx < userRankIdx);
+        
+        // إذا كان قيادي CIA أعلى أو المالك يمكنه منح رتب أعلى
+        if (isCiaLeader) {
             availableRanks = RANKS.filter((r, idx) => idx < userRankIdx);
         }
-        let rankOptions = availableRanks.map(r => `<option value="${r}" ${r === agent.rank ? 'selected' : ''}>${r}</option>`).join('');
 
+        let rankOptions = availableRanks.map(r => `<option value="${r}" ${r === agent.rank ? 'selected' : ''}>${r}</option>`).join('');
         let sectorOptions = SECTORS.map(s => `<option value="${s}" ${s === (agent.sector || 'CIA') ? 'selected' : ''}>${s}</option>`).join('');
         
-        // مناصب CIA العليا (رئيس، نائب، مستشار) تدار فقط حصرياً من قِبل القيادة العليا أو المالك
-        let availablePositions = POSITIONS;
-        if (!isCiaTop) {
-            availablePositions = POSITIONS.filter(p => !p.includes("رئيس CIA") && !p.includes("نائب رئيس CIA") && !p.includes("مستشار CIA"));
+        // هل يمكنه إعطاء مناصب؟ (فقط قادة CIA أو من لديهم مناصب قيادية محددة، أو إذا لم يكن لديه منصب لا يملك صلاحية إعطاء مناصب)
+        let canAssignPosition = isCiaLeader || isCidLeader || userPos.includes("رئيس");
+        let positionSectionHtml = '';
+
+        if (canAssignPosition) {
+            let availablePositions = POSITIONS;
+            // قادة CID يعطون مناصب CID فقط، قادة CIA يعطون كل المناصب
+            if (isCidLeader && !isCiaLeader) {
+                availablePositions = ["بدون منصب", "قائد CID", "نائب قائد CID"];
+            }
+            let positionOptions = availablePositions.map(p => `<option value="${p}" ${p === (agent.position || 'بدون منصب') ? 'selected' : ''}>${p}</option>`).join('');
+            
+            positionSectionHtml = `
+                <div class="form-group">
+                    <label>تعديل المنصب:</label>
+                    <select id="modal-position">${positionOptions}</select>
+                    <button style="margin-top:5px;" onclick="saveField('${agent.id}', 'position', 'modal-position')">حفظ المنصب</button>
+                </div>
+            `;
+        } else {
+            positionSectionHtml = `<p style="font-size:11px; color:#e74c3c;">⚠️ لا تملك صلاحية منح المناصب لعدم امتلاكك منصباً إدارياً قيادياً.</p>`;
         }
-        let positionOptions = availablePositions.map(p => `<option value="${p}" ${p === (agent.position || 'بدون منصب') ? 'selected' : ''}>${p}</option>`).join('');
-        
+
         let statusOptions = STATUSES.map(st => `<option value="${st}" ${st === (agent.status || 'في الخدمة 🟢') ? 'selected' : ''}>${st}</option>`).join('');
         let evalOptions = EVALUATIONS.map(ev => `<option value="${ev}" ${ev === (agent.evaluation || 'بدون تقييم') ? 'selected' : ''}>${ev}</option>`).join('');
 
         modalBody.innerHTML = `
             <div class="form-group">
-                <label>تعديل الرتبة (الترقيات للأقل منك فقط):</label>
+                <label>تعديل الرتبة (لا تتجاوز ملازم):</label>
                 <select id="modal-rank">${rankOptions}</select>
                 <button style="margin-top:5px;" onclick="saveField('${agent.id}', 'rank', 'modal-rank')">حفظ الرتبة</button>
             </div>
@@ -705,11 +718,7 @@
                 <select id="modal-sector">${sectorOptions}</select>
                 <button style="margin-top:5px;" onclick="saveField('${agent.id}', 'sector', 'modal-sector')">حفظ القطاع</button>
             </div>
-            <div class="form-group">
-                <label>تعديل المنصب:</label>
-                <select id="modal-position">${positionOptions}</select>
-                <button style="margin-top:5px;" onclick="saveField('${agent.id}', 'position', 'modal-position')">حفظ المنصب</button>
-            </div>
+            ${positionSectionHtml}
             <div class="form-group">
                 <label>تعديل الحالة:</label>
                 <select id="modal-status">${statusOptions}</select>
@@ -720,7 +729,7 @@
                 <select id="modal-eval">${evalOptions}</select>
                 <button style="margin-top:5px;" onclick="saveField('${agent.id}', 'evaluation', 'modal-eval')">حفظ التقييم</button>
             </div>
-            ${isOwnerUnlocked ? `<button class="btn-danger" style="margin-top:10px;" onclick="deleteAgent('${agent.id}')">🗑️ حذف العميل نهائياً</button>` : ''}
+            ${isOwner ? `<button class="btn-danger" style="margin-top:10px;" onclick="deleteAgent('${agent.id}')">🗑️ حذف العميل نهائياً</button>` : ''}
         `;
         document.getElementById('edit-modal').classList.remove('hidden');
     }
@@ -729,6 +738,20 @@
 
     async function saveField(id, field, elemId) {
         const val = document.getElementById(elemId).value;
+        
+        // التحقق من حد الرتبة ألا يتجاوز ملازم للمرقي إذا لم يكن قيادة عليا
+        if (field === 'rank') {
+            const targetRankIdx = RANKS.indexOf(val);
+            const molazimIdx = RANKS.indexOf("ملازم");
+            const userPos = currentUser.position || "";
+            const isCiaLeader = userPos.includes("رئيس CIA") || userPos.includes("نائب رئيس CIA") || currentUser.id === "mehdicia";
+            
+            if (!isCiaLeader && targetRankIdx > molazimIdx) {
+                alert("⚠️ لا يمكن أن تتجاوز الترقيات رتبة ملازم!");
+                return;
+            }
+        }
+
         await fetch(`${DB_URL}/${id}/${field}.json`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
