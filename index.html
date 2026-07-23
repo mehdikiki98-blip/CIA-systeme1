@@ -299,7 +299,7 @@
             margin-top: 8px;
         }
 
-        /* --- تصميم الهيكلية العسكرية/الأمنية --- */
+        /* --- تصميم الهيكلية العسكرية والتأثيرات --- */
         .alliances-section {
             margin-top: 35px;
             padding-top: 20px;
@@ -317,6 +317,25 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
+        }
+
+        /* القوس المقوس العلوي (Arch Banner) */
+        .arch-banner {
+            display: inline-block;
+            padding: 8px 35px;
+            margin-bottom: -15px;
+            position: relative;
+            z-index: 2;
+            background: linear-gradient(180deg, #161a22 0%, #0d1117 100%);
+            border: 2px solid var(--accent-gold);
+            border-bottom: none;
+            border-radius: 50px 50px 0 0;
+            color: var(--accent-gold);
+            font-weight: bold;
+            font-size: 14px;
+            letter-spacing: 1px;
+            box-shadow: 0 -5px 15px rgba(212, 175, 55, 0.25);
+            text-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
         }
 
         /* حاوية القيادة العليا في الأعلى */
@@ -512,8 +531,11 @@
                 <span>🛡️</span> القيادة العليا وأجهزة التحالف الأمني <span>🛡️</span>
             </h2>
 
-            <!-- CIA في الأعلى فوق جميع الأجهزة -->
+            <!-- القوس والتأطير العلوي لـ CIA -->
             <div class="top-cia-container">
+                <div class="arch-banner">
+                    ⚔️ حثالة المجتمع والقانون ⚔️
+                </div>
                 <div class="cia-card">
                     <span class="cia-tag">👑 القيادة العليا | HIGH COMMAND</span>
                     <img class="cia-img" src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Logo">
