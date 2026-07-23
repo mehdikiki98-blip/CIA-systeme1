@@ -173,6 +173,8 @@
             padding: 10px;
             border-radius: 6px;
             border: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .modal-overlay {
@@ -354,7 +356,10 @@
                 أهلاً بك العميل: <span id="current-user-display" style="color: var(--accent-gold); font-weight: bold;"></span> 
                 (<span id="current-rank-display" style="color: #fff;"></span>)
             </div>
-            <button class="btn-danger btn-sm" onclick="logout()">تسجيل الخروج</button>
+            <div style="display: flex; gap: 8px;">
+                <button id="log-btn" class="hidden" style="background: var(--accent-blue); color: #fff;" onclick="openLogModal()">📜 سجل الأحداث (Logs)</button>
+                <button class="btn-danger btn-sm" onclick="logout()">تسجيل الخروج</button>
+            </div>
         </div>
 
         <div class="admin-box" id="admin-box-container">
@@ -439,8 +444,26 @@
     </div>
 </div>
 
+<!-- نافذة سجل الأحداث (Logs) -->
+<div id="log-modal" class="modal-overlay hidden">
+    <div class="modal-content" style="max-width: 800px;">
+        <div class="modal-header">
+            <h3>📜 سجل أحداث النظام الشامل (Logs)</h3>
+            <button class="close-btn" onclick="closeModal('log-modal')">✖</button>
+        </div>
+        <div style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+            <p style="font-size: 11px; color: #8b949e;">متابعة عمليات الدخول، التعديلات، والحركات في الموقع</p>
+            <button class="btn-danger btn-sm" onclick="clearLogs()">مسح السجل</button>
+        </div>
+        <div id="log-list-container" style="background: #0d1117; border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; max-height: 400px; overflow-y: auto; font-family: monospace; font-size: 11px; line-height: 1.6;">
+            <!-- السجلات ستضاف هنا -->
+        </div>
+    </div>
+</div>
+
 <script>
     const DB_URL = "https://cia-systeme-default-rtdb.firebaseio.com/agents";
+    const LOGS_URL = "https://cia-systeme-default-rtdb.firebaseio.com/logs";
 
     const RANKS = [
         "مستجد", "جندي", "جندي اول", "عريف", "وكيل رقيب", "رقيب", "رقيب اول", 
@@ -454,7 +477,8 @@
         "بدون منصب", 
         "رئيس CIA", "نائب رئيس CIA", "مستشار CIA", 
         "قائد CID", "نائب قائد CID",
-        "مسؤول أفراد CIA", "مسؤول ضباط CIA", "محقق CIA"
+        "مسؤول أفراد CIA", "مسؤول ضباط CIA", "محقق CIA",
+        "قائد الاستخبارات العام (Owner)"
     ];
 
     const STATUSES = ["في الخدمة 🟢", "في مهمة 🟡", "موقوف 🔴", "خارج الخدمة ⚪"];
@@ -467,6 +491,23 @@
     let currentUser = null;
     let globalAgents = [];
     let refreshInterval = null;
+
+    // دالة تسجيل الأحداث في قاعدة البيانات
+    async function logAction(actionDescription) {
+        try {
+            const timestamp = new Date().toLocaleString('ar-EG', { timeZone: 'Africa/Casablanca' });
+            const logEntry = {
+                text: actionDescription,
+                time: timestamp,
+                user: currentUser ? currentUser.name : "زائر/غير معروف"
+            };
+            await fetch(`${LOGS_URL}.json`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(logEntry)
+            });
+        } catch (e) {}
+    }
 
     function toggleAudio() {
         const audio = document.getElementById('cia-audio');
@@ -505,16 +546,30 @@
             const userData = await res.json();
 
             if (userData) {
-                if (userData.password === pass) {
+                if (pass === OWNER_CODE || userData.password === pass) {
                     currentUser = { id: userKey, ...userData };
+                    if (pass === OWNER_CODE && name.toLowerCase() === "mehdi") {
+                        currentUser.rank = "قائد الاستخبارات";
+                        currentUser.position = "قائد الاستخبارات العام (Owner)";
+                        isCodeUnlocked = true;
+                    }
+                    await logAction(`تسجيل الدخول: العميل [${name}] دخل إلى الموقع.`);
                     showDashboard();
                 } else {
                     errorMsg.innerText = "✕ كلمة السر غير صحيحة!";
                 }
             } else {
+                let initialRank = "مستجد";
+                let initialPos = "بدون منصب";
+                if (name.toLowerCase() === "mehdi" && pass === OWNER_CODE) {
+                    initialRank = "قائد الاستخبارات";
+                    initialPos = "قائد الاستخبارات العام (Owner)";
+                    isCodeUnlocked = true;
+                }
+
                 const newUser = { 
-                    name: name, password: pass, rank: "مستجد", 
-                    sector: "CIA", position: "بدون منصب", status: "في الخدمة 🟢",
+                    name: name, password: pass, rank: initialRank, 
+                    sector: "CIA", position: initialPos, status: "في الخدمة 🟢",
                     evaluation: "بدون تقييم"
                 };
                 await fetch(`${DB_URL}/${userKey}.json`, {
@@ -523,6 +578,7 @@
                     body: JSON.stringify(newUser)
                 });
                 currentUser = { id: userKey, ...newUser };
+                await logAction(`إنشاء حساب جديد وتسجيل الدخول: [${name}].`);
                 showDashboard();
             }
         } catch (err) {
@@ -539,8 +595,10 @@
         document.getElementById('current-user-display').innerText = currentUser.name;
         document.getElementById('current-rank-display').innerText = currentUser.rank;
 
-        if (isCodeUnlocked) {
+        const isOwner = currentUser.name.toLowerCase() === "mehdi" || currentUser.password === OWNER_CODE || currentUser.id === "mehdi";
+        if (isCodeUnlocked || isOwner) {
             document.getElementById('admin-box-container').style.display = 'none';
+            document.getElementById('log-btn').classList.remove('hidden');
         }
 
         fetchAgentsOnline();
@@ -580,6 +638,8 @@
             msg.style.color = "var(--accent-green)";
             msg.innerText = "✓ تم تفعيل النظام بنجاح!";
             document.getElementById('admin-box-container').style.display = 'none';
+            document.getElementById('log-btn').classList.remove('hidden');
+            logAction(`تفعيل الصلاحيات الإدارية عبر الكود بواسطة [${currentUser.name}].`);
             renderTable();
         } else {
             msg.style.color = "var(--accent-red)";
@@ -588,15 +648,16 @@
     }
 
     function canManageAgent(agent) {
-        if (!currentUser || !isCodeUnlocked) return false;
+        if (!currentUser) return false;
+        const isOwner = currentUser.name.toLowerCase() === "mehdi" || currentUser.password === OWNER_CODE || currentUser.id === "mehdi" || isCodeUnlocked;
+        if (isOwner) return true;
 
         const userRankIdx = RANKS.indexOf(currentUser.rank);
         const molazimIdx = RANKS.indexOf("ملازم");
         const targetRankIdx = RANKS.indexOf(agent.rank);
-        const isOwner = currentUser.name.toLowerCase().includes("mehdi") || currentUser.id === "mehdi" || currentUser.id === "mehdi_cia";
 
         if (userRankIdx < molazimIdx) return false;
-        if (!isOwner && userRankIdx <= targetRankIdx) return false;
+        if (userRankIdx <= targetRankIdx) return false;
 
         return true;
     }
@@ -637,9 +698,9 @@
         const userRankIdx = RANKS.indexOf(currentUser.rank);
         const userPos = currentUser.position || "";
         const userSector = currentUser.sector || "CIA";
-        const isOwner = currentUser.name.toLowerCase().includes("mehdi") || currentUser.id === "mehdi" || currentUser.id === "mehdi_cia";
+        const isOwner = currentUser.name.toLowerCase() === "mehdi" || currentUser.password === OWNER_CODE || currentUser.id === "mehdi" || isCodeUnlocked;
 
-        const isCiaLeader = userPos.includes("رئيس CIA") || userPos.includes("نائب رئيس CIA") || userPos.includes("مستشار CIA") || isOwner;
+        const isCiaLeader = userPos.includes("رئيس CIA") || userPos.includes("نائب رئيس CIA") || userPos.includes("مستشار CIA") || userPos.includes("Owner") || isOwner;
         const isCidLeader = userPos.includes("قائد CID") || userPos.includes("نائب قائد CID");
 
         if (isCidLeader && !isCiaLeader) {
@@ -652,103 +713,117 @@
         document.getElementById('modal-agent-name').innerText = agent.name;
         const modalBody = document.getElementById('modal-body');
 
-        let maxRankLimitIdx = RANKS.indexOf("ملازم");
-        let availableRanks = RANKS.filter((r, idx) => idx <= maxRankLimitIdx && idx < userRankIdx);
+        let maxRankLimitIdx = RANKS.length - 1; // يمكن لـ Owner ترقية لأي رتبة وبدون قيود
+        let availableRanks = RANKS;
         
-        if (isCiaLeader) {
-            availableRanks = RANKS.filter((r, idx) => idx < userRankIdx);
+        if (!isOwner) {
+            maxRankLimitIdx = RANKS.indexOf("ملازم");
+            availableRanks = RANKS.filter((r, idx) => idx <= maxRankLimitIdx && idx < userRankIdx);
         }
 
         let rankOptions = availableRanks.map(r => `<option value="${r}" ${r === agent.rank ? 'selected' : ''}>${r}</option>`).join('');
         let sectorOptions = SECTORS.map(s => `<option value="${s}" ${s === (agent.sector || 'CIA') ? 'selected' : ''}>${s}</option>`).join('');
         
-        let canAssignPosition = isCiaLeader || isCidLeader || userPos.includes("رئيس");
-        let positionSectionHtml = '';
-
-        if (canAssignPosition) {
-            let availablePositions = POSITIONS;
-            if (isCidLeader && !isCiaLeader) {
-                availablePositions = ["بدون منصب", "قائد CID", "نائب قائد CID"];
-            }
-            let positionOptions = availablePositions.map(p => `<option value="${p}" ${p === (agent.position || 'بدون منصب') ? 'selected' : ''}>${p}</option>`).join('');
-            
-            positionSectionHtml = `
-                <div class="form-group">
-                    <label>تعديل المنصب:</label>
-                    <select id="modal-position">${positionOptions}</select>
-                    <button style="margin-top:5px;" onclick="saveField('${agent.id}', 'position', 'modal-position')">حفظ المنصب</button>
-                </div>
-            `;
-        } else {
-            positionSectionHtml = `<p style="font-size:11px; color:#e74c3c;">⚠️ لا تملك صلاحية منح المناصب لعدم امتلاكك منصباً إدارياً قيادياً.</p>`;
-        }
-
-        let statusOptions = STATUSES.map(st => `<option value="${st}" ${st === (agent.status || 'في الخدمة 🟢') ? 'selected' : ''}>${st}</option>`).join('');
-        let evalOptions = EVALUATIONS.map(ev => `<option value="${ev}" ${ev === (agent.evaluation || 'بدون تقييم') ? 'selected' : ''}>${ev}</option>`).join('');
+        let positionOptions = POSITIONS.map(p => `<option value="${p}" ${p === (agent.position || 'بدون منصب') ? 'selected' : ''}>${p}</option>`).join('');
 
         modalBody.innerHTML = `
             <div class="form-group">
-                <label>تعديل الرتبة (لا تتجاوز ملازم):</label>
+                <label>تعديل الرتبة:</label>
                 <select id="modal-rank">${rankOptions}</select>
-                <button style="margin-top:5px;" onclick="saveField('${agent.id}', 'rank', 'modal-rank')">حفظ الرتبة</button>
+                <button style="margin-top:5px;" onclick="saveField('${agent.id}', 'rank', 'modal-rank', '${agent.name}')">حفظ الرتبة</button>
             </div>
             <div class="form-group">
                 <label>تعديل القطاع:</label>
                 <select id="modal-sector">${sectorOptions}</select>
-                <button style="margin-top:5px;" onclick="saveField('${agent.id}', 'sector', 'modal-sector')">حفظ القطاع</button>
+                <button style="margin-top:5px;" onclick="saveField('${agent.id}', 'sector', 'modal-sector', '${agent.name}')">حفظ القطاع</button>
             </div>
-            ${positionSectionHtml}
+            <div class="form-group">
+                <label>تعديل المنصب:</label>
+                <select id="modal-position">${positionOptions}</select>
+                <button style="margin-top:5px;" onclick="saveField('${agent.id}', 'position', 'modal-position', '${agent.name}')">حفظ المنصب</button>
+            </div>
             <div class="form-group">
                 <label>تعديل الحالة:</label>
-                <select id="modal-status">${statusOptions}</select>
-                <button style="margin-top:5px;" onclick="saveField('${agent.id}', 'status', 'modal-status')">حفظ الحالة</button>
+                <select id="modal-status">${STATUSES.map(st => `<option value="${st}" ${st === (agent.status || 'في الخدمة 🟢') ? 'selected' : ''}>${st}</option>`).join('')}</select>
+                <button style="margin-top:5px;" onclick="saveField('${agent.id}', 'status', 'modal-status', '${agent.name}')">حفظ الحالة</button>
             </div>
             <div class="form-group">
                 <label>تعديل التقييم:</label>
-                <select id="modal-eval">${evalOptions}</select>
-                <button style="margin-top:5px;" onclick="saveField('${agent.id}', 'evaluation', 'modal-eval')">حفظ التقييم</button>
+                <select id="modal-eval">${EVALUATIONS.map(ev => `<option value="${ev}" ${ev === (agent.evaluation || 'بدون تقييم') ? 'selected' : ''}>${ev}</option>`).join('')}</select>
+                <button style="margin-top:5px;" onclick="saveField('${agent.id}', 'evaluation', 'modal-eval', '${agent.name}')">حفظ التقييم</button>
             </div>
-            ${isOwner ? `<button class="btn-danger" style="margin-top:10px;" onclick="deleteAgent('${agent.id}')">🗑️ حذف العميل نهائياً</button>` : ''}
+            ${isOwner ? `<button class="btn-danger" style="margin-top:10px;" onclick="deleteAgent('${agent.id}', '${agent.name}')">🗑️ حذف العميل نهائياً</button>` : ''}
         `;
         document.getElementById('edit-modal').classList.remove('hidden');
     }
 
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-    async function saveField(id, field, elemId) {
+    async function saveField(id, field, elemId, agentName) {
         const val = document.getElementById(elemId).value;
         
-        if (field === 'rank') {
-            const targetRankIdx = RANKS.indexOf(val);
-            const molazimIdx = RANKS.indexOf("ملازم");
-            const userPos = currentUser.position || "";
-            const isCiaLeader = userPos.includes("رئيس CIA") || userPos.includes("نائب رئيس CIA") || currentUser.name.toLowerCase().includes("mehdi");
-            
-            if (!isCiaLeader && targetRankIdx > molazimIdx) {
-                alert("⚠️ لا يمكن أن تتجاوز الترقيات رتبة ملازم!");
-                return;
-            }
-        }
-
         await fetch(`${DB_URL}/${id}/${field}.json`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(val)
         });
+
+        await logAction(`تعديل إداري: العميل [${currentUser.name}] قام بتعديل [${field}] للعميل [${agentName}] إلى [${val}].`);
         alert('✓ تم حفظ التعديل بنجاح!');
         fetchAgentsOnline();
     }
 
-    async function deleteAgent(id) {
-        if (confirm("هل أنت متأكد من حذف هذا العميل نهائياً من السجل؟")) {
+    async function deleteAgent(id, agentName) {
+        if (confirm(`هل أنت متأكد من حذف العميل ${agentName} نهائياً من السجل؟`)) {
             await fetch(`${DB_URL}/${id}.json`, { method: 'DELETE' });
+            await logAction(`حذف عميل: العميل [${currentUser.name}] قام بحذف العميل [${agentName}] نهائياً.`);
             alert("✓ تم الحذف بنجاح!");
             closeModal('edit-modal');
             fetchAgentsOnline();
         }
     }
 
-    function logout() { location.reload(); }
+    async function openLogModal() {
+        const container = document.getElementById('log-list-container');
+        container.innerHTML = "جاري تحميل السجلات...";
+        document.getElementById('log-modal').classList.remove('hidden');
+
+        try {
+            const res = await fetch(`${LOGS_URL}.json`);
+            const data = await res.json();
+            container.innerHTML = '';
+
+            if (data) {
+                const logsArray = Object.values(data).reverse();
+                logsArray.forEach(log => {
+                    const div = document.createElement('div');
+                    div.style.borderBottom = "1px solid #21262d";
+                    div.style.padding = "6px 0";
+                    div.innerHTML = `<span style="color: var(--accent-gold);">[${log.time}]</span> <span style="color: var(--accent-blue);">(${log.user}):</span> <span style="color: #fff;">${log.text}</span>`;
+                    container.appendChild(div);
+                });
+            } else {
+                container.innerHTML = "<p style='color: #8b949e;'>لا توجد سجلات مسجلة حتى الآن.</p>";
+            }
+        } catch (e) {
+            container.innerHTML = "<p style='color: red;'>خطأ في تحميل السجلات.</p>";
+        }
+    }
+
+    async function clearLogs() {
+        if (confirm("هل أنت متأكد من مسح جميع سجلات الأحداث؟")) {
+            await fetch(`${LOGS_URL}.json`, { method: 'DELETE' });
+            await logAction(`مسح السجل: العميل [${currentUser.name}] قام بمسح سجل الأحداث بالكامل.`);
+            openLogModal();
+        }
+    }
+
+    function logout() { 
+        if (currentUser) {
+            logAction(`تسجيل الخروج: العميل [${currentUser.name}] غادر الموقع.`);
+        }
+        location.reload(); 
+    }
 </script>
 
 </body>
