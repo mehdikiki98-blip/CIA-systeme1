@@ -38,45 +38,13 @@
             overflow-x: hidden;
         }
 
-        /* الهيدر العلوي */
-        .header-banner-styled {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            padding: 12px 40px;
-            margin-bottom: -2px;
-            position: relative;
-            z-index: 5;
-            background: linear-gradient(180deg, #181d26 0%, #0d1117 100%);
-            border: 2px solid #e2b023;
-            border-bottom: none;
-            border-radius: 12px 12px 0 0;
-            box-shadow: 0 -5px 25px rgba(243, 156, 18, 0.3), inset 0 0 10px rgba(243, 156, 18, 0.2);
-            text-align: center;
-        }
-
-        .header-banner-styled .shield-icon {
-            font-size: 20px;
-            color: #3498db;
-            filter: drop-shadow(0 0 6px #3498db);
-        }
-
-        .header-banner-styled .title-text {
-            color: var(--accent-gold-bright);
-            font-weight: 800;
-            font-size: 20px;
-            letter-spacing: 1px;
-            text-shadow: 0 0 10px rgba(255, 193, 7, 0.6);
-        }
-
         .container {
             width: 100%;
             max-width: 1200px;
             background-color: var(--panel-bg);
             border: 1px solid var(--border-color);
             border-top: 3px solid var(--accent-gold);
-            border-radius: 0 0 8px 8px;
+            border-radius: 8px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(243, 156, 18, 0.15);
             padding: 20px;
         }
@@ -158,7 +126,7 @@
             background: #c0392b;
         }
 
-        /* الزر الأحمر المميز */
+        /* الزر الأحمر حتالة المجتمع */
         .btn-red-alliance {
             background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%) !important;
             color: #fff !important;
@@ -169,6 +137,19 @@
         .btn-red-alliance:hover {
             background: linear-gradient(135deg, #ff5e4d 0%, #e74c3c 100%) !important;
             box-shadow: 0 0 15px rgba(231, 76, 60, 0.7);
+        }
+
+        /* زر القوة الضاربة Z3 */
+        .btn-strike-force {
+            background: linear-gradient(135deg, #f39c12 0%, #d35400 100%) !important;
+            color: #fff !important;
+            border: 1px solid #f1c40f !important;
+            box-shadow: 0 0 10px rgba(243, 156, 18, 0.4);
+        }
+
+        .btn-strike-force:hover {
+            background: linear-gradient(135deg, #f1c40f 0%, #e67e22 100%) !important;
+            box-shadow: 0 0 15px rgba(243, 156, 18, 0.7);
         }
 
         .btn-sm {
@@ -290,7 +271,7 @@
             gap: 10px;
         }
 
-        /* النوافذ المنبثقة Modal */
+        /* Modal */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -342,7 +323,7 @@
             margin-top: 8px;
         }
 
-        /* --- تصميم الأجهزة الأمنية --- */
+        /* الأجهزة والقطاعات */
         .alliances-section {
             margin-top: 35px;
             padding-top: 20px;
@@ -405,7 +386,6 @@
             margin-top: 3px;
         }
 
-        /* مشغل الصوت العلوي الثابت */
         .audio-control-bar {
             position: fixed;
             bottom: 15px;
@@ -433,13 +413,6 @@
 <div class="audio-control-bar">
     <span style="font-size: 12px; color: var(--accent-gold); font-weight: bold;">🎵 شيلة Alpha:</span>
     <button id="music-btn" style="background: var(--accent-gold); color: #000; font-size: 11px; padding: 4px 10px; border-radius: 15px;" onclick="toggleAudio()">▶️ تشغيل الصوت</button>
-</div>
-
-<!-- الهيدر العلوي -->
-<div class="header-banner-styled">
-    <span class="shield-icon">🛡️</span>
-    <span class="title-text">أجهزة التحالف والقطاعات الأمنية</span>
-    <span class="shield-icon">🛡️</span>
 </div>
 
 <div class="container">
@@ -480,8 +453,9 @@
             </div>
 
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <!-- التعديل المطلوب بدقة هنا -->
                 <button class="btn-red-alliance" onclick="scrollToAlliances()">🛡️ حتالة المجتمع</button>
+                <!-- الزر الجديد المطلوب: القوة الضاربة Z3 -->
+                <button class="btn-strike-force" onclick="scrollToAlliances()">⚡ القوة الضاربة (Z3)</button>
                 
                 <div id="leader-quick-btn-container" class="hidden">
                     <button style="background: var(--accent-gold); color: #000;" onclick="toggleLeaderPanel()">⚡ فتح قائمة الإدارة والترقيات</button>
@@ -517,11 +491,18 @@
             </tbody>
         </table>
 
-        <!-- قسم الهيكلية الأمنية والشركاء -->
+        <!-- قسم القطاعات والأجهزة -->
         <div class="alliances-section" id="alliances-sec">
 
-            <!-- الأجهزة والقطاعات الأمنية المشتركة -->
             <div class="sub-factions-grid">
+
+                <!-- بطاقة القوة الضاربة Z3 المُضافة -->
+                <div class="faction-card">
+                    <span class="faction-tag" style="background: #d35400; color: #fff;">⚡ القوة الضاربة</span>
+                    <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/1067/1067357.png" alt="Z3 Logo">
+                    <div class="faction-name">Z3</div>
+                    <div class="faction-desc">وحدة القوة الضاربة والعمليات الخاصة</div>
+                </div>
 
                 <!-- 1. التدخل السريع -->
                 <div class="faction-card">
@@ -570,7 +551,7 @@
     </div>
 </div>
 
-<!-- النافذة المنبثقة لقائمة الترقية والإدارة -->
+<!-- Modal -->
 <div id="edit-modal" class="modal-overlay hidden">
     <div class="modal-content">
         <div class="modal-header">
@@ -619,7 +600,6 @@
     let globalAgents = [];
     let refreshInterval = null;
 
-    // التحكم في تشغيل الصوت
     function toggleAudio() {
         const audio = document.getElementById('bg-music');
         const btn = document.getElementById('music-btn');
@@ -637,7 +617,6 @@
         }
     }
 
-    // تشغيل تلقائي بمجرد أي ضغطة بالأرضية
     window.addEventListener('click', function() {
         const audio = document.getElementById('bg-music');
         if (audio.paused) {
@@ -867,6 +846,7 @@
         let sectorOptions = `
             <option value="CIA" ${agent.sector === 'CIA' ? 'selected' : ''}>CIA</option>
             <option value="CID" ${agent.sector === 'CID' ? 'selected' : ''}>CID</option>
+            <option value="Z3" ${agent.sector === 'Z3' ? 'selected' : ''}>Z3 (القوة الضاربة)</option>
         `;
         let positionOptions = POSITIONS.map(p => `<option value="${p}" ${p === agent.position ? 'selected' : ''}>${p}</option>`).join('');
         let statusOptions = STATUSES.map(s => `<option value="${s}" ${s === agent.status ? 'selected' : ''}>${s}</option>`).join('');
