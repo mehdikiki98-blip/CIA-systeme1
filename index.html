@@ -359,7 +359,7 @@
         </div>
 
         <div class="admin-box" id="admin-box-container">
-            <h3 style="font-size: 13px; margin-bottom: 8px; color: var(--accent-gold);">🔓 تفعيل الصلاحيات عبر الكود</h3>
+            <h3 style="font-size: 13px; margin-bottom: 8px; color: var(--accent-gold);">🔒 تفعيل الصلاحيات عبر الكود</h3>
             <div style="display: flex; gap: 8px;">
                 <input type="password" id="admin-code-input" placeholder="أدخل كود التفعيل...">
                 <button style="width: 120px;" onclick="unlockAdmin()">تفعيل</button>
@@ -521,6 +521,8 @@
 
         if (isCodeUnlocked) {
             document.getElementById('admin-box-container').style.display = 'none';
+        } else {
+            document.getElementById('admin-box-container').style.display = 'block';
         }
 
         fetchAgentsOnline();
