@@ -113,20 +113,10 @@
             box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
         }
 
-        .btn-full {
-            width: 100%;
-        }
+        .btn-full { width: 100%; }
+        .btn-danger { background: var(--accent-red); color: #fff; }
+        .btn-danger:hover { background: #c0392b; }
 
-        .btn-danger {
-            background: var(--accent-red);
-            color: #fff;
-        }
-
-        .btn-danger:hover {
-            background: #c0392b;
-        }
-
-        /* الزر الأحمر حتالة المجتمع */
         .btn-red-alliance {
             background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%) !important;
             color: #fff !important;
@@ -139,7 +129,6 @@
             box-shadow: 0 0 15px rgba(231, 76, 60, 0.7);
         }
 
-        /* زر القوة الضاربة */
         .btn-strike-force {
             background: linear-gradient(135deg, #f39c12 0%, #d35400 100%) !important;
             color: #fff !important;
@@ -152,7 +141,6 @@
             box-shadow: 0 0 15px rgba(243, 156, 18, 0.7);
         }
 
-        /* سطر فاصل بين الأزرار */
         .btn-divider {
             width: 1px;
             height: 25px;
@@ -161,15 +149,8 @@
             align-self: center;
         }
 
-        .btn-sm {
-            padding: 4px 8px;
-            font-size: 11px;
-            width: auto;
-        }
-
-        .hidden {
-            display: none !important;
-        }
+        .btn-sm { padding: 4px 8px; font-size: 11px; width: auto; }
+        .hidden { display: none !important; }
 
         table {
             width: 100%;
@@ -177,9 +158,7 @@
             margin-top: 15px;
         }
 
-        tbody tr:hover {
-            background-color: rgba(212, 175, 55, 0.05);
-        }
+        tbody tr:hover { background-color: rgba(212, 175, 55, 0.05); }
 
         th, td {
             padding: 8px 10px;
@@ -188,10 +167,7 @@
             font-size: 12px;
         }
 
-        th {
-            background-color: #0d1117;
-            color: var(--accent-gold);
-        }
+        th { background-color: #0d1117; color: var(--accent-gold); }
 
         .agent-name-click {
             color: var(--accent-gold);
@@ -200,63 +176,19 @@
             font-weight: bold;
         }
 
-        .agent-name-click:hover {
-            color: #fff;
-        }
-
-        .badge {
+        .badge, .badge-sector, .badge-position, .badge-status, .badge-eval {
             padding: 3px 6px;
             border-radius: 4px;
             font-size: 11px;
             font-weight: bold;
-            background: #21262d;
-            color: var(--accent-gold);
-            border: 1px solid var(--accent-gold);
             display: inline-block;
         }
 
-        .badge-sector {
-            padding: 3px 6px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: bold;
-            background: #1b2838;
-            color: var(--accent-blue);
-            border: 1px solid var(--accent-blue);
-            display: inline-block;
-        }
-
-        .badge-position {
-            padding: 3px 6px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: bold;
-            background: #2c1d38;
-            color: var(--accent-purple);
-            border: 1px solid var(--accent-purple);
-            display: inline-block;
-        }
-
-        .badge-status {
-            padding: 3px 6px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: bold;
-            background: #0d1117;
-            border: 1px solid var(--border-color);
-            display: inline-block;
-        }
-
-        .badge-eval {
-            padding: 3px 6px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: bold;
-            background: #17202a;
-            color: #2ecc71;
-            border: 1px solid #2ecc71;
-            display: inline-block;
-        }
+        .badge { background: #21262d; color: var(--accent-gold); border: 1px solid var(--accent-gold); }
+        .badge-sector { background: #1b2838; color: var(--accent-blue); border: 1px solid var(--accent-blue); }
+        .badge-position { background: #2c1d38; color: var(--accent-purple); border: 1px solid var(--accent-purple); }
+        .badge-status { background: #0d1117; border: 1px solid var(--border-color); }
+        .badge-eval { background: #17202a; color: #2ecc71; border: 1px solid #2ecc71; }
 
         .admin-box {
             background: #0d1117;
@@ -280,7 +212,6 @@
             gap: 10px;
         }
 
-        /* Modal */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -301,7 +232,6 @@
             max-width: 650px;
             max-height: 85vh;
             overflow-y: auto;
-            box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
         }
 
         .modal-header {
@@ -313,31 +243,26 @@
             padding-bottom: 10px;
         }
 
-        .modal-header h3 {
-            color: var(--accent-gold);
-            font-size: 16px;
+        .close-btn { background: transparent; color: var(--accent-red); font-size: 20px; border: none; cursor: pointer; }
+
+        /* ترويسة وعناوين الأقسام السفليّة المفصولة */
+        .section-title-box {
+            background: #0d1117;
+            border: 1px solid var(--border-color);
+            border-right: 4px solid var(--accent-gold);
+            padding: 10px 15px;
+            margin: 25px 0 15px 0;
+            text-align: right;
+            border-radius: 4px;
         }
 
-        .close-btn {
-            background: transparent;
-            color: var(--accent-red);
-            font-size: 20px;
-            border: none;
-            cursor: pointer;
+        .section-title-box h3 {
+            color: #fff;
+            font-size: 14px;
         }
 
-        .error-msg {
-            color: var(--accent-red);
-            font-size: 12px;
-            margin-top: 8px;
-        }
-
-        /* الأجهزة والقطاعات */
-        .alliances-section {
-            margin-top: 35px;
-            padding-top: 20px;
-            border-top: 2px solid var(--border-color);
-            text-align: center;
+        .section-title-box.scum-title {
+            border-right-color: var(--accent-red);
         }
 
         .sub-factions-grid {
@@ -361,7 +286,6 @@
         .faction-card:hover {
             border-color: var(--accent-gold);
             transform: translateY(-4px);
-            box-shadow: 0 6px 18px rgba(212, 175, 55, 0.2);
         }
 
         .faction-tag {
@@ -372,28 +296,17 @@
             padding: 2px 8px;
             border-radius: 12px;
             margin-bottom: 10px;
-            text-transform: uppercase;
         }
 
         .faction-img {
-            width: 65px;
-            height: 65px;
+            width: 60px;
+            height: 60px;
             object-fit: contain;
             margin-bottom: 10px;
-            filter: drop-shadow(0 0 5px rgba(255,255,255,0.15));
         }
 
-        .faction-name {
-            font-weight: bold;
-            color: #fff;
-            font-size: 13px;
-        }
-
-        .faction-desc {
-            font-size: 10px;
-            color: #8b949e;
-            margin-top: 3px;
-        }
+        .faction-name { font-weight: bold; color: #fff; font-size: 13px; }
+        .faction-desc { font-size: 10px; color: #8b949e; margin-top: 3px; }
 
         .audio-control-bar {
             position: fixed;
@@ -407,18 +320,15 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
         }
     </style>
 </head>
 <body>
 
-<!-- صوت شيلة Alpha Alexander -->
 <audio id="bg-music" loop>
     <source src="https://files.catbox.moe/5z924f.mp3" type="audio/mpeg">
 </audio>
 
-<!-- مشغل الصوت السريع -->
 <div class="audio-control-bar">
     <span style="font-size: 12px; color: var(--accent-gold); font-weight: bold;">🎵 شيلة Alpha:</span>
     <button id="music-btn" style="background: var(--accent-gold); color: #000; font-size: 11px; padding: 4px 10px; border-radius: 15px;" onclick="toggleAudio()">▶️ تشغيل الصوت</button>
@@ -430,7 +340,7 @@
         <p>نظام إلكتروني موحد لمتابعة وإدارة الرتب والقطاعات والمناصب مباشرة أونلاين</p>
     </div>
 
-    <!-- 1. صفحة التسجيل والدخول -->
+    <!-- التسجيل والدخول -->
     <div id="login-section">
         <h2 style="margin-bottom: 12px; font-size: 15px;">تسجيل الدخول / إنشاء حساب عميل</h2>
         <form id="login-form">
@@ -442,18 +352,12 @@
                 <label for="password">كلمة السر الخاصة بك:</label>
                 <input type="password" id="password" placeholder="أدخل كلمة السر..." required autocomplete="off">
             </div>
-            <div class="form-group">
-                <label for="initial-rank">الرتبة الأولية عند التسجيل الجديد:</label>
-                <select id="initial-rank" disabled>
-                    <option value="مستجد" selected>مستجد</option>
-                </select>
-            </div>
             <button type="submit" id="submit-btn" class="btn-full">دخول / إنشاء حساب</button>
-            <p id="login-error" class="error-msg"></p>
+            <p id="login-error" class="error-msg" style="color:red; font-size:12px; margin-top:5px;"></p>
         </form>
     </div>
 
-    <!-- 2. لوحة النظام الرئيسية -->
+    <!-- اللوحة الرئيسية -->
     <div id="dashboard-section" class="hidden">
         <div class="top-bar">
             <div>
@@ -461,17 +365,13 @@
                 (<span id="current-rank-display" style="color: #fff;"></span>)
             </div>
 
-            <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
-                <button class="btn-red-alliance" onclick="scrollToAlliances()">🛡️ حتالة المجتمع</button>
-                
-                <!-- سطر فاصل بين حتالة المجتمع والقوة الضاربة -->
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                <button class="btn-strike-force" onclick="scrollToSec('cia-sec')">⚡ قطاع CIA والقوة الضاربة</button>
                 <div class="btn-divider"></div>
-
-                <!-- زر القوة الضاربة مع قوس CIA فوقه -->
-                <button class="btn-strike-force" onclick="scrollToAlliances()">⚡ القوة الضاربة (CIA)</button>
+                <button class="btn-red-alliance" onclick="scrollToSec('scum-sec')">🛡️ حتالة المجتمع</button>
                 
                 <div id="leader-quick-btn-container" class="hidden">
-                    <button style="background: var(--accent-gold); color: #000;" onclick="toggleLeaderPanel()">⚡ فتح قائمة الإدارة والترقيات</button>
+                    <button style="background: var(--accent-gold); color: #000;" onclick="toggleLeaderPanel()">⚡ الإدارة</button>
                 </div>
 
                 <button class="btn-danger btn-sm" onclick="logout()">تسجيل الخروج</button>
@@ -481,7 +381,7 @@
         <div class="admin-box" id="admin-box-container">
             <h3 style="font-size: 13px; margin-bottom: 8px; color: var(--accent-gold);">🔓 تفعيل الصلاحيات عبر الكود</h3>
             <div style="display: flex; gap: 8px;">
-                <input type="password" id="admin-code-input" placeholder="أدخل كود التفعيل الخارجي...">
+                <input type="password" id="admin-code-input" placeholder="أدخل كود التفعيل...">
                 <button style="width: 120px;" onclick="unlockAdmin()">تفعيل</button>
             </div>
             <p id="admin-msg" style="font-size: 12px; margin-top: 6px; font-weight: bold;"></p>
@@ -497,68 +397,72 @@
                     <th>القطاع</th>
                     <th>المنصب</th>
                     <th>التقييم</th>
-                    <th id="admin-actions-header">تعديل الإجراءات</th>
+                    <th>تعديل الإجراءات</th>
                 </tr>
             </thead>
-            <tbody id="agents-table-body">
-            </tbody>
+            <tbody id="agents-table-body"></tbody>
         </table>
 
-        <!-- قسم القطاعات والأجهزة -->
-        <div class="alliances-section" id="alliances-sec">
+        <!-- ==================== 1. قسم قطاع CIA والقوة الضاربة (مفصل بشكل كامل) ==================== -->
+        <div id="cia-sec" class="section-title-box">
+            <h3>⚡ قطاع CIA والوحدات التابعة له</h3>
+        </div>
 
-            <div class="sub-factions-grid">
-
-                <!-- بطاقة القوة الضاربة التابعة لـ CIA -->
-                <div class="faction-card">
-                    <span class="faction-tag" style="background: #d35400; color: #fff;">⚡ القوة الضاربة</span>
-                    <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/1067/1067357.png" alt="Strike Force Logo">
-                    <div class="faction-name">القوة الضاربة</div>
-                    <div class="faction-desc">وحدة التدخل الخاص التابعة لـ CIA</div>
-                </div>
-
-                <!-- 1. التدخل السريع -->
-                <div class="faction-card">
-                    <span class="faction-tag" style="background: #e67e22; color: #fff;">🔥 التدخل السريع</span>
-                    <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/1022/1022331.png" alt="RDF Logo">
-                    <div class="faction-name">RDF</div>
-                    <div class="faction-desc">قوات الانتشار والتدخل السريع</div>
-                </div>
-
-                <!-- 2. القوات الخاصة -->
-                <div class="faction-card">
-                    <span class="faction-tag" style="background: #2980b9; color: #fff;">🛡️ القوات الخاصة</span>
-                    <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/947/947502.png" alt="SSF Logo">
-                    <div class="faction-name">SSF</div>
-                    <div class="faction-desc">قوات الأمن الخاصة</div>
-                </div>
-
-                <!-- 3. التحقيقات -->
-                <div class="faction-card">
-                    <span class="faction-tag" style="background: #f1c40f; color: #000;">🔍 التحقيقات</span>
-                    <img class="faction-img" src="https://upload.wikimedia.org/wikipedia/commons/d/da/Seal_of_the_Federal_Bureau_of_Investigation.svg" alt="FBI Logo">
-                    <div class="faction-name">FBI</div>
-                    <div class="faction-desc">مكتب التحقيقات الفيدرالي</div>
-                </div>
-
-                <!-- 4. الأمن العام -->
-                <div class="faction-card">
-                    <span class="faction-tag" style="background: #f39c12; color: #000;">🚓 الأمن العام</span>
-                    <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/2067/2067831.png" alt="POLICE Logo">
-                    <div class="faction-name">POLICE</div>
-                    <div class="faction-desc">جهاز الشرطة العامة</div>
-                </div>
-
-                <!-- 5. القوات المسلحة -->
-                <div class="faction-card">
-                    <span class="faction-tag" style="background: #27ae60; color: #fff;">⚔️ القوات المسلحة</span>
-                    <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/2599/2599636.png" alt="ARMY Logo">
-                    <div class="faction-name">ARMY</div>
-                    <div class="faction-desc">الجيش والقوات المسلحة</div>
-                </div>
-
+        <div class="sub-factions-grid">
+            <!-- كارت القوة الضاربة داخل CIA -->
+            <div class="faction-card" style="border-color: #f39c12;">
+                <span class="faction-tag" style="background: #d35400; color: #fff;">⚡ CIA STRIKE FORCE</span>
+                <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/1067/1067357.png" alt="Strike Force Logo">
+                <div class="faction-name">القوة الضاربة (CIA)</div>
+                <div class="faction-desc">وحدة التدخل والعمليات الخاصة التابعة لـ CIA</div>
             </div>
 
+            <!-- التدخل السريع -->
+            <div class="faction-card">
+                <span class="faction-tag" style="background: #e67e22; color: #fff;">🔥 التدخل السريع</span>
+                <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/1022/1022331.png" alt="RDF Logo">
+                <div class="faction-name">RDF</div>
+                <div class="faction-desc">قوات الانتشار والتدخل السريع</div>
+            </div>
+
+            <!-- القوات الخاصة -->
+            <div class="faction-card">
+                <span class="faction-tag" style="background: #2980b9; color: #fff;">🛡️ القوات الخاصة</span>
+                <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/947/947502.png" alt="SSF Logo">
+                <div class="faction-name">SSF</div>
+                <div class="faction-desc">قوات الأمن الخاصة</div>
+            </div>
+
+            <!-- مكتب التحقيقات -->
+            <div class="faction-card">
+                <span class="faction-tag" style="background: #f1c40f; color: #000;">🔍 التحقيقات</span>
+                <img class="faction-img" src="https://upload.wikimedia.org/wikipedia/commons/d/da/Seal_of_the_Federal_Bureau_of_Investigation.svg" alt="FBI Logo">
+                <div class="faction-name">FBI</div>
+                <div class="faction-desc">مكتب التحقيقات الفيدرالي</div>
+            </div>
+        </div>
+
+        <!-- ==================== 2. قسم حتالة المجتمع (مفصول تماماً تحت) ==================== -->
+        <div id="scum-sec" class="section-title-box scum-title">
+            <h3 style="color: var(--accent-red);">🛡️ قطاع حتالة المجتمع (الأجهزة الأخرى)</h3>
+        </div>
+
+        <div class="sub-factions-grid">
+            <!-- الأمن العام -->
+            <div class="faction-card">
+                <span class="faction-tag" style="background: #e74c3c; color: #fff;">🚓 الأمن العام</span>
+                <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/2067/2067831.png" alt="POLICE Logo">
+                <div class="faction-name">POLICE</div>
+                <div class="faction-desc">جهاز الشرطة العامة</div>
+            </div>
+
+            <!-- القوات المسلحة -->
+            <div class="faction-card">
+                <span class="faction-tag" style="background: #c0392b; color: #fff;">⚔️ القوات المسلحة</span>
+                <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/2599/2599636.png" alt="ARMY Logo">
+                <div class="faction-name">ARMY</div>
+                <div class="faction-desc">الجيش والقوات المسلحة العامة</div>
+            </div>
         </div>
 
     </div>
@@ -571,8 +475,7 @@
             <h3>⚙️ لوحة الترقية وتعديل العميل: <span id="modal-agent-name" style="color: #fff;"></span></h3>
             <button class="close-btn" onclick="closeModal('edit-modal')">✖</button>
         </div>
-        <div id="modal-body" style="display: flex; flex-direction: column; gap: 12px;">
-        </div>
+        <div id="modal-body" style="display: flex; flex-direction: column; gap: 12px;"></div>
     </div>
 </div>
 
@@ -586,19 +489,8 @@
     ];
 
     const POSITIONS = [
-        "بدون منصب",
-        "رئيس CIA",
-        "نائب رئيس CIA",
-        "مستشار CIA",
-        "مسؤول أفراد CIA",
-        "مسؤول ضباط CIA",
-        "محقق CIA",
-        "رئيس CID",
-        "نائب رئيس CID",
-        "مستشار CID",
-        "مسؤول أفراد CID",
-        "مسؤول ضباط CID",
-        "محقق CID"
+        "بدون منصب", "رئيس CIA", "نائب رئيس CIA", "مستشار CIA", "مسؤول أفراد CIA", 
+        "مسؤول ضباط CIA", "محقق CIA", "رئيس CID", "نائب رئيس CID", "مستشار CID"
     ];
 
     const STATUSES = ["في الخدمة 🟢", "مفصول 🔴"];
@@ -630,26 +522,9 @@
         }
     }
 
-    window.addEventListener('click', function() {
-        const audio = document.getElementById('bg-music');
-        if (audio.paused) {
-            audio.volume = 0.5;
-            audio.play().then(() => {
-                const btn = document.getElementById('music-btn');
-                if (btn) {
-                    btn.innerText = "⏸️ إيقاف الصوت";
-                    btn.style.background = "#e74c3c";
-                    btn.style.color = "#fff";
-                }
-            }).catch(() => {});
-        }
-    }, { once: true });
-
-    function scrollToAlliances() {
-        const sec = document.getElementById('alliances-sec');
-        if (sec) {
-            sec.scrollIntoView({ behavior: 'smooth' });
-        }
+    function scrollToSec(id) {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
     }
 
     document.getElementById('login-form').addEventListener('submit', async function(e) {
@@ -676,7 +551,7 @@
                     currentUser = { id: userKey, ...userData };
                     showDashboard();
                 } else {
-                    errorMsg.innerText = "✕ كلمة السر غير صحيحة لهذا الاسم!";
+                    errorMsg.innerText = "✕ كلمة السر غير صحيحة!";
                 }
             } else {
                 const newUser = { 
@@ -720,44 +595,16 @@
             if (data) {
                 Object.keys(data).forEach(key => {
                     if (data[key]) {
-                        const sector = data[key].sector || "CIA";
-                        const position = data[key].position || "بدون منصب";
-                        const status = data[key].status || "في الخدمة 🟢";
-                        const evaluation = data[key].evaluation || "بدون تقييم";
-                        const evaluator = data[key].evaluator || "";
-                        
-                        globalAgents.push({ id: key, ...data[key], sector, position, status, evaluation, evaluator });
-                        
+                        globalAgents.push({ id: key, ...data[key] });
                         if (currentUser && currentUser.id === key) {
                             currentUser.rank = data[key].rank;
-                            currentUser.sector = sector;
-                            currentUser.position = position;
-                            currentUser.status = status;
-                            currentUser.evaluation = evaluation;
-                            currentUser.evaluator = evaluator;
                             document.getElementById('current-rank-display').innerText = currentUser.rank;
                         }
                     }
                 });
             }
-
-            const isTopLeader = (
-                currentUser.rank === "قائد الاستخبارات" || 
-                currentUser.position === "رئيس CIA" || 
-                currentUser.position === "نائب رئيس CIA" || 
-                currentUser.position === "مستشار CIA"
-            );
-
-            if (isTopLeader) {
-                document.getElementById('leader-quick-btn-container').classList.remove('hidden');
-            } else {
-                document.getElementById('leader-quick-btn-container').classList.add('hidden');
-            }
-
             renderTable();
-        } catch (e) {
-            console.log("جارٍ التحديث...");
-        }
+        } catch (e) {}
     }
 
     function unlockAdmin() {
@@ -766,18 +613,13 @@
 
         if (inputCode === OWNER_CODE) {
             isOwnerUnlocked = true;
-            isCodeUnlocked = false;
             msg.style.color = "var(--accent-green)";
-            msg.innerText = "👑 تم تفعيل كامل الصلاحيات المطلقة والمناصب!";
+            msg.innerText = "👑 تم تفعيل كامل الصلاحيات المطلقة!";
             renderTable();
-            return;
-        }
-
-        if (inputCode === ADMIN_SECRET) {
+        } else if (inputCode === ADMIN_SECRET) {
             isCodeUnlocked = true;
-            isOwnerUnlocked = false;
             msg.style.color = "var(--accent-green)";
-            msg.innerText = "✓ تم التفعيل! يمكنك التعديل لمن هم أقل منك رتبة.";
+            msg.innerText = "✓ تم التفعيل بكتُبة مسؤول!";
             renderTable();
         } else {
             msg.style.color = "var(--accent-red)";
@@ -786,48 +628,20 @@
     }
 
     function renderTable() {
-        if (document.activeElement && document.activeElement.tagName === 'SELECT') return;
-
         const tbody = document.getElementById('agents-table-body');
         if (!tbody || !currentUser) return;
         tbody.innerHTML = '';
 
-        const myRankIndex = RANKS.indexOf(currentUser.rank);
-        const isTopLeader = (
-            currentUser.rank === "قائد الاستخبارات" || 
-            currentUser.position === "رئيس CIA" || 
-            currentUser.position === "نائب رئيس CIA" || 
-            currentUser.position === "مستشار CIA"
-        );
-
         globalAgents.forEach((agent) => {
             const tr = document.createElement('tr');
-            const targetRankIndex = RANKS.indexOf(agent.rank);
-            const currentSector = agent.sector || "CIA";
-            const currentPosition = agent.position || "بدون منصب";
-            const currentStatus = agent.status || "في الخدمة 🟢";
-            const currentEval = agent.evaluation || "بدون تقييم";
-            const currentEvaluator = agent.evaluator ? `(المقيِّم: ${agent.evaluator})` : '';
-
-            let actionsHTML = '';
-
-            if (isOwnerUnlocked || isTopLeader || (isCodeUnlocked && myRankIndex > targetRankIndex)) {
-                actionsHTML = `<td><button class="btn-sm" onclick="openModal('${agent.id}')">⚙️ فتح التعديل</button></td>`;
-            } else {
-                actionsHTML = `<td><span style="font-size:10px; color:#777;">🔒 يتطلب صلاحية</span></td>`;
-            }
-
             tr.innerHTML = `
                 <td><span class="agent-name-click" onclick="openModal('${agent.id}')">${agent.name}</span></td>
-                <td><span class="badge-status">${currentStatus}</span></td>
+                <td><span class="badge-status">${agent.status || 'في الخدمة 🟢'}</span></td>
                 <td><span class="badge">${agent.rank}</span></td>
-                <td><span class="badge-sector">${currentSector}</span></td>
-                <td><span class="badge-position">${currentPosition}</span></td>
-                <td>
-                    <span class="badge-eval">${currentEval}</span>
-                    <span class="eval-evaluator">${currentEvaluator}</span>
-                </td>
-                ${actionsHTML}
+                <td><span class="badge-sector">${agent.sector || 'CIA'}</span></td>
+                <td><span class="badge-position">${agent.position || 'بدون منصب'}</span></td>
+                <td><span class="badge-eval">${agent.evaluation || 'بدون تقييم'}</span></td>
+                <td><button class="btn-sm" onclick="openModal('${agent.id}')">⚙️ تعديل</button></td>
             `;
             tbody.appendChild(tr);
         });
@@ -837,116 +651,28 @@
         const agent = globalAgents.find(a => a.id === agentId);
         if (!agent) return;
 
-        const myRankIndex = RANKS.indexOf(currentUser.rank);
-        const targetRankIndex = RANKS.indexOf(agent.rank);
-        const isTopLeader = (
-            currentUser.rank === "قائد الاستخبارات" || 
-            currentUser.position === "رئيس CIA" || 
-            currentUser.position === "نائب رئيس CIA" || 
-            currentUser.position === "مستشار CIA"
-        );
-
-        if (!isOwnerUnlocked && !isTopLeader && (!isCodeUnlocked || myRankIndex <= targetRankIndex)) {
-            alert("🔒 لا تملك صلاحية تعديل هذا العميل!");
-            return;
-        }
-
         document.getElementById('modal-agent-name').innerText = agent.name;
         const modalBody = document.getElementById('modal-body');
 
-        let allowedRanks = isOwnerUnlocked || isTopLeader ? RANKS : RANKS.slice(0, myRankIndex);
-        let rankOptions = allowedRanks.map(r => `<option value="${r}" ${r === agent.rank ? 'selected' : ''}>${r}</option>`).join('');
-        let sectorOptions = `
-            <option value="CIA" ${agent.sector === 'CIA' ? 'selected' : ''}>CIA</option>
-            <option value="CID" ${agent.sector === 'CID' ? 'selected' : ''}>CID</option>
-            <option value="القوة الضاربة" ${agent.sector === 'القوة الضاربة' ? 'selected' : ''}>القوة الضاربة (CIA)</option>
-        `;
+        let rankOptions = RANKS.map(r => `<option value="${r}" ${r === agent.rank ? 'selected' : ''}>${r}</option>`).join('');
         let positionOptions = POSITIONS.map(p => `<option value="${p}" ${p === agent.position ? 'selected' : ''}>${p}</option>`).join('');
-        let statusOptions = STATUSES.map(s => `<option value="${s}" ${s === agent.status ? 'selected' : ''}>${s}</option>`).join('');
-        let evalOptions = EVALUATIONS.map(e => `<option value="${e}" ${e === agent.evaluation ? 'selected' : ''}>${e}</option>`).join('');
 
         modalBody.innerHTML = `
             <div class="form-group">
-                <label>تعديل اسم العميل:</label>
-                <div style="display:flex; gap:5px;">
-                    <input type="text" id="modal-name-input" value="${agent.name}">
-                    <button style="width:90px; background:var(--accent-gold); color:#000;" onclick="saveName('${agent.id}')">حفظ</button>
-                </div>
+                <label>تعديل الرتبة:</label>
+                <select id="modal-rank">${rankOptions}</select>
+                <button style="margin-top:5px;" onclick="saveField('${agent.id}', 'rank', 'modal-rank')">حفظ الرتبة</button>
             </div>
-
-            <div class="form-group">
-                <label>تعديل الرتبة والترقية:</label>
-                <div style="display:flex; gap:5px;">
-                    <select id="modal-rank">${rankOptions}</select>
-                    <button style="width:90px;" onclick="saveField('${agent.id}', 'rank', 'modal-rank')">حفظ</button>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>تعديل حالة الخدمة:</label>
-                <div style="display:flex; gap:5px;">
-                    <select id="modal-status">${statusOptions}</select>
-                    <button style="width:90px; background:var(--accent-green); color:#000;" onclick="saveField('${agent.id}', 'status', 'modal-status')">حفظ</button>
-                </div>
-            </div>
-
             <div class="form-group">
                 <label>تعديل المنصب:</label>
-                <div style="display:flex; gap:5px;">
-                    <select id="modal-position">${positionOptions}</select>
-                    <button style="width:90px; background:var(--accent-purple); color:#fff;" onclick="saveField('${agent.id}', 'position', 'modal-position')">حفظ</button>
-                </div>
+                <select id="modal-position">${positionOptions}</select>
+                <button style="margin-top:5px;" onclick="saveField('${agent.id}', 'position', 'modal-position')">حفظ المنصب</button>
             </div>
-
-            <div class="form-group">
-                <label>تعديل القطاع:</label>
-                <div style="display:flex; gap:5px;">
-                    <select id="modal-sector">${sectorOptions}</select>
-                    <button style="width:90px; background:var(--accent-blue); color:#fff;" onclick="saveField('${agent.id}', 'sector', 'modal-sector')">حفظ</button>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>إضافة تقييم:</label>
-                <div style="display:flex; gap:5px;">
-                    <select id="modal-eval">${evalOptions}</select>
-                    <button style="width:90px; background:#e67e22; color:#fff;" onclick="saveEvaluation('${agent.id}')">تقييم</button>
-                </div>
-            </div>
-
-            <button class="btn-danger btn-full" style="margin-top:10px;" onclick="deleteAgentOnline('${agent.id}')">🗑️ طرد العميل نهائياً</button>
         `;
-
         document.getElementById('edit-modal').classList.remove('hidden');
     }
 
-    function closeModal(id) {
-        document.getElementById(id).classList.add('hidden');
-    }
-
-    function toggleLeaderPanel() {
-        if (globalAgents.length > 0) {
-            openModal(globalAgents[0].id);
-        }
-    }
-
-    async function saveName(id) {
-        const newName = document.getElementById('modal-name-input').value.trim();
-        if (!newName) {
-            alert("يرجى إدخال اسم صحيح!");
-            return;
-        }
-
-        await fetch(`${DB_URL}/${id}/name.json`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newName)
-        });
-
-        alert('✏️ تم تغيير اسم العميل بنجاح!');
-        closeModal('edit-modal');
-        fetchAgentsOnline();
-    }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
     async function saveField(id, field, elemId) {
         const val = document.getElementById(elemId).value;
@@ -955,47 +681,11 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(val)
         });
-        alert('✓ تم حفظ التعديل بنجاح!');
+        alert('✓ تم حفظ التعديل!');
         fetchAgentsOnline();
     }
 
-    async function saveEvaluation(id) {
-        const val = document.getElementById('modal-eval').value;
-        await fetch(`${DB_URL}/${id}/evaluation.json`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(val)
-        });
-        await fetch(`${DB_URL}/${id}/evaluator.json`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(currentUser.name)
-        });
-        alert('⭐ تم إضافة التقييم بنجاح!');
-        fetchAgentsOnline();
-    }
-
-    async function deleteAgentOnline(id) {
-        if (confirm("هل أنت تأكد من طرد هذا العميل من القاعدة؟")) {
-            await fetch(`${DB_URL}/${id}.json`, { method: 'DELETE' });
-            closeModal('edit-modal');
-            fetchAgentsOnline();
-        }
-    }
-
-    function logout() {
-        if (refreshInterval) clearInterval(refreshInterval);
-        refreshInterval = null;
-        isOwnerUnlocked = false;
-        isCodeUnlocked = false;
-        currentUser = null;
-        document.getElementById('password').value = '';
-        document.getElementById('login-error').innerText = '';
-        document.getElementById('admin-code-input').value = '';
-        document.getElementById('admin-msg').innerText = '';
-        document.getElementById('dashboard-section').classList.add('hidden');
-        document.getElementById('login-section').classList.remove('hidden');
-    }
+    function logout() { location.reload(); }
 </script>
 
 </body>
