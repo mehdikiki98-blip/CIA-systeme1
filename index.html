@@ -36,7 +36,7 @@
 
         .container {
             width: 100%;
-            max-width: 1150px;
+            max-width: 1200px;
             background-color: var(--panel-bg);
             border: 1px solid var(--border-color);
             border-top: 3px solid var(--accent-gold);
@@ -199,6 +199,24 @@
             display: inline-block;
         }
 
+        .badge-eval {
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            background: #17202a;
+            color: #2ecc71;
+            border: 1px solid #2ecc71;
+            display: inline-block;
+        }
+
+        .eval-evaluator {
+            display: block;
+            font-size: 9px;
+            color: #8b949e;
+            margin-top: 3px;
+        }
+
         .admin-box {
             background: #0d1117;
             border: 1px dashed var(--accent-gold);
@@ -241,7 +259,7 @@
         }
 
         .action-flex select {
-            width: 105px;
+            width: 110px;
             padding: 4px;
             font-size: 11px;
         }
@@ -322,6 +340,7 @@
                     <th>الرتبة الحالية</th>
                     <th>القطاع</th>
                     <th>المنصب</th>
+                    <th>التقييم</th>
                     <th id="admin-actions-header">تعديل الإجراءات</th>
                 </tr>
             </thead>
@@ -355,6 +374,14 @@
     const STATUSES = [
         "متصل 🟢",
         "غير متصل 🔴"
+    ];
+
+    const EVALUATIONS = [
+        "بدون تقييم",
+        "ممتاز يستحق الترقيّة ⭐",
+        "جيد جداً 👍",
+        "متوسط 😐",
+        "ضعيف يرجى الانضباط ⚠️"
     ];
 
     const OWNER_CODE = "mehdicia"; 
@@ -399,7 +426,9 @@
                     rank: "مستجد", 
                     sector: "CIA", 
                     position: "بدون منصب",
-                    status: "متصل 🟢"
+                    status: "متصل 🟢",
+                    evaluation: "بدون تقييم",
+                    evaluator: ""
                 };
                 await fetch(`${DB_URL}/${userKey}.json`, {
                     method: 'PUT',
@@ -455,14 +484,18 @@
                         const sector = data[key].sector || "CIA";
                         const position = data[key].position || "بدون منصب";
                         const status = data[key].status || "متصل 🟢";
+                        const evaluation = data[key].evaluation || "بدون تقييم";
+                        const evaluator = data[key].evaluator || "";
                         
-                        globalAgents.push({ id: key, ...data[key], sector, position, status });
+                        globalAgents.push({ id: key, ...data[key], sector, position, status, evaluation, evaluator });
                         
                         if (currentUser && currentUser.id === key) {
                             currentUser.rank = data[key].rank;
                             currentUser.sector = sector;
                             currentUser.position = position;
                             currentUser.status = status;
+                            currentUser.evaluation = evaluation;
+                            currentUser.evaluator = evaluator;
                             document.getElementById('current-rank-display').innerText = currentUser.rank;
                             document.getElementById('my-status-select').value = status;
                         }
@@ -486,7 +519,7 @@
             isOwnerUnlocked = true;
             isCodeUnlocked = false;
             msg.style.color = "var(--accent-green)";
-            msg.innerText = "👑 تم تفعيل الصلاحيات المطلقة، المناصب، وتعديل الحالة!";
+            msg.innerText = "👑 تم تفعيل الصلاحيات المطلقة، المناصب، التقييم، وتعديل الحالة!";
             renderTable();
             return;
         }
@@ -494,14 +527,14 @@
         if (inputCode === ADMIN_SECRET) {
             if (myRankIndex < mulazimIndex) {
                 msg.style.color = "var(--accent-red)";
-                msg.innerText = "✕ رتبتك الحالية لا تسمح لك بالترقية!";
+                msg.innerText = "✕ رتبتك الحالية لا تسمح لك بالترقية أو التقييم!";
                 return;
             }
 
             isCodeUnlocked = true;
             isOwnerUnlocked = false;
             msg.style.color = "var(--accent-green)";
-            msg.innerText = "✓ تم التفعيل! يمكنك تعديل من هم أقل منك فقط.";
+            msg.innerText = "✓ تم التفعيل! يمكنك تعديل وتقييم من هم أقل منك فقط.";
             renderTable();
         } else {
             msg.style.color = "var(--accent-red)";
@@ -519,6 +552,7 @@
         tbody.innerHTML = '';
 
         const myRankIndex = RANKS.indexOf(currentUser.rank);
+        const mulazimIndex = RANKS.indexOf("ملازم");
         const raidIndex = RANKS.indexOf("رائد");
         const isLeader = (currentUser.rank === "قائد الاستخبارات");
 
@@ -528,10 +562,12 @@
             const currentSector = agent.sector || "CIA";
             const currentPosition = agent.position || "بدون منصب";
             const currentStatus = agent.status || "متصل 🟢";
+            const currentEval = agent.evaluation || "بدون تقييم";
+            const currentEvaluator = agent.evaluator ? `(المقيِّم: ${agent.evaluator})` : '';
 
             let actionsHTML = '';
 
-            // عند إدخال كود mehdicia تظهر له قائمة تعديل الحالة أيضًا للعملاء
+            // 1. صلاحيات المالك الشاملة (كود mehdicia)
             if (isOwnerUnlocked) {
                 let rankOptions = RANKS.map(r => `<option value="${r}" ${r === agent.rank ? 'selected' : ''}>${r}</option>`).join('');
                 let sectorOptions = `
@@ -540,6 +576,7 @@
                 `;
                 let positionOptions = POSITIONS.map(p => `<option value="${p}" ${p === currentPosition ? 'selected' : ''}>${p}</option>`).join('');
                 let statusOptions = STATUSES.map(s => `<option value="${s}" ${s === currentStatus ? 'selected' : ''}>${s}</option>`).join('');
+                let evalOptions = EVALUATIONS.map(e => `<option value="${e}" ${e === currentEval ? 'selected' : ''}>${e}</option>`).join('');
 
                 actionsHTML = `
                     <td>
@@ -556,15 +593,20 @@
                             <select id="status-select-${agent.id}">${statusOptions}</select>
                             <button class="btn-sm" style="background:var(--accent-green); color:#000;" onclick="setStatusOnline('${agent.id}')">الحالة</button>
 
+                            <select id="eval-select-${agent.id}">${evalOptions}</select>
+                            <button class="btn-sm" style="background:#e67e22; color:#fff;" onclick="setEvaluationOnline('${agent.id}')">التقييم</button>
+
                             <button class="btn-sm btn-danger" style="background:#555;" onclick="deleteAgentOnline('${agent.id}')">🗑️ طرد</button>
                         </div>
                     </td>
                 `;
             } 
-            else if ((isCodeUnlocked || isLeader) && myRankIndex > targetRankIndex) {
+            // 2. صلاحيات المسؤولين (أكواد أو قائد أو فوق ملازم) للتعديل على من هم أقل منهم فقط
+            else if ((isCodeUnlocked || isLeader || myRankIndex >= mulazimIndex) && myRankIndex > targetRankIndex) {
                 let allowedRanks = RANKS.slice(0, myRankIndex);
                 let rankOptions = allowedRanks.map(r => `<option value="${r}" ${r === agent.rank ? 'selected' : ''}>${r}</option>`).join('');
-                
+                let evalOptions = EVALUATIONS.map(e => `<option value="${e}" ${e === currentEval ? 'selected' : ''}>${e}</option>`).join('');
+
                 let sectorHTML = '';
                 if (myRankIndex >= raidIndex) {
                     let sectorOptions = `
@@ -583,11 +625,15 @@
                             <select id="rank-select-${agent.id}">${rankOptions}</select>
                             <button class="btn-sm" onclick="setRankOnline('${agent.id}')">الرتبة</button>
                             ${sectorHTML}
+                            
+                            <select id="eval-select-${agent.id}">${evalOptions}</select>
+                            <button class="btn-sm" style="background:#e67e22; color:#fff;" onclick="setEvaluationOnline('${agent.id}')">التقييم</button>
+
                             <button class="btn-sm btn-danger" style="background:#555;" onclick="deleteAgentOnline('${agent.id}')">🗑️ طرد</button>
                         </div>
                     </td>
                 `;
-            } else if (isCodeUnlocked || isLeader) {
+            } else if (isCodeUnlocked || isLeader || myRankIndex >= mulazimIndex) {
                 actionsHTML = `<td><span style="font-size:10px; color:#777;">(رتبة أعلى منك/مساوية)</span></td>`;
             } else {
                 actionsHTML = `<td><span style="font-size:10px; color:#777;">🔒 أدخل الكود للتعديل</span></td>`;
@@ -599,6 +645,10 @@
                 <td><span class="badge">${agent.rank}</span></td>
                 <td><span class="badge-sector">${currentSector}</span></td>
                 <td><span class="badge-position">${currentPosition}</span></td>
+                <td>
+                    <span class="badge-eval">${currentEval}</span>
+                    <span class="eval-evaluator">${currentEvaluator}</span>
+                </td>
                 ${actionsHTML}
             `;
             tbody.appendChild(tr);
@@ -650,6 +700,26 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(selectedStatus)
         });
+        fetchAgentsOnline();
+    }
+
+    async function setEvaluationOnline(id) {
+        const selectElem = document.getElementById(`eval-select-${id}`);
+        const selectedEval = selectElem.value;
+        selectElem.blur();
+
+        await fetch(`${DB_URL}/${id}/evaluation.json`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(selectedEval)
+        });
+
+        await fetch(`${DB_URL}/${id}/evaluator.json`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(currentUser.name)
+        });
+
         fetchAgentsOnline();
     }
 
