@@ -243,7 +243,7 @@
             gap: 10px;
         }
 
-        /* النافذة المنبثقة (Modal/Popup) */
+        /* النافذة المنبثقة */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -298,11 +298,107 @@
             font-size: 12px;
             margin-top: 8px;
         }
+
+        /* --- قسم الشركاء والأجهزة الأمنية --- */
+        .alliances-section {
+            margin-top: 35px;
+            padding-top: 20px;
+            border-top: 2px solid var(--border-color);
+            text-align: center;
+        }
+
+        .alliances-title {
+            color: var(--accent-gold);
+            font-size: 18px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .factions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .faction-card {
+            background: #0d1117;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .faction-card:hover {
+            border-color: var(--accent-gold);
+            transform: translateY(-4px);
+            box-shadow: 0 6px 18px rgba(212, 175, 55, 0.2);
+        }
+
+        .faction-card.cia-main {
+            grid-column: 1 / -1;
+            background: linear-gradient(180deg, #161a22 0%, #0d1117 100%);
+            border: 2px solid var(--accent-gold);
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.25);
+            max-width: 320px;
+            margin: 0 auto 15px auto;
+        }
+
+        .faction-tag {
+            background: var(--accent-gold);
+            color: #000;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .faction-card.cia-main .faction-tag {
+            background: #e74c3c;
+            color: #fff;
+        }
+
+        .faction-img {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.2));
+        }
+
+        .faction-card.cia-main .faction-img {
+            width: 90px;
+            height: 90px;
+        }
+
+        .faction-name {
+            font-weight: bold;
+            color: #fff;
+            font-size: 13px;
+        }
+
+        .faction-desc {
+            font-size: 10px;
+            color: #8b949e;
+            margin-top: 3px;
+        }
     </style>
 </head>
 <body>
 
-<!-- صوت استخباراتي هادئ جداً (2%) -->
+<!-- صوت استخباراتي هادئ (2%) -->
 <audio id="bg-music" loop preload="auto">
     <source src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_c8c8a221f2.mp3?filename=ambient-tech-10501.mp3" type="audio/mpeg">
 </audio>
@@ -344,11 +440,15 @@
                 (<span id="current-rank-display" style="color: #fff;"></span>)
             </div>
 
-            <div id="leader-quick-btn-container" class="hidden">
-                <button style="background: var(--accent-gold); color: #000;" onclick="toggleLeaderPanel()">⚡ فتح قائمة الإدارة والترقيات</button>
-            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button style="background: var(--accent-blue); color: #fff;" onclick="scrollToAlliances()">🛡️ شركاء التحالف الأمنيين</button>
+                
+                <div id="leader-quick-btn-container" class="hidden">
+                    <button style="background: var(--accent-gold); color: #000;" onclick="toggleLeaderPanel()">⚡ فتح قائمة الإدارة والترقيات</button>
+                </div>
 
-            <button class="btn-danger btn-sm" onclick="logout()">تسجيل الخروج</button>
+                <button class="btn-danger btn-sm" onclick="logout()">تسجيل الخروج</button>
+            </div>
         </div>
 
         <div class="admin-box" id="admin-box-container">
@@ -376,6 +476,66 @@
             <tbody id="agents-table-body">
             </tbody>
         </table>
+
+        <!-- قسم التحالف الأمني واستعراض الأجهزة -->
+        <div class="alliances-section" id="alliances-sec">
+            <h2 class="alliances-title">
+                <span>🛡️</span> القيادة العليا وأجهزة التحالف الأمني <span>🛡️</span>
+            </h2>
+
+            <div class="factions-grid">
+
+                <!-- 1. الجهاز الرئيسي CIA -->
+                <div class="faction-card cia-main">
+                    <span class="faction-tag">👑 القيادة العليا | HIGH COMMAND</span>
+                    <img class="faction-img" src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Logo">
+                    <div class="faction-name">CIA</div>
+                    <div class="faction-desc">وكالة الاستخبارات المركزية العامة</div>
+                </div>
+
+                <!-- 2. جهاز RDF -->
+                <div class="faction-card">
+                    <span class="faction-tag">🔥 التدخل السريع</span>
+                    <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/1022/1022331.png" alt="RDF Logo">
+                    <div class="faction-name">RDF</div>
+                    <div class="faction-desc">قوات الانتشار والتدخل السريع</div>
+                </div>
+
+                <!-- 3. جهاز SSF -->
+                <div class="faction-card">
+                    <span class="faction-tag">🛡️ القوات الخاصة</span>
+                    <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/947/947502.png" alt="SSF Logo">
+                    <div class="faction-name">SSF</div>
+                    <div class="faction-desc">قوات الأمن الخاصة</div>
+                </div>
+
+                <!-- 4. جهاز FBI -->
+                <div class="faction-card">
+                    <span class="faction-tag">🔍 التحقيقات</span>
+                    <img class="faction-img" src="https://upload.wikimedia.org/wikipedia/commons/d/da/Seal_of_the_Federal_Bureau_of_Investigation.svg" alt="FBI Logo">
+                    <div class="faction-name">FBI</div>
+                    <div class="faction-desc">مكتب التحقيقات الفيدرالي</div>
+                </div>
+
+                <!-- 5. جهاز POLICE -->
+                <div class="faction-card">
+                    <span class="faction-tag">🚓 الأمن العام</span>
+                    <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/2067/2067831.png" alt="POLICE Logo">
+                    <div class="faction-name">POLICE</div>
+                    <div class="faction-desc">جهاز الشرطة العامة</div>
+                </div>
+
+                <!-- 6. جهاز ARMY -->
+                <div class="faction-card">
+                    <span class="faction-tag">⚔️ القوات المسلحة</span>
+                    <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/2599/2599636.png" alt="ARMY Logo">
+                    <div class="faction-name">ARMY</div>
+                    <div class="faction-desc">الجيش والقوات المسلحة</div>
+                </div>
+
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -400,7 +560,6 @@
         "عميد", "فريق", "فريق اول", "قائد الاستخبارات"
     ];
 
-    // تمت إضافة مسؤول الأفراد ومسؤول الضباط هنا
     const POSITIONS = [
         "بدون منصب",
         "رئيس CIA",
@@ -429,7 +588,7 @@
     let globalAgents = [];
     let refreshInterval = null;
 
-    // تشغيل الموسيقى بدرجة 2% (0.02)
+    // تشغيل الموسيقى
     function playMusic() {
         const audio = document.getElementById('bg-music');
         if (audio) {
@@ -439,6 +598,14 @@
     }
     window.addEventListener('click', playMusic, { once: true });
     window.addEventListener('mousemove', playMusic, { once: true });
+
+    // التمرير السريع لقسم التحالف الأمني
+    function scrollToAlliances() {
+        const sec = document.getElementById('alliances-sec');
+        if (sec) {
+            sec.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
 
     document.getElementById('login-form').addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -529,7 +696,6 @@
                 });
             }
 
-            // إظهار زر الترقية السريع للقيادة
             const isTopLeader = (
                 currentUser.rank === "قائد الاستخبارات" || 
                 currentUser.position === "رئيس CIA" || 
@@ -622,7 +788,6 @@
         });
     }
 
-    // فتح النافذة المنبثقة لقائمة الترقيات والتحكم
     function openModal(agentId) {
         const agent = globalAgents.find(a => a.id === agentId);
         if (!agent) return;
@@ -719,7 +884,6 @@
         }
     }
 
-    // حفظ الاسم الجديد
     async function saveName(id) {
         const newName = document.getElementById('modal-name-input').value.trim();
         if (!newName) {
