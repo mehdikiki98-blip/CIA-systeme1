@@ -158,7 +158,7 @@
             background: #c0392b;
         }
 
-        /* الزر الأحمر المعدل للتحالفات */
+        /* الزر الأحمر المميز */
         .btn-red-alliance {
             background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%) !important;
             color: #fff !important;
@@ -342,7 +342,7 @@
             margin-top: 8px;
         }
 
-        /* --- تصميم الأجهزة الأمنية والترتيب --- */
+        /* --- تصميم الأجهزة الأمنية --- */
         .alliances-section {
             margin-top: 35px;
             padding-top: 20px;
@@ -355,7 +355,6 @@
             grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             gap: 15px;
             width: 100%;
-            margin-bottom: 35px;
         }
 
         .faction-card {
@@ -406,84 +405,6 @@
             margin-top: 3px;
         }
 
-        .bottom-cia-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-            width: 100%;
-        }
-
-        .cia-card-large {
-            background: linear-gradient(180deg, #1c222e 0%, #0d1117 100%);
-            border: 2px solid var(--accent-gold);
-            border-radius: 12px;
-            padding: 30px 20px;
-            width: 100%;
-            max-width: 600px;
-            box-shadow: 0 0 35px rgba(212, 175, 55, 0.4);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .cia-card-large:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 0 50px rgba(212, 175, 55, 0.6);
-            border-color: #fff;
-        }
-
-        .click-hint {
-            margin-top: 10px;
-            font-size: 11px;
-            color: var(--accent-blue);
-            background: rgba(52, 152, 219, 0.15);
-            padding: 4px 10px;
-            border-radius: 15px;
-            border: 1px solid var(--accent-blue);
-        }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .gallery-item {
-            background: #0d1117;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .gallery-info {
-            padding: 10px;
-            text-align: right;
-        }
-
-        .gallery-info h4 {
-            color: var(--accent-gold);
-            font-size: 13px;
-            margin-bottom: 4px;
-        }
-
-        .gallery-info p {
-            color: #8b949e;
-            font-size: 11px;
-            line-height: 1.4;
-        }
-
         /* مشغل الصوت العلوي الثابت */
         .audio-control-bar {
             position: fixed;
@@ -508,7 +429,7 @@
     <source src="https://files.catbox.moe/5z924f.mp3" type="audio/mpeg">
 </audio>
 
-<!-- مشغل الصوت السريع لتفادي منع المتصفح -->
+<!-- مشغل الصوت السريع -->
 <div class="audio-control-bar">
     <span style="font-size: 12px; color: var(--accent-gold); font-weight: bold;">🎵 شيلة Alpha:</span>
     <button id="music-btn" style="background: var(--accent-gold); color: #000; font-size: 11px; padding: 4px 10px; border-radius: 15px;" onclick="toggleAudio()">▶️ تشغيل الصوت</button>
@@ -559,8 +480,8 @@
             </div>
 
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <!-- التعديل هنا: الزر أصبح أحمر ومكتوب عليه حلفاء مجتمع القوة -->
-                <button class="btn-red-alliance" onclick="scrollToAlliances()">🛡️ حلفاء مجتمع القوة</button>
+                <!-- التعديل المطلوب بدقة هنا -->
+                <button class="btn-red-alliance" onclick="scrollToAlliances()">🛡️ حتالة المجتمع</button>
                 
                 <div id="leader-quick-btn-container" class="hidden">
                     <button style="background: var(--accent-gold); color: #000;" onclick="toggleLeaderPanel()">⚡ فتح قائمة الإدارة والترقيات</button>
@@ -602,15 +523,7 @@
             <!-- الأجهزة والقطاعات الأمنية المشتركة -->
             <div class="sub-factions-grid">
 
-                <!-- 1. CIA جهاز المخابرات (تمت إضافته بالقائمة) -->
-                <div class="faction-card">
-                    <span class="faction-tag" style="background: #e74c3c; color: #fff;">👁️ CIA</span>
-                    <img class="faction-img" src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Logo">
-                    <div class="faction-name">CIA</div>
-                    <div class="faction-desc">وكالة الاستخبارات المركزية</div>
-                </div>
-
-                <!-- 2. التدخل السريع -->
+                <!-- 1. التدخل السريع -->
                 <div class="faction-card">
                     <span class="faction-tag" style="background: #e67e22; color: #fff;">🔥 التدخل السريع</span>
                     <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/1022/1022331.png" alt="RDF Logo">
@@ -618,7 +531,7 @@
                     <div class="faction-desc">قوات الانتشار والتدخل السريع</div>
                 </div>
 
-                <!-- 3. القوات الخاصة -->
+                <!-- 2. القوات الخاصة -->
                 <div class="faction-card">
                     <span class="faction-tag" style="background: #2980b9; color: #fff;">🛡️ القوات الخاصة</span>
                     <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/947/947502.png" alt="SSF Logo">
@@ -626,7 +539,7 @@
                     <div class="faction-desc">قوات الأمن الخاصة</div>
                 </div>
 
-                <!-- 4. التحقيقات -->
+                <!-- 3. التحقيقات -->
                 <div class="faction-card">
                     <span class="faction-tag" style="background: #f1c40f; color: #000;">🔍 التحقيقات</span>
                     <img class="faction-img" src="https://upload.wikimedia.org/wikipedia/commons/d/da/Seal_of_the_Federal_Bureau_of_Investigation.svg" alt="FBI Logo">
@@ -634,7 +547,7 @@
                     <div class="faction-desc">مكتب التحقيقات الفيدرالي</div>
                 </div>
 
-                <!-- 5. الأمن العام -->
+                <!-- 4. الأمن العام -->
                 <div class="faction-card">
                     <span class="faction-tag" style="background: #f39c12; color: #000;">🚓 الأمن العام</span>
                     <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/2067/2067831.png" alt="POLICE Logo">
@@ -642,7 +555,7 @@
                     <div class="faction-desc">جهاز الشرطة العامة</div>
                 </div>
 
-                <!-- 6. القوات المسلحة -->
+                <!-- 5. القوات المسلحة -->
                 <div class="faction-card">
                     <span class="faction-tag" style="background: #27ae60; color: #fff;">⚔️ القوات المسلحة</span>
                     <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/2599/2599636.png" alt="ARMY Logo">
@@ -652,23 +565,12 @@
 
             </div>
 
-            <!-- بطاقة CIA الكبيرة في الأسفل -->
-            <div class="bottom-cia-container">
-                <div class="cia-card-large" onclick="openCiaAchievements()">
-                    <span class="cia-tag" style="background: linear-gradient(90deg, #c0392b, #e74c3c); color: #fff; font-size: 12px; font-weight: bold; padding: 5px 15px; border-radius: 20px; margin-bottom: 15px;">👑 القيادة العليا | HIGH COMMAND</span>
-                    <img class="cia-img" style="width: 130px; height: 130px; object-fit: contain; margin-bottom: 12px; filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.5));" src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Logo">
-                    <div class="faction-name" style="font-size: 22px; color: var(--accent-gold); letter-spacing: 2px;">CIA - وكالة الاستخبارات المركزية</div>
-                    <div class="faction-desc" style="font-size: 13px; color: #a0aec0; margin-top: 5px;">الرئاسة التنفيذية العليا لإدارة السيرفر والعمليات التكتيكية</div>
-                    <span class="click-hint">👈 اضغط هنا لاستعراض إنجازات وحسنات جهاز CIA</span>
-                </div>
-            </div>
-
         </div>
 
     </div>
 </div>
 
-<!-- 1. النافذة المنبثقة لقائمة الترقية والإدارة -->
+<!-- النافذة المنبثقة لقائمة الترقية والإدارة -->
 <div id="edit-modal" class="modal-overlay hidden">
     <div class="modal-content">
         <div class="modal-header">
@@ -676,54 +578,6 @@
             <button class="close-btn" onclick="closeModal('edit-modal')">✖</button>
         </div>
         <div id="modal-body" style="display: flex; flex-direction: column; gap: 12px;">
-        </div>
-    </div>
-</div>
-
-<!-- 2. النافذة المنبثقة لإنجازات وحسنات الـ CIA -->
-<div id="cia-modal" class="modal-overlay hidden">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3>🏆 سجل حسانات وإنجازات وكالة الاستخبارات (CIA)</h3>
-            <button class="close-btn" onclick="closeModal('cia-modal')">✖</button>
-        </div>
-        
-        <p style="font-size: 12px; color: #a0aec0; text-align: right; margin-bottom: 15px; line-height: 1.6;">
-            استعراض توثيقي لأبرز العمليات النوعية، تأمين القطاعات، وإحكام السيطرة الأمنية التامة ضد المداهمات والمخاطر.
-        </p>
-
-        <div class="gallery-grid">
-            <div class="gallery-item">
-                <img src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80" alt="Special Operation">
-                <div class="gallery-info">
-                    <h4>🎯 التخطيط والإشراف التكتيكي</h4>
-                    <p>قيادة وتنسيق أكبر المداهمات والعمليات المشتركة بنجاح 100% بدون خسائر.</p>
-                </div>
-            </div>
-
-            <div class="gallery-item">
-                <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80" alt="Cyber Security">
-                <div class="gallery-info">
-                    <h4>🔒 الحماية الرقمية واستخبارات التسلل</h4>
-                    <p>اختراق وتفكيك المخططات الإجرامية واستعادة الأمن والنظام العام في زمن قياسي.</p>
-                </div>
-            </div>
-
-            <div class="gallery-item">
-                <img src="https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=800&q=80" alt="Tactical Operations">
-                <div class="gallery-info">
-                    <h4>⚔️ حماية وحسم القانون</h4>
-                    <p>تطهير المدينة من المحرضين وحماية المدنيين وفرض الهيبة التنفيذية الصارمة.</p>
-                </div>
-            </div>
-
-            <div class="gallery-item">
-                <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=800&q=80" alt="Command Center">
-                <div class="gallery-info">
-                    <h4>🏛️ غرفة العمليات المركزية</h4>
-                    <p>مراقبة وتنظيم جميع الأجهزة الأمنية (FBI, POLICE, SSF, RDF, ARMY) بكفاءة عالية.</p>
-                </div>
-            </div>
         </div>
     </div>
 </div>
@@ -798,10 +652,6 @@
             }).catch(() => {});
         }
     }, { once: true });
-
-    function openCiaAchievements() {
-        document.getElementById('cia-modal').classList.remove('hidden');
-    }
 
     function scrollToAlliances() {
         const sec = document.getElementById('alliances-sec');
