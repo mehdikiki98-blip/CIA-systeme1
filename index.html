@@ -124,21 +124,11 @@
             box-shadow: 0 0 10px rgba(231, 76, 60, 0.4);
         }
 
-        .btn-red-alliance:hover {
-            background: linear-gradient(135deg, #ff5e4d 0%, #e74c3c 100%) !important;
-            box-shadow: 0 0 15px rgba(231, 76, 60, 0.7);
-        }
-
         .btn-strike-force {
             background: linear-gradient(135deg, #f39c12 0%, #d35400 100%) !important;
             color: #fff !important;
             border: 1px solid #f1c40f !important;
             box-shadow: 0 0 10px rgba(243, 156, 18, 0.4);
-        }
-
-        .btn-strike-force:hover {
-            background: linear-gradient(135deg, #f1c40f 0%, #e67e22 100%) !important;
-            box-shadow: 0 0 15px rgba(243, 156, 18, 0.7);
         }
 
         .btn-divider {
@@ -245,7 +235,6 @@
 
         .close-btn { background: transparent; color: var(--accent-red); font-size: 20px; border: none; cursor: pointer; }
 
-        /* ترويسة وعناوين الأقسام السفليّة المفصولة */
         .section-title-box {
             background: #0d1117;
             border: 1px solid var(--border-color);
@@ -265,9 +254,70 @@
             border-right-color: var(--accent-red);
         }
 
+        /* --- كارت CIA الفريد والمهيب --- */
+        .cia-hero-card {
+            background: linear-gradient(180deg, #181d26 0%, #0d1117 100%);
+            border: 2px solid var(--accent-gold);
+            border-radius: 12px;
+            padding: 25px 15px;
+            margin-bottom: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-shadow: 0 0 25px rgba(243, 156, 18, 0.25), inset 0 0 15px rgba(0, 0, 0, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cia-hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent-gold-bright), transparent);
+        }
+
+        .cia-hero-tag {
+            background: linear-gradient(135deg, #d35400 0%, #e67e22 100%);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 4px 16px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            box-shadow: 0 0 12px rgba(230, 126, 34, 0.6);
+            border: 1px solid #f1c40f;
+        }
+
+        .cia-hero-img {
+            width: 110px;
+            height: 110px;
+            object-fit: contain;
+            margin: 10px 0 15px 0;
+            filter: drop-shadow(0 0 15px rgba(243, 156, 18, 0.5));
+        }
+
+        .cia-hero-title {
+            font-size: 20px;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+
+        .cia-hero-desc {
+            font-size: 13px;
+            color: #a0aec0;
+            margin-top: 6px;
+            max-width: 500px;
+        }
+
+        /* شبكة الكروت الأخرى بالأسفل */
         .sub-factions-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
             width: 100%;
         }
@@ -280,6 +330,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            text-align: center;
             box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
 
@@ -306,7 +357,7 @@
         }
 
         .faction-name { font-weight: bold; color: #fff; font-size: 13px; }
-        .faction-desc { font-size: 10px; color: #8b949e; margin-top: 3px; }
+        .faction-desc { font-size: 11px; color: #8b949e; margin-top: 3px; }
 
         .audio-control-bar {
             position: fixed;
@@ -320,18 +371,16 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
         }
     </style>
 </head>
 <body>
 
-<audio id="bg-music" loop>
-    <source src="https://files.catbox.moe/5z924f.mp3" type="audio/mpeg">
-</audio>
-
+<!-- شريط تشغيل الصوت -->
 <div class="audio-control-bar">
     <span style="font-size: 12px; color: var(--accent-gold); font-weight: bold;">🎵 شيلة Alpha:</span>
-    <button id="music-btn" style="background: var(--accent-gold); color: #000; font-size: 11px; padding: 4px 10px; border-radius: 15px;" onclick="toggleAudio()">▶️ تشغيل الصوت</button>
+    <button id="music-btn" style="background: var(--accent-gold); color: #000; font-size: 11px; padding: 5px 12px; border-radius: 15px;" onclick="toggleAudio()">▶️ تشغيل الصوت</button>
 </div>
 
 <div class="container">
@@ -366,13 +415,9 @@
             </div>
 
             <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-                <button class="btn-strike-force" onclick="scrollToSec('cia-sec')">⚡ قطاع CIA والقوة الضاربة</button>
+                <button class="btn-strike-force" onclick="scrollToSec('cia-sec')">⚡ قطاع CIA بوحده</button>
                 <div class="btn-divider"></div>
-                <button class="btn-red-alliance" onclick="scrollToSec('scum-sec')">🛡️ حتالة المجتمع</button>
-                
-                <div id="leader-quick-btn-container" class="hidden">
-                    <button style="background: var(--accent-gold); color: #000;" onclick="toggleLeaderPanel()">⚡ الإدارة</button>
-                </div>
+                <button class="btn-red-alliance" onclick="scrollToSec('sub-sec')">🛡️ باقي الوحدات والقطاعات</button>
 
                 <button class="btn-danger btn-sm" onclick="logout()">تسجيل الخروج</button>
             </div>
@@ -403,20 +448,25 @@
             <tbody id="agents-table-body"></tbody>
         </table>
 
-        <!-- ==================== 1. قسم قطاع CIA والقوة الضاربة (مفصل بشكل كامل) ==================== -->
+        <!-- ==================== 1. كارت CIA المهيب والمنفرد فوق ==================== -->
         <div id="cia-sec" class="section-title-box">
-            <h3>⚡ قطاع CIA والوحدات التابعة له</h3>
+            <h3>⚡ القطاع الرئيسي والقيادي</h3>
+        </div>
+
+        <div class="cia-hero-card">
+            <span class="cia-hero-tag">⚡ CIA STRIKE FORCE ⚡</span>
+            <!-- صورة رسمية معتمدة لوكالة CIA -->
+            <img class="cia-hero-img" src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Emblem">
+            <div class="cia-hero-title">القوة الضاربة (CIA)</div>
+            <div class="cia-hero-desc">وحدة التدخل السري والعمليات الخاصة العالية الخطورة التابعة لوكالة المخابرات المركزية</div>
+        </div>
+
+        <!-- ==================== 2. باقي الوحدات مفرقة ومحتوية بالأسفل ==================== -->
+        <div id="sub-sec" class="section-title-box">
+            <h3>🛡️ باقي قطاعات الاستخبارات والوحدات الميدانية</h3>
         </div>
 
         <div class="sub-factions-grid">
-            <!-- كارت القوة الضاربة داخل CIA -->
-            <div class="faction-card" style="border-color: #f39c12;">
-                <span class="faction-tag" style="background: #d35400; color: #fff;">⚡ CIA STRIKE FORCE</span>
-                <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/1067/1067357.png" alt="Strike Force Logo">
-                <div class="faction-name">القوة الضاربة (CIA)</div>
-                <div class="faction-desc">وحدة التدخل والعمليات الخاصة التابعة لـ CIA</div>
-            </div>
-
             <!-- التدخل السريع -->
             <div class="faction-card">
                 <span class="faction-tag" style="background: #e67e22; color: #fff;">🔥 التدخل السريع</span>
@@ -442,8 +492,8 @@
             </div>
         </div>
 
-        <!-- ==================== 2. قسم حتالة المجتمع (مفصول تماماً تحت) ==================== -->
-        <div id="scum-sec" class="section-title-box scum-title">
+        <!-- ==================== 3. قطاع حتالة المجتمع ==================== -->
+        <div class="section-title-box scum-title">
             <h3 style="color: var(--accent-red);">🛡️ قطاع حتالة المجتمع (الأجهزة الأخرى)</h3>
         </div>
 
@@ -468,7 +518,7 @@
     </div>
 </div>
 
-<!-- Modal -->
+<!-- Modal التعديل والترقية -->
 <div id="edit-modal" class="modal-overlay hidden">
     <div class="modal-content">
         <div class="modal-header">
@@ -493,9 +543,6 @@
         "مسؤول ضباط CIA", "محقق CIA", "رئيس CID", "نائب رئيس CID", "مستشار CID"
     ];
 
-    const STATUSES = ["في الخدمة 🟢", "مفصول 🔴"];
-    const EVALUATIONS = ["بدون تقييم", "ممتاز يستحق الترقيّة ⭐", "جيد جداً 👍", "متوسط 😐", "ضعيف يرجى الانضباط ⚠️"];
-
     const OWNER_CODE = "mehdicia"; 
     const ADMIN_SECRET = "ciaontop"; 
     
@@ -505,22 +552,39 @@
     let globalAgents = [];
     let refreshInterval = null;
 
+    // --- إعداد تشغيل الصوت المباشر والمضمون ---
+    const bgAudio = new Audio("https://files.catbox.moe/5z924f.mp3");
+    bgAudio.loop = true;
+    bgAudio.volume = 0.6;
+    let isAudioPlaying = false;
+
     function toggleAudio() {
-        const audio = document.getElementById('bg-music');
         const btn = document.getElementById('music-btn');
-        if (audio.paused) {
-            audio.volume = 0.5;
-            audio.play();
-            btn.innerText = "⏸️ إيقاف الصوت";
-            btn.style.background = "#e74c3c";
-            btn.style.color = "#fff";
+        if (!isAudioPlaying) {
+            bgAudio.play().then(() => {
+                isAudioPlaying = true;
+                btn.innerText = "⏸️ إيقاف الصوت";
+                btn.style.background = "#e74c3c";
+                btn.style.color = "#fff";
+            }).catch(err => {
+                console.log("Audio play blocked", err);
+            });
         } else {
-            audio.pause();
+            bgAudio.pause();
+            isAudioPlaying = false;
             btn.innerText = "▶️ تشغيل الصوت";
             btn.style.background = "#f39c12";
             btn.style.color = "#000";
         }
     }
+
+    // تشغيل تلقائي أول ما يضغط العميل على الشاشة في أي مكان
+    document.body.addEventListener('click', function autoPlayOnce() {
+        if (!isAudioPlaying) {
+            toggleAudio();
+        }
+        document.body.removeEventListener('click', autoPlayOnce);
+    }, { once: true });
 
     function scrollToSec(id) {
         const el = document.getElementById(id);
