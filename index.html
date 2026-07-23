@@ -139,7 +139,7 @@
             box-shadow: 0 0 15px rgba(231, 76, 60, 0.7);
         }
 
-        /* زر القوة الضاربة Z3 */
+        /* زر القوة الضاربة */
         .btn-strike-force {
             background: linear-gradient(135deg, #f39c12 0%, #d35400 100%) !important;
             color: #fff !important;
@@ -150,6 +150,15 @@
         .btn-strike-force:hover {
             background: linear-gradient(135deg, #f1c40f 0%, #e67e22 100%) !important;
             box-shadow: 0 0 15px rgba(243, 156, 18, 0.7);
+        }
+
+        /* سطر فاصل بين الأزرار */
+        .btn-divider {
+            width: 1px;
+            height: 25px;
+            background-color: var(--border-color);
+            margin: 0 4px;
+            align-self: center;
         }
 
         .btn-sm {
@@ -452,10 +461,14 @@
                 (<span id="current-rank-display" style="color: #fff;"></span>)
             </div>
 
-            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
                 <button class="btn-red-alliance" onclick="scrollToAlliances()">🛡️ حتالة المجتمع</button>
-                <!-- الزر الجديد المطلوب: القوة الضاربة Z3 -->
-                <button class="btn-strike-force" onclick="scrollToAlliances()">⚡ القوة الضاربة (Z3)</button>
+                
+                <!-- سطر فاصل بين حتالة المجتمع والقوة الضاربة -->
+                <div class="btn-divider"></div>
+
+                <!-- زر القوة الضاربة مع قوس CIA فوقه -->
+                <button class="btn-strike-force" onclick="scrollToAlliances()">⚡ القوة الضاربة (CIA)</button>
                 
                 <div id="leader-quick-btn-container" class="hidden">
                     <button style="background: var(--accent-gold); color: #000;" onclick="toggleLeaderPanel()">⚡ فتح قائمة الإدارة والترقيات</button>
@@ -496,12 +509,12 @@
 
             <div class="sub-factions-grid">
 
-                <!-- بطاقة القوة الضاربة Z3 المُضافة -->
+                <!-- بطاقة القوة الضاربة التابعة لـ CIA -->
                 <div class="faction-card">
                     <span class="faction-tag" style="background: #d35400; color: #fff;">⚡ القوة الضاربة</span>
-                    <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/1067/1067357.png" alt="Z3 Logo">
-                    <div class="faction-name">Z3</div>
-                    <div class="faction-desc">وحدة القوة الضاربة والعمليات الخاصة</div>
+                    <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/1067/1067357.png" alt="Strike Force Logo">
+                    <div class="faction-name">القوة الضاربة</div>
+                    <div class="faction-desc">وحدة التدخل الخاص التابعة لـ CIA</div>
                 </div>
 
                 <!-- 1. التدخل السريع -->
@@ -846,7 +859,7 @@
         let sectorOptions = `
             <option value="CIA" ${agent.sector === 'CIA' ? 'selected' : ''}>CIA</option>
             <option value="CID" ${agent.sector === 'CID' ? 'selected' : ''}>CID</option>
-            <option value="Z3" ${agent.sector === 'Z3' ? 'selected' : ''}>Z3 (القوة الضاربة)</option>
+            <option value="القوة الضاربة" ${agent.sector === 'القوة الضاربة' ? 'selected' : ''}>القوة الضاربة (CIA)</option>
         `;
         let positionOptions = POSITIONS.map(p => `<option value="${p}" ${p === agent.position ? 'selected' : ''}>${p}</option>`).join('');
         let statusOptions = STATUSES.map(s => `<option value="${s}" ${s === agent.status ? 'selected' : ''}>${s}</option>`).join('');
