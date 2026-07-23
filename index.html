@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام الاستخبارات العامة | CIA DATABASE</title>
+    <title>نظام الاستخبارات العامة | CIA & CID DATABASE</title>
     <style>
         :root {
             --bg-color: #0d0f12;
@@ -317,7 +317,14 @@
 </head>
 <body>
 
+<div class="audio-control-bar">
+    <span style="font-size: 12px; color: var(--accent-gold); font-weight: bold;">أغنية ألفا CIA:</span>
+    <button id="music-btn" style="background: var(--accent-gold); color: #000; font-size: 11px; padding: 4px 10px; border-radius: 12px;" onclick="toggleAudio()">▶️ تشغيل الأغنية</button>
 </div>
+
+<audio id="cia-audio" loop>
+    <source src="data:audio/mp3;base64,...">
+</audio>
 
 <div class="container">
     <div class="header">
@@ -351,7 +358,7 @@
         </div>
 
         <div class="admin-box" id="admin-box-container">
-            <h3 style="font-size: 13px; margin-bottom: 8px; color: var(--accent-gold);">🔓 تفعيل الصلاحيات عبر الكود</h3>
+            <h3 style="font-size: 13px; margin-bottom: 8px; color: var(--accent-gold);">🔒 تفعيل الصلاحيات عبر الكود</h3>
             <div style="display: flex; gap: 8px;">
                 <input type="password" id="admin-code-input" placeholder="أدخل كود التفعيل...">
                 <button style="width: 120px;" onclick="unlockAdmin()">تفعيل</button>
@@ -376,15 +383,15 @@
         </table>
 
         <div class="cia-main-ticket">
-            <span class="cia-main-tag">⚡ CIA - CENTRAL INTELLIGENCE AGENCY ⚡</span>
+            <span class="cia-main-tag"> CIA - CENTRAL INTELLIGENCE AGENCY </span>
             <img class="cia-main-img" src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Logo">
-            <div class="cia-main-title">🌐 وكالة الاستخبارات المركزية (CIA)</div>
+            <div class="cia-main-title">وكالة الاستخبارات المركزية (CIA)</div>
             <div class="cia-main-desc">القطاع الرئيسي القيادي لإدارة كافة العمليات الخاصة والاستخباراتية</div>
         </div>
 
         <div class="factions-grid">
             <div class="faction-card">
-                <span class="faction-tag" style="background: #e67e22; color: #fff;">🔥 التدخل السريع</span>
+                <span class="faction-tag" style="background: #e67e22; color: #fff;">⚡ التدخل السريع</span>
                 <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/1022/1022331.png" alt="RDF Logo">
                 <div class="faction-name">RDF</div>
                 <div class="faction-desc">قوات الانتشار والتدخل السريع</div>
@@ -405,14 +412,14 @@
             </div>
 
             <div class="faction-card">
-                <span class="faction-tag" style="background: #e74c3c; color: #fff;">🚓 الأمن العام</span>
+                <span class="faction-tag" style="background: #e74c3c; color: #fff;">🚨 الأمن العام</span>
                 <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/2067/2067831.png" alt="POLICE Logo">
                 <div class="faction-name">POLICE</div>
                 <div class="faction-desc">جهاز الشرطة العامة</div>
             </div>
 
             <div class="faction-card">
-                <span class="faction-tag" style="background: #c0392b; color: #fff;">⚔️ القوات المسلحة</span>
+                <span class="faction-tag" style="background: #c0392b; color: #fff;">🎖️ القوات المسلحة</span>
                 <img class="faction-img" src="https://cdn-icons-png.flaticon.com/512/2599/2599636.png" alt="ARMY Logo">
                 <div class="faction-name">ARMY</div>
                 <div class="faction-desc">وحدة الجيش والعمليات</div>
@@ -580,7 +587,6 @@
         }
     }
 
-    // التحقق مما إذا كان المستخدم يمتلك صلاحية إدارة عميل معين (يظهر له الزر فقط إذا كان أقل منه رتبة وهو نفسه يملك ملازم فما فوق وتم تفعيل الكود)
     function canManageAgent(agent) {
         if (!currentUser || !isCodeUnlocked) return false;
 
@@ -589,10 +595,7 @@
         const targetRankIdx = RANKS.indexOf(agent.rank);
         const isOwner = currentUser.id === "mehdicia";
 
-        // يجب أن تكون رتبة المستخدم ملازم فما فوق
         if (userRankIdx < molazimIdx) return false;
-
-        // يجب ألا يكون العميل المراد تعديله مساوياً له أو أعلى منه في الرتبة (إلا إذا كان المالك)
         if (!isOwner && userRankIdx <= targetRankIdx) return false;
 
         return true;
@@ -607,10 +610,9 @@
             const tr = document.createElement('tr');
             const canManage = canManageAgent(agent);
             
-            // زر الإدارة يظهر فقط إذا كان مسموحاً للمستخدم تعديل هذا العميل بالذات
             const actionCell = canManage 
                 ? `<button class="btn-sm" onclick="openModal('${agent.id}')">⚙️ إدارة</button>` 
-                : `<span style="color:#555; font-size:11px;">مقفول 🔒</span>`;
+                : `<span style="color:#555; font-size:11px;">🔒 مقفول</span>`;
 
             tr.innerHTML = `
                 <td><span class="${canManage ? 'agent-name-click' : ''}" onclick="${canManage ? `openModal('${agent.id}')` : ''}">${agent.name}</span></td>
@@ -640,7 +642,6 @@
         const isCiaLeader = userPos.includes("رئيس CIA") || userPos.includes("نائب رئيس CIA") || userPos.includes("مستشار CIA") || isOwner;
         const isCidLeader = userPos.includes("قائد CID") || userPos.includes("نائب قائد CID");
 
-        // التحقق من قطاع CID
         if (isCidLeader && !isCiaLeader) {
             if (agent.sector !== "CID" && agent.sector !== userSector) {
                 alert("⚠️ قادة CID يتحكمون فقط بأعضاء قطاعهم!");
@@ -651,7 +652,6 @@
         document.getElementById('modal-agent-name').innerText = agent.name;
         const modalBody = document.getElementById('modal-body');
 
-        // ترقيات المدراء العاديين لا تتجاوز "ملازم"، أو حسب رتبتهم إذا كانت أقل، أما قيادة CIA العليا فيمكنهم الترقية بحرية
         let maxRankLimitIdx = RANKS.indexOf("ملازم");
         let availableRanks = RANKS.filter((r, idx) => idx <= maxRankLimitIdx && idx < userRankIdx);
         
