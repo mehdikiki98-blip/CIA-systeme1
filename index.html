@@ -29,6 +29,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
@@ -36,14 +37,34 @@
             overflow-x: hidden;
         }
 
+        /* القوس العلوي الأحمر الملطخ بالدم والإضاءة */
+        .arch-banner-top-red {
+            display: inline-block;
+            padding: 10px 45px;
+            margin-bottom: -2px;
+            position: relative;
+            z-index: 5;
+            background: linear-gradient(180deg, #3a080c 0%, #1a0305 100%);
+            border: 2px solid #e74c3c;
+            border-bottom: none;
+            border-radius: 40px 40px 0 0;
+            color: #ff4d4d;
+            font-weight: bold;
+            font-size: 16px;
+            letter-spacing: 2px;
+            box-shadow: 0 -8px 25px rgba(231, 76, 60, 0.5), inset 0 0 15px rgba(255, 0, 0, 0.3);
+            text-shadow: 0 0 12px rgba(255, 77, 77, 0.9), 0 0 20px rgba(231, 76, 60, 0.6);
+            text-align: center;
+        }
+
         .container {
             width: 100%;
             max-width: 1200px;
             background-color: var(--panel-bg);
             border: 1px solid var(--border-color);
-            border-top: 3px solid var(--accent-gold);
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            border-top: 3px solid #e74c3c;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(231, 76, 60, 0.2);
             padding: 20px;
         }
 
@@ -302,7 +323,7 @@
             margin-top: 8px;
         }
 
-        /* --- تصميم الأجهزة الأمنية والترتيب الجديد --- */
+        /* --- تصميم الأجهزة الأمنية والترتيب --- */
         .alliances-section {
             margin-top: 35px;
             padding-top: 20px;
@@ -322,7 +343,7 @@
             gap: 10px;
         }
 
-        /* شبكة الأجهزة العادية في الأعلى */
+        /* شبكة الأجهزة العادية */
         .sub-factions-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -379,7 +400,7 @@
             margin-top: 3px;
         }
 
-        /* --- بطاقة CIA الكبيرة في الأسفل مع القوس --- */
+        /* --- بطاقة CIA الكبيرة في الأسفل --- */
         .bottom-cia-container {
             display: flex;
             flex-direction: column;
@@ -394,7 +415,7 @@
             border-radius: 12px;
             padding: 30px 20px;
             width: 100%;
-            max-width: 600px; /* حجم كبير ممتد أطول وأكبر من باقي القطاعات */
+            max-width: 600px;
             box-shadow: 0 0 35px rgba(212, 175, 55, 0.4);
             display: flex;
             flex-direction: column;
@@ -409,26 +430,6 @@
             border-color: #fff;
         }
 
-        /* القوس السفلي الكبير المضيء */
-        .arch-banner-bottom {
-            display: block;
-            width: 100%;
-            max-width: 600px;
-            padding: 10px 0;
-            margin-top: -2px;
-            background: linear-gradient(180deg, #161a22 0%, #0d1117 100%);
-            border: 2px solid var(--accent-gold);
-            border-top: none;
-            border-radius: 0 0 40px 40px;
-            color: var(--accent-gold);
-            font-weight: bold;
-            font-size: 16px;
-            letter-spacing: 1.5px;
-            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
-            text-align: center;
-        }
-
         .click-hint {
             margin-top: 10px;
             font-size: 11px;
@@ -439,7 +440,7 @@
             border: 1px solid var(--accent-blue);
         }
 
-        /* تصميم معرض صور النافذة الخاصة بالإنجازات */
+        /* معرض صور الإنجازات */
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -486,6 +487,11 @@
 <audio id="bg-music" loop preload="auto">
     <source src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_c8c8a221f2.mp3?filename=ambient-tech-10501.mp3" type="audio/mpeg">
 </audio>
+
+<!-- القوس العلوي الأحمر الدموي المضيء فوق الحاوية -->
+<div class="arch-banner-top-red">
+    ⚔️ حثالة المجتمع والقانون ⚔️
+</div>
 
 <div class="container">
     <div class="header">
@@ -612,7 +618,7 @@
 
             </div>
 
-            <!-- بطاقة CIA الكبيرة في الأسفل متبوعة بالقوس -->
+            <!-- بطاقة CIA الكبيرة في الأسفل -->
             <div class="bottom-cia-container">
                 <div class="cia-card-large" onclick="openCiaAchievements()">
                     <span class="cia-tag" style="background: linear-gradient(90deg, #c0392b, #e74c3c); color: #fff; font-size: 12px; font-weight: bold; padding: 5px 15px; border-radius: 20px; margin-bottom: 15px;">👑 القيادة العليا | HIGH COMMAND</span>
@@ -620,11 +626,6 @@
                     <div class="faction-name" style="font-size: 22px; color: var(--accent-gold); letter-spacing: 2px;">CIA - وكالة الاستخبارات المركزية</div>
                     <div class="faction-desc" style="font-size: 13px; color: #a0aec0; margin-top: 5px;">الرئاسة التنفيذية العليا لإدارة السيرفر والعمليات التكتيكية</div>
                     <span class="click-hint">👈 اضغط هنا لاستعراض إنجازات وحسنات جهاز CIA</span>
-                </div>
-
-                <!-- القوس المضيء في الأسفل -->
-                <div class="arch-banner-bottom">
-                    ⚔️ حثالة المجتمع والقانون ⚔️
                 </div>
             </div>
 
@@ -672,7 +673,7 @@
             <div class="gallery-item">
                 <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80" alt="Cyber Security">
                 <div class="gallery-info">
-                    <h4>🔒 الحماية الرقمية والاستخبارات</h4>
+                    <h4>🔒 الحماية الرقمية واستخبارات التسلل</h4>
                     <p>اختراق وتفكيك المخططات الإجرامية واستعادة الأمن والنظام العام في زمن قياسي.</p>
                 </div>
             </div>
