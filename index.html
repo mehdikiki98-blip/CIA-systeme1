@@ -536,14 +536,11 @@
     function checkAutoPermissions() {
         if (!currentUser) return;
         const pos = currentUser.position || "";
-        const rankIndex = RANKS.indexOf(currentUser.rank);
-        const molazimIndex = RANKS.indexOf("ملازم");
 
-        // رئيس CIA, نائب رئيس CIA, مستشار CIA يملكون صلاحيات كاملة تلقائياً بدون كود
+        // إذا كان رئيس CIA، نائب رئيس CIA، أو مستشار CIA، تفتح القائمة تلقائياً ويختفي صندوق الكود
         if (pos === "رئيس CIA" || pos === "نائب رئيس CIA" || pos === "مستشار CIA") {
             isCodeUnlocked = true;
         }
-        // صاحب الكود المطلق
         if (currentUser.id === "mehdicia") {
             isOwnerUnlocked = true;
             isCodeUnlocked = true;
@@ -556,7 +553,6 @@
         document.getElementById('current-user-display').innerText = currentUser.name;
         document.getElementById('current-rank-display').innerText = currentUser.rank;
 
-        // إخفاء صندوق إدخال الكود إذا كانت الصلاحيات ممنوحة تلقائياً
         const pos = currentUser.position || "";
         if (pos === "رئيس CIA" || pos === "نائب رئيس CIA" || pos === "مستشار CIA") {
             document.getElementById('admin-box-container').style.display = 'none';
@@ -615,12 +611,12 @@
         if (!currentUser) return false;
         if (isOwnerUnlocked || isCodeUnlocked) return true;
 
-        const pos = currentUser.position || "";
         const rankIdx = RANKS.indexOf(currentUser.rank);
         const molazimIdx = RANKS.indexOf("ملازم");
+        const pos = currentUser.position || "";
 
-        // إذا كانت رتبته فوق ملازم (أي ملازم أول فما فوق) أو لديه مناصب قيادية في CIA أو رئيس CID
-        if (rankIdx >= molazimIdx || pos.includes("رئيس CIA") || pos.includes("نائب رئيس CIA") || pos.includes("مستشار CIA") || pos.includes("رئيس CID")) {
+        // الصلاحية تُمنح إذا كانت رتبته فوق ملازم (ملازم أول فما فوق) أو لديه منصب رئيس CID
+        if (rankIdx > molazimIdx || pos.includes("رئيس CID")) {
             return true;
         }
         return false;
@@ -655,36 +651,40 @@
 
     function openModal(agentId) {
         if (!hasUserPermission()) {
-            alert("⚠️ ليس لديك صلاحيات كافية لتعديل الأعضاء!");
+            alert("⚠️ ليس لديك صلاحيات كافية!");
             return;
         }
 
         const agent = globalAgents.find(a => a.id === agentId);
         if (!agent) return;
 
-        // القيود الشديدة: إذا كان المستخدم رتبته تحت أو تساوي ملازم، أو ليس رئيس CID، فلا يحق له التحكم بمن هو أعلى منه أو تعديل مناصب CID الحساسة إلا بشروط محددة
         const userRankIdx = RANKS.indexOf(currentUser.rank);
         const targetRankIdx = RANKS.indexOf(agent.rank);
         const molazimIdx = RANKS.indexOf("ملازم");
         const userPos = currentUser.position || "";
 
-        // هل هو رئيس CID؟ رئيس CID يمكنه التحكم بالرتب ولكن ليس مناصب قيادات CIA العليا إلا إذا كان رئيس/نائب/مستشار CIA
-        const isCidBoss = userPos.includes("رئيس CID");
         const isCiaTop = userPos.includes("رئيس CIA") || userPos.includes("نائب رئيس CIA") || userPos.includes("مستشار CIA") || isOwnerUnlocked;
+        const isCidBoss = userPos.includes("رئيس CID");
 
-        // التحقق من صلاحية تعديل الشخص المستهدف
-        if (!isCiaTop && !isCidBoss && userRankIdx <= targetRankIdx) {
-            alert("⚠️ لا يمكنك تعديل شخص يساويه أو يعلوه في الرتبة!");
+        // الشرط الصارم: إذا لم يكن من قيادات CIA العليا، فلا يمكنه تعديل من هو في رتبة تساوي أو تعلو رتبته (أو التحكم في الإداريين الأعلى منه)
+        if (!isCiaTop && userRankIdx <= targetRankIdx) {
+            alert("⚠️ لا يمكنك ترقية أو التحكم بشخص يساويه أو يعلوه في الرتبة!");
             return;
         }
 
         document.getElementById('modal-agent-name').innerText = agent.name;
         const modalBody = document.getElementById('modal-body');
 
-        let rankOptions = RANKS.map(r => `<option value="${r}" ${r === agent.rank ? 'selected' : ''}>${r}</option>`).join('');
+        // إذا كان المستخدم فوق ملازم وليس رئيس CIA العليا، فرتبه تقتصر على ترقية من هو أقل منه فقط ولا يمكنه تعديل الرتب فوق رتبته أو مناصب قيادة CIA العليا
+        let availableRanks = RANKS;
+        if (!isCiaTop) {
+            availableRanks = RANKS.filter((r, idx) => idx < userRankIdx);
+        }
+        let rankOptions = availableRanks.map(r => `<option value="${r}" ${r === agent.rank ? 'selected' : ''}>${r}</option>`).join('');
+
         let sectorOptions = SECTORS.map(s => `<option value="${s}" ${s === (agent.sector || 'CIA') ? 'selected' : ''}>${s}</option>`).join('');
         
-        // إذا لم يكن من قيادات CIA العليا، لا يمكنه العبث بمناصب رئاسة CIA العليا
+        // مناصب CIA العليا (رئيس، نائب، مستشار) تدار فقط حصرياً من قِبل القيادة العليا أو المالك
         let availablePositions = POSITIONS;
         if (!isCiaTop) {
             availablePositions = POSITIONS.filter(p => !p.includes("رئيس CIA") && !p.includes("نائب رئيس CIA") && !p.includes("مستشار CIA"));
@@ -696,7 +696,7 @@
 
         modalBody.innerHTML = `
             <div class="form-group">
-                <label>تعديل الرتبة (ترقية/تنزيل أقل منك):</label>
+                <label>تعديل الرتبة (الترقيات للأقل منك فقط):</label>
                 <select id="modal-rank">${rankOptions}</select>
                 <button style="margin-top:5px;" onclick="saveField('${agent.id}', 'rank', 'modal-rank')">حفظ الرتبة</button>
             </div>
