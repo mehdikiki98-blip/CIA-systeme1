@@ -22,6 +22,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: all 0.25s ease;
         }
 
         body {
@@ -32,6 +33,7 @@
             align-items: center;
             min-height: 100vh;
             padding: 15px;
+            overflow-x: hidden;
         }
 
         .container {
@@ -43,6 +45,10 @@
             border-radius: 8px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
             padding: 20px;
+        }
+
+        .container:hover {
+            box-shadow: 0 12px 35px rgba(212, 175, 55, 0.15);
         }
 
         .header {
@@ -57,6 +63,7 @@
             font-size: 20px;
             letter-spacing: 1px;
             margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
         }
 
         .header p {
@@ -96,6 +103,7 @@
 
         input:focus, select:focus {
             border-color: var(--accent-gold);
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
         }
 
         button {
@@ -107,11 +115,13 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 12px;
-            transition: 0.3s;
+            transition: transform 0.2s ease, background-color 0.3s ease;
         }
 
         button:hover {
             background: #b59228;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
         }
 
         .btn-full {
@@ -125,6 +135,7 @@
 
         .btn-danger:hover {
             background: #c0392b;
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
         }
 
         .btn-sm {
@@ -141,6 +152,15 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
+        }
+
+        tr {
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background-color: rgba(212, 175, 55, 0.05);
+            transform: scale(1.002);
         }
 
         th, td {
@@ -273,6 +293,11 @@
 </head>
 <body>
 
+<!-- صوت خلفية استخباراتي خفيف -->
+<audio id="bg-music" loop preload="auto">
+    <source src="https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3" type="audio/mpeg">
+</audio>
+
 <div class="container">
     <div class="header">
         <h1>🌐 نظام الاستخبارات العامة | CIA DATABASE</h1>
@@ -314,8 +339,8 @@
             <div class="user-status-controls">
                 <span>حالتك الشخصية:</span>
                 <select id="my-status-select" onchange="updateMyStatus()">
-                    <option value="متصل 🟢">متصل 🟢</option>
-                    <option value="غير متصل 🔴">غير متصل 🔴</option>
+                    <option value="في الخدمة 🟢">في الخدمة 🟢</option>
+                    <option value="مفصول 🔴">مفصول 🔴</option>
                 </select>
             </div>
 
@@ -372,8 +397,8 @@
     ];
 
     const STATUSES = [
-        "متصل 🟢",
-        "غير متصل 🔴"
+        "في الخدمة 🟢",
+        "مفصول 🔴"
     ];
 
     const EVALUATIONS = [
@@ -392,6 +417,21 @@
     let currentUser = null;
     let globalAgents = [];
     let refreshInterval = null;
+
+    // تشغيل الموسيقى الخفيفة تلقائياً عند أول حركة ماوس أو ضغطة
+    let audioStarted = false;
+    function startMusic() {
+        if (!audioStarted) {
+            const music = document.getElementById('bg-music');
+            if (music) {
+                music.volume = 0.15; // صوت خفيف وهادئ
+                music.play().catch(() => {});
+                audioStarted = true;
+            }
+        }
+    }
+    window.addEventListener('mousemove', startMusic, { once: true });
+    window.addEventListener('click', startMusic, { once: true });
 
     document.getElementById('login-form').addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -426,7 +466,7 @@
                     rank: "مستجد", 
                     sector: "CIA", 
                     position: "بدون منصب",
-                    status: "متصل 🟢",
+                    status: "في الخدمة 🟢",
                     evaluation: "بدون تقييم",
                     evaluator: ""
                 };
@@ -483,7 +523,7 @@
                     if (data[key]) {
                         const sector = data[key].sector || "CIA";
                         const position = data[key].position || "بدون منصب";
-                        const status = data[key].status || "متصل 🟢";
+                        const status = data[key].status || "في الخدمة 🟢";
                         const evaluation = data[key].evaluation || "بدون تقييم";
                         const evaluator = data[key].evaluator || "";
                         
@@ -511,26 +551,17 @@
     function unlockAdmin() {
         const inputCode = document.getElementById('admin-code-input').value.trim();
         const msg = document.getElementById('admin-msg');
-        
-        const myRankIndex = RANKS.indexOf(currentUser.rank);
-        const mulazimIndex = RANKS.indexOf("ملازم");
 
         if (inputCode === OWNER_CODE) {
             isOwnerUnlocked = true;
             isCodeUnlocked = false;
             msg.style.color = "var(--accent-green)";
-            msg.innerText = "👑 تم تفعيل الصلاحيات المطلقة، المناصب، التقييم، وتعديل الحالة!";
+            msg.innerText = "👑 تم تفعيل الصلاحيات المطلقة والمناصب والتقييم!";
             renderTable();
             return;
         }
 
         if (inputCode === ADMIN_SECRET) {
-            if (myRankIndex < mulazimIndex) {
-                msg.style.color = "var(--accent-red)";
-                msg.innerText = "✕ رتبتك الحالية لا تسمح لك بالترقية أو التقييم!";
-                return;
-            }
-
             isCodeUnlocked = true;
             isOwnerUnlocked = false;
             msg.style.color = "var(--accent-green)";
@@ -552,22 +583,19 @@
         tbody.innerHTML = '';
 
         const myRankIndex = RANKS.indexOf(currentUser.rank);
-        const mulazimIndex = RANKS.indexOf("ملازم");
-        const raidIndex = RANKS.indexOf("رائد");
-        const isLeader = (currentUser.rank === "قائد الاستخبارات");
 
         globalAgents.forEach((agent) => {
             const tr = document.createElement('tr');
             const targetRankIndex = RANKS.indexOf(agent.rank);
             const currentSector = agent.sector || "CIA";
             const currentPosition = agent.position || "بدون منصب";
-            const currentStatus = agent.status || "متصل 🟢";
+            const currentStatus = agent.status || "في الخدمة 🟢";
             const currentEval = agent.evaluation || "بدون تقييم";
             const currentEvaluator = agent.evaluator ? `(المقيِّم: ${agent.evaluator})` : '';
 
             let actionsHTML = '';
 
-            // 1. صلاحيات المالك الشاملة (كود mehdicia)
+            // 1. المالك المباشر (كود mehdicia)
             if (isOwnerUnlocked) {
                 let rankOptions = RANKS.map(r => `<option value="${r}" ${r === agent.rank ? 'selected' : ''}>${r}</option>`).join('');
                 let sectorOptions = `
@@ -601,30 +629,17 @@
                     </td>
                 `;
             } 
-            // 2. صلاحيات المسؤولين (أكواد أو قائد أو فوق ملازم) للتعديل على من هم أقل منهم فقط
-            else if ((isCodeUnlocked || isLeader || myRankIndex >= mulazimIndex) && myRankIndex > targetRankIndex) {
+            // 2. كود الإدارة (ciaontop) - تعديل من هم أقل في الرتبة فقط بشرط إدخال الكود
+            else if (isCodeUnlocked && myRankIndex > targetRankIndex) {
                 let allowedRanks = RANKS.slice(0, myRankIndex);
                 let rankOptions = allowedRanks.map(r => `<option value="${r}" ${r === agent.rank ? 'selected' : ''}>${r}</option>`).join('');
                 let evalOptions = EVALUATIONS.map(e => `<option value="${e}" ${e === currentEval ? 'selected' : ''}>${e}</option>`).join('');
-
-                let sectorHTML = '';
-                if (myRankIndex >= raidIndex) {
-                    let sectorOptions = `
-                        <option value="CIA" ${currentSector === 'CIA' ? 'selected' : ''}>CIA</option>
-                        <option value="CID" ${currentSector === 'CID' ? 'selected' : ''}>CID</option>
-                    `;
-                    sectorHTML = `
-                        <select id="sector-select-${agent.id}">${sectorOptions}</select>
-                        <button class="btn-sm" style="background:var(--accent-blue); color:#fff;" onclick="setSectorOnline('${agent.id}')">القطاع</button>
-                    `;
-                }
 
                 actionsHTML = `
                     <td>
                         <div class="action-flex">
                             <select id="rank-select-${agent.id}">${rankOptions}</select>
                             <button class="btn-sm" onclick="setRankOnline('${agent.id}')">الرتبة</button>
-                            ${sectorHTML}
                             
                             <select id="eval-select-${agent.id}">${evalOptions}</select>
                             <button class="btn-sm" style="background:#e67e22; color:#fff;" onclick="setEvaluationOnline('${agent.id}')">التقييم</button>
@@ -633,7 +648,7 @@
                         </div>
                     </td>
                 `;
-            } else if (isCodeUnlocked || isLeader || myRankIndex >= mulazimIndex) {
+            } else if (isCodeUnlocked) {
                 actionsHTML = `<td><span style="font-size:10px; color:#777;">(رتبة أعلى منك/مساوية)</span></td>`;
             } else {
                 actionsHTML = `<td><span style="font-size:10px; color:#777;">🔒 أدخل الكود للتعديل</span></td>`;
