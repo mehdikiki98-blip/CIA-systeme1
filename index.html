@@ -11,6 +11,7 @@
             --accent-gold: #d4af37;
             --accent-red: #e74c3c;
             --accent-green: #2ecc71;
+            --accent-blue: #3498db;
             --text-color: #e0e6ed;
             --border-color: #2c3240;
         }
@@ -34,7 +35,7 @@
 
         .container {
             width: 100%;
-            max-width: 950px;
+            max-width: 1000px;
             background-color: var(--panel-bg);
             border: 1px solid var(--border-color);
             border-top: 4px solid var(--accent-gold);
@@ -162,6 +163,16 @@
             border: 1px solid var(--accent-gold);
         }
 
+        .badge-sector {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            background: #1b2838;
+            color: var(--accent-blue);
+            border: 1px solid var(--accent-blue);
+        }
+
         .admin-box {
             background: #0d1117;
             border: 1px dashed var(--accent-gold);
@@ -179,12 +190,13 @@
 
         .action-flex {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .action-flex select {
-            width: 180px;
+            width: 130px;
             padding: 6px;
         }
 
@@ -200,7 +212,7 @@
 <div class="container">
     <div class="header">
         <h1>🌐 نظام الاستخبارات العامة | CIA DATABASE</h1>
-        <p>نظام إلكتروني سري لمتابعة وإدارة الرتب والعملاء (متصل مباشرة أونلاين)</p>
+        <p>نظام إلكتروني سري لمتابعة وإدارة الرتب والقطاعات (متصل مباشرة أونلاين)</p>
     </div>
 
     <!-- 1. صفحة التسجيل والدخول -->
@@ -248,7 +260,8 @@
                 <tr>
                     <th>الاسم / الكود</th>
                     <th>الرتبة الحالية</th>
-                    <th id="admin-actions-header">تعديل الرتبة / الإجراءات</th>
+                    <th>القطاع</th>
+                    <th id="admin-actions-header">تعديل الرتبة والقطاع / الإجراءات</th>
                 </tr>
             </thead>
             <tbody id="agents-table-body">
@@ -302,7 +315,7 @@
                     errorMsg.innerText = "✕ كلمة السر غير صحيحة لهذا الاسم!";
                 }
             } else {
-                const newUser = { name: name, password: pass, rank: "مستجد" };
+                const newUser = { name: name, password: pass, rank: "مستجد", sector: "CIA" };
                 await fetch(`${DB_URL}/${userKey}.json`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
@@ -339,9 +352,13 @@
             if (data) {
                 Object.keys(data).forEach(key => {
                     if (data[key]) {
-                        globalAgents.push({ id: key, ...data[key] });
+                        // الافتراضي هو CIA إذا لم يكن محدد
+                        const sector = data[key].sector || "CIA";
+                        globalAgents.push({ id: key, ...data[key], sector });
+                        
                         if (currentUser && currentUser.id === key) {
                             currentUser.rank = data[key].rank;
+                            currentUser.sector = sector;
                             document.getElementById('current-rank-display').innerText = currentUser.rank;
                         }
                     }
@@ -379,7 +396,7 @@
             isCodeUnlocked = true;
             isOwnerUnlocked = false;
             msg.style.color = "var(--accent-green)";
-            msg.innerText = "✓ تم التفعيل! يمكنك الآن تعديل من هم أقل منك فقط.";
+            msg.innerText = "✓ تم التفعيل! يمكنك تعديل من هم أقل منك فقط.";
             renderTable();
         } else {
             msg.style.color = "var(--accent-red)";
@@ -388,7 +405,6 @@
     }
 
     function renderTable() {
-        // حماية: إذا كان المستخدم فاتح شي قائمة اختيار دابا، نوقفو التحديث باش ما تسدش عليه
         if (document.activeElement && document.activeElement.tagName === 'SELECT') {
             return;
         }
@@ -398,36 +414,62 @@
         tbody.innerHTML = '';
 
         const myRankIndex = RANKS.indexOf(currentUser.rank);
+        const raidIndex = RANKS.indexOf("رائد");
         const isLeader = (currentUser.rank === "قائد الاستخبارات" || currentUser.rank === "نائب رئيس الاستخبارات");
 
         globalAgents.forEach((agent) => {
             const tr = document.createElement('tr');
             const targetRankIndex = RANKS.indexOf(agent.rank);
+            const currentSector = agent.sector || "CIA";
 
             let actionsHTML = '';
 
+            // صلاحية التعديل الشاملة للأونر
             if (isOwnerUnlocked) {
-                let optionsHTML = RANKS.map(r => `<option value="${r}" ${r === agent.rank ? 'selected' : ''}>${r}</option>`).join('');
+                let rankOptions = RANKS.map(r => `<option value="${r}" ${r === agent.rank ? 'selected' : ''}>${r}</option>`).join('');
+                let sectorOptions = `
+                    <option value="CIA" ${currentSector === 'CIA' ? 'selected' : ''}>CIA</option>
+                    <option value="CID" ${currentSector === 'CID' ? 'selected' : ''}>CID</option>
+                `;
 
                 actionsHTML = `
                     <td>
                         <div class="action-flex">
-                            <select id="rank-select-${agent.id}">${optionsHTML}</select>
-                            <button class="btn-sm" onclick="setRankOnline('${agent.id}')">تطبيق</button>
+                            <select id="rank-select-${agent.id}">${rankOptions}</select>
+                            <button class="btn-sm" onclick="setRankOnline('${agent.id}')">تطبيق الرتبة</button>
+                            
+                            <select id="sector-select-${agent.id}">${sectorOptions}</select>
+                            <button class="btn-sm" style="background:var(--accent-blue); color:#fff;" onclick="setSectorOnline('${agent.id}')">تطبيق القطاع</button>
+
                             <button class="btn-sm btn-danger" style="background:#555;" onclick="deleteAgentOnline('${agent.id}')">🗑️ طرد</button>
                         </div>
                     </td>
                 `;
             } 
+            // صلاحية تعديل الرتبة + القطاع (شرط رائد فما فوق لتعديل القطاع)
             else if ((isCodeUnlocked || isLeader) && myRankIndex > targetRankIndex) {
                 let allowedRanks = RANKS.slice(0, myRankIndex);
-                let optionsHTML = allowedRanks.map(r => `<option value="${r}" ${r === agent.rank ? 'selected' : ''}>${r}</option>`).join('');
+                let rankOptions = allowedRanks.map(r => `<option value="${r}" ${r === agent.rank ? 'selected' : ''}>${r}</option>`).join('');
+                
+                // خيارات القطاع (متاحة فقط إذا كانت رتبة المستخدم الحالية رائد فما فوق)
+                let sectorHTML = '';
+                if (myRankIndex >= raidIndex) {
+                    let sectorOptions = `
+                        <option value="CIA" ${currentSector === 'CIA' ? 'selected' : ''}>CIA</option>
+                        <option value="CID" ${currentSector === 'CID' ? 'selected' : ''}>CID</option>
+                    `;
+                    sectorHTML = `
+                        <select id="sector-select-${agent.id}">${sectorOptions}</select>
+                        <button class="btn-sm" style="background:var(--accent-blue); color:#fff;" onclick="setSectorOnline('${agent.id}')">تطبيق القطاع</button>
+                    `;
+                }
 
                 actionsHTML = `
                     <td>
                         <div class="action-flex">
-                            <select id="rank-select-${agent.id}">${optionsHTML}</select>
-                            <button class="btn-sm" onclick="setRankOnline('${agent.id}')">تطبيق</button>
+                            <select id="rank-select-${agent.id}">${rankOptions}</select>
+                            <button class="btn-sm" onclick="setRankOnline('${agent.id}')">تطبيق الرتبة</button>
+                            ${sectorHTML}
                             <button class="btn-sm btn-danger" style="background:#555;" onclick="deleteAgentOnline('${agent.id}')">🗑️ طرد</button>
                         </div>
                     </td>
@@ -441,6 +483,7 @@
             tr.innerHTML = `
                 <td><strong>${agent.name}</strong></td>
                 <td><span class="badge">${agent.rank}</span></td>
+                <td><span class="badge-sector">${currentSector}</span></td>
                 ${actionsHTML}
             `;
             tbody.appendChild(tr);
@@ -450,11 +493,23 @@
     async function setRankOnline(id) {
         const selectElem = document.getElementById(`rank-select-${id}`);
         const selectedRank = selectElem.value;
-        selectElem.blur(); // إلغاء التركيز بعد الاختيار باش يرجع التحديث التلقائي خدام
+        selectElem.blur();
         await fetch(`${DB_URL}/${id}/rank.json`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(selectedRank)
+        });
+        fetchAgentsOnline();
+    }
+
+    async function setSectorOnline(id) {
+        const selectElem = document.getElementById(`sector-select-${id}`);
+        const selectedSector = selectElem.value;
+        selectElem.blur();
+        await fetch(`${DB_URL}/${id}/sector.json`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(selectedSector)
         });
         fetchAgentsOnline();
     }
